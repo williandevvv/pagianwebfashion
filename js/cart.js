@@ -395,34 +395,36 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendOrderToWhatsApp(order, savedOrderId = null) {
         const phoneNumber = '50494859196'; // Número de WhatsApp de Honduras
         
-        // Formatear mensaje 
-        let message = `🛍️ *🛍️NUEVO PEDIDO - Fashion Collection Honduras*\n\n`;
-        message += `👤 Cliente: ${order.userName}\n`;
-        message += `📧 Email: ${order.userEmail}\n`;
-        message += `📅 Fecha: ${formatDateHonduras(new Date())}\n`;
-        message += `🆔 ID Pedido: #${order.id.substring(0, 8)}\n`;
+        // Formatear mensaje en estilo de factura
+        let message = `🧾 *Factura de Pedido - Fashion Collection* 🧾\n\n`;
+        message += `👤 *Cliente:* ${order.userName}\n`;
+        message += `📧 *Correo:* ${order.userEmail}\n`;
+        message += `🗓️ *Fecha:* ${formatDateHonduras(new Date())}\n`;
+        message += `🆔 *Pedido:* #${order.id.substring(0, 8)}\n`;
         if (savedOrderId) {
-            message += `💾 ID Sistema: ${savedOrderId}\n`;
+            message += `🔑 *ID Sistema:* ${savedOrderId}\n`;
         }
-        message += `\n`;
-        
-        message += `📦 *PRODUCTOS SOLICITADOS:*\n`;
+        message += `------------------------------\n`;
+
+        message += `*Detalle de Productos*\n`;
         order.items.forEach((item, index) => {
             const itemTotal = item.price * item.quantity;
             message += `${index + 1}. ${item.name}\n`;
-            message += `   💰 L. ${formatCurrencyHonduras(item.price)} x ${item.quantity} = L. ${formatCurrencyHonduras(itemTotal)}\n\n`;
+            message += `   Precio: L. ${formatCurrencyHonduras(item.price)}\n`;
+            message += `   Cantidad: ${item.quantity}\n`;
+            message += `   Subtotal: L. ${formatCurrencyHonduras(itemTotal)}\n`;
         });
-        
-        message += `📊 *RESUMEN DEL PEDIDO:*\n`;
+
+        message += `------------------------------\n`;
+        message += `*Resumen*\n`;
         message += `Subtotal: L. ${formatCurrencyHonduras(order.subtotal)}\n`;
         message += `Envío: L. ${formatCurrencyHonduras(order.shipping)}\n`;
-        message += `💵 *TOTAL A PAGAR: L. ${formatCurrencyHonduras(order.total)}*\n\n`;
-        
-        message += `🇭🇳 *INFORMACIÓN DE ENTREGA:*\n`;
-        message += `📍 Por favor confirma tu dirección completa en Honduras\n`;
-        message += `💳 Método de pago preferido (Efectivo/Transferencia)\n`;
+        message += `*TOTAL: L. ${formatCurrencyHonduras(order.total)}*\n\n`;
+
+        message += `📍 Confirma tu dirección de entrega en Honduras\n`;
+        message += `💳 Forma de pago: Efectivo o Transferencia\n`;
         message += `📞 Número de contacto para coordinar entrega\n\n`;
-        
+
         message += `✅ Pedido realizado desde: ${window.location.origin}\n`;
         message += `🕒 Horario de atención: Lunes a Sábado 8:00 AM - 5:30 PM`;
         
