@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let orders = [];
   let users = [];
   let productoEnEdicion = null;
+  let currentUserRole = null;
+  let currentPermissions = {};
 
   // Importar módulos de reportes y configuración
   import('./reports.js').then(module => {
@@ -23,54 +25,68 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Configuración en modo offline');
   });
 
-  // Función para verificar acceso de administrador
+  // Función para verificar acceso y establecer permisos
   async function checkAdminAccess() {
     try {
-      // Verificar si Firebase está disponible
       if (typeof firebase !== 'undefined' && firebase.auth) {
-        // Esperar a que Firebase se inicialice
         firebase.auth().onAuthStateChanged(async (user) => {
           if (!user) {
-            // No hay usuario autenticado
             redirectToLogin();
             return;
           }
 
-          // Verificar rol del usuario
           try {
             const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-            const userData = userDoc.data();
-            
-            if (!userData || userData.role !== 'admin') {
-              // Usuario no es administrador
+            const userData = userDoc.data() || {};
+
+            currentUserRole = userData.role || 'customer';
+            currentPermissions = userData.permissions || defaultPermissions[currentUserRole] || {};
+
+            const username = userData.displayName || user.email;
+            const nameEl = document.getElementById('admin-username');
+            if (nameEl) nameEl.textContent = username;
+
+            if (!currentPermissions.dashboard?.view) {
               showUnauthorizedMessage();
               return;
             }
 
-            // Usuario es administrador, continuar cargando el panel
-            console.log('✅ Acceso de administrador verificado');
-            
+            console.log(`✅ Acceso verificado para rol ${currentUserRole}`);
+            applyRolePermissions();
+            loadDataFromFirebase();
+            loadInventoryData();
+            setupAdminEvents();
           } catch (error) {
             console.error('Error verificando rol:', error);
             redirectToLogin();
           }
         });
       } else {
-        // Firebase no disponible, verificar datos offline
         const offlineData = localStorage.getItem('offlineData');
         if (offlineData) {
           try {
             const data = JSON.parse(offlineData);
-            if (data.user && data.user.role === 'admin') {
-              console.log('✅ Acceso de administrador offline verificado');
+            if (data.user) {
+              currentUserRole = data.user.role || 'customer';
+              currentPermissions = defaultPermissions[currentUserRole] || {};
+
+              if (!currentPermissions.dashboard?.view) {
+                showUnauthorizedMessage();
+                return;
+              }
+
+              applyRolePermissions();
+              loadDataFromFirebase();
+              loadInventoryData();
+              setupAdminEvents();
+              console.log('✅ Acceso offline verificado');
               return;
             }
           } catch (error) {
             console.error('Error verificando datos offline:', error);
           }
         }
-        
-        // No hay acceso válido
+
         redirectToLogin();
       }
     } catch (error) {
@@ -170,34 +186,41 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Cambiar rol de usuario (cliente/admin)
+    // Cambiar rol de usuario mostrando lista de roles
     document.addEventListener("click", async (e) => {
       const btn = e.target.closest(".cambiar-rol");
       if (!btn) return;
 
       const id = btn.dataset.id;
       const actual = btn.dataset.rol;
-      const nuevoRol = actual === "admin" ? "cliente" : "admin";
 
-      const resultado = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: `¿Cambiar el rol de este usuario a "${nuevoRol}"?`,
-        icon: "question",
+      const { value: nuevoRol } = await Swal.fire({
+        title: 'Cambiar Rol',
+        html: `
+          <select id="rolNuevo" class="form-select">
+            <option value="customer" ${actual === 'customer' ? 'selected' : ''}>Cliente</option>
+            <option value="viewer" ${actual === 'viewer' ? 'selected' : ''}>Visualizador</option>
+            <option value="editor" ${actual === 'editor' ? 'selected' : ''}>Editor</option>
+            <option value="moderator" ${actual === 'moderator' ? 'selected' : ''}>Moderador</option>
+            <option value="admin" ${actual === 'admin' ? 'selected' : ''}>Administrador</option>
+          </select>
+        `,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: "Sí, cambiar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#6610f2",
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => document.getElementById('rolNuevo').value
       });
 
-      if (!resultado.isConfirmed) return;
+      if (!nuevoRol || nuevoRol === actual) return;
 
       try {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(id)
-          .update({ role: nuevoRol });
-        users = users.map((u) => (u.id === id ? { ...u, role: nuevoRol } : u));
+        await firebase.firestore().collection('users').doc(id).update({
+          role: nuevoRol,
+          permissions: defaultPermissions[nuevoRol] || {},
+          updatedAt: new Date()
+        });
+        users = users.map(u => u.id === id ? { ...u, role: nuevoRol, permissions: defaultPermissions[nuevoRol] || {} } : u);
         renderUsersTable();
         Swal.fire({
           title: '¡Éxito!',
@@ -206,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
           confirmButtonColor: '#198754'
         });
       } catch (err) {
-        console.error("❌ Error al cambiar rol:", err);
+        console.error('❌ Error al cambiar rol:', err);
         Swal.fire({
           title: 'Error',
           text: 'No se pudo cambiar el rol del usuario',
@@ -426,16 +449,8 @@ function renderProductsTable() {
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-warning editar-producto" data-id="${
-                            product.id
-                        }">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger eliminar-producto" data-id="${
-                            product.id
-                        }">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                        ${hasPermission('products','edit') ? `<button class="btn btn-sm btn-warning editar-producto" data-id="${product.id}"><i class="fas fa-edit"></i></button>` : ''}
+                        ${hasPermission('products','delete') ? `<button class="btn btn-sm btn-danger eliminar-producto" data-id="${product.id}"><i class="fas fa-trash-alt"></i></button>` : ''}
                     </td>
                 </tr>
             `
@@ -486,6 +501,31 @@ function renderProductsTable() {
       settings: { view: false, edit: false, backup: false, system: false }
     }
   };
+
+  function hasPermission(module, action) {
+    return !!currentPermissions?.[module]?.[action];
+  }
+
+  function applyRolePermissions() {
+    const modules = ['dashboard','products','orders','users','inventory','reports','settings'];
+    modules.forEach(m => {
+      const canView = hasPermission(m,'view');
+      const navEl = document.querySelector(`#sidebar [data-section="${m}"]`);
+      if (navEl) navEl.parentElement.style.display = canView ? '' : 'none';
+      const section = document.getElementById(`${m}-section`);
+      if (section && !canView) section.remove();
+    });
+
+    if (!hasPermission('products','create')) {
+      document.querySelector('#products-section [data-bs-target="#addProductModal"]')?.classList.add('d-none');
+    }
+    if (!hasPermission('users','create')) {
+      document.querySelector('[data-bs-target="#addUserModal"]')?.classList.add('d-none');
+    }
+    if (!hasPermission('users','roles')) {
+      document.querySelector('[data-bs-target="#rolesPermissionsModal"]')?.classList.add('d-none');
+    }
+  }
 
 function renderUsersTable() {
     const container = document.querySelector("#users-table tbody");
@@ -563,18 +603,10 @@ function renderUsersTable() {
                         <td>${user.lastAccess ? new Date(user.lastAccess.seconds * 1000).toLocaleDateString() : 'Nunca'}</td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')" title="Editar">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning cambiar-rol" data-id="${user.id}" data-rol="${user.role || ''}" title="Cambiar Rol">
-                                    <i class="fas fa-user-tag"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info" onclick="editUserPermissions('${user.id}')" title="Permisos">
-                                    <i class="fas fa-key"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')" title="Eliminar">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                ${hasPermission('users','edit') ? `<button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')" title="Editar"><i class="fas fa-edit"></i></button>` : ''}
+                                ${hasPermission('users','roles') ? `<button class="btn btn-sm btn-outline-warning cambiar-rol" data-id="${user.id}" data-rol="${user.role || ''}" title="Cambiar Rol"><i class="fas fa-user-tag"></i></button>` : ''}
+                                ${hasPermission('users','permissions') ? `<button class="btn btn-sm btn-outline-info" onclick="editUserPermissions('${user.id}')" title="Permisos"><i class="fas fa-key"></i></button>` : ''}
+                                ${hasPermission('users','delete') ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>` : ''}
                             </div>
                         </td>
                     </tr>
@@ -817,9 +849,8 @@ function renderUsersTable() {
                     </td>
                     <td>
                         ${
-                          estado === "pending" || estado === "pendiente"
-                            ? `
-                        <button class="btn btn-sm btn-success marcar-enviado" data-id="${order.id}">Marcar Enviado</button>`
+                          (estado === "pending" || estado === "pendiente") && hasPermission('orders','edit')
+                            ? `<button class="btn btn-sm btn-success marcar-enviado" data-id="${order.id}">Marcar Enviado</button>`
                             : ""
                         }
                     </td>
@@ -1929,8 +1960,5 @@ function renderUsersTable() {
     }
   }
 
-  // Inicializar
-  loadDataFromFirebase();
-  loadInventoryData();
-  setupAdminEvents();
+  // Inicialización se realiza tras validar permisos en checkAdminAccess
 });

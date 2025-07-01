@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 userCredential.user.displayName ||
                 userData.displayName ||
                 "Usuario",
-              role: userData.role || "user",
+              role: userData.role || "customer",
             };
           } catch (error) {
             console.log("Firebase login falló, intentando modo offline");
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
               .set({
                 email: user.email,
                 displayName: user.displayName || "Usuario",
-                role: "user",
+                role: "customer",
                 createdAt: new Date(),
               });
           }
@@ -343,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await firebase.firestore().collection("users").doc(user.uid).set({
         email: user.email,
         displayName: displayName,
-        role: "user",
+        role: "customer",
         createdAt: new Date(),
       });
 
