@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `
                 <div class="text-center py-5">
                     <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-                    <h3>Tu carrito está vacío</h3>
-                    <p class="text-muted">¡Agrega algunos productos!</p>
+                    <h3>Tu carrito está vacío 😢</h3>
+                    <p class="text-muted">¡Agrega algunos productos y luce increíble! ✨</p>
                     <a href="index.html" class="btn btn-primary">
                         <i class="fas fa-shopping-bag me-2"></i>Ir a comprar
                     </a>
@@ -84,16 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <p class="text-muted small">${item.category}</p>
                             <div class="quantity-control d-flex align-items-center">
-                                <button class="btn btn-outline-secondary btn-sm quantity-btn" 
+                                <button class="btn btn-outline-secondary btn-sm quantity-btn"
                                         data-action="decrease" data-index="${index}"
                                         ${item.quantity <= 1 ? 'disabled' : ''}>
-                                    <i class="fas fa-minus"></i>
+                                    ➖
                                 </button>
                                 <span class="mx-3 quantity-value">${item.quantity}</span>
-                                <button class="btn btn-outline-secondary btn-sm quantity-btn" 
+                                <button class="btn btn-outline-secondary btn-sm quantity-btn"
                                         data-action="increase" data-index="${index}"
                                         ${item.quantity >= item.stock ? 'disabled' : ''}>
-                                    <i class="fas fa-plus"></i>
+                                    ➕
                                 </button>
                             </div>
                         </div>
@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveCartToStorage();
         renderCart();
         updateCartTotals();
+        showNotification('Cantidad actualizada ✅');
     }
 
     // Remover del carrito

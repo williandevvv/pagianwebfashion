@@ -16,6 +16,12 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+        .emoji-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .header {
             background-color: #000;
             color: white;
@@ -86,6 +92,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 1.1rem;
         }
 
         .quantity-btn:hover {
@@ -205,7 +212,7 @@
                 </div>
                 <div class="d-flex align-items-center">
                     <a href="index" class="btn btn-outline-light me-2">
-                        <i class="fas fa-arrow-left me-2"></i>Seguir Comprando
+                        <i class="fas fa-arrow-left me-2"></i>Seguir Comprando 🛍️
                     </a>
                 </div>
             </div>
@@ -219,7 +226,7 @@
             <div class="col-lg-8">
                 <div class="cart-container">
                     <div class="p-4">
-                        <h2 class="mb-4">Carrito de Compras</h2>
+                        <h2 class="mb-4 emoji-title"><span>🛒</span>Carrito de Compras</h2>
                         <div id="cart-items">
                             <!-- Cart items will be dynamically loaded here -->
                         </div>
@@ -230,7 +237,7 @@
             <!-- Order Summary -->
             <div class="col-lg-4">
                 <div class="summary-card sticky-lg-top" style="top: 100px;">
-                    <h3 class="summary-title">Resumen del Pedido</h3>
+                    <h3 class="summary-title emoji-title"><span>📦</span>Resumen del Pedido</h3>
                     <div class="summary-item">
                         <span>Subtotal</span>
                         <span>L0.00</span>
@@ -245,12 +252,12 @@
                         <span>L0.00</span>
                     </div>
                     <button id="checkout-btn" class="btn btn-primary checkout-btn w-100 mt-4">
-                        <i class="fas fa-lock me-2"></i>Proceder al Pago
+                        <i class="fas fa-lock me-2"></i>Proceder al Pago 💳
                     </button>
                     <div class="text-center mt-3">
                         <small class="text-muted">
                             <i class="fas fa-shield-alt me-1"></i>
-                            Pago seguro garantizado
+                            Pago seguro garantizado ✅
                         </small>
                     </div>
                 </div>
