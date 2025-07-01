@@ -466,6 +466,7 @@ function renderProductsTable() {
       orders: { view: true, edit: true, cancel: true, refund: true },
       users: { view: true, create: true, edit: true, delete: true, roles: true, permissions: true },
       inventory: { view: true, update: true, alerts: true, reports: true },
+      reports: { view: true, export: true },
       settings: { view: true, edit: true, backup: true, system: true }
     },
     moderator: {
@@ -474,6 +475,7 @@ function renderProductsTable() {
       orders: { view: true, edit: true, cancel: true, refund: false },
       users: { view: true, create: false, edit: true, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: true, alerts: false, reports: true },
+      reports: { view: true, export: true },
       settings: { view: true, edit: false, backup: false, system: false }
     },
     editor: {
@@ -482,6 +484,7 @@ function renderProductsTable() {
       orders: { view: true, edit: true, cancel: false, refund: false },
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: true, alerts: false, reports: false },
+      reports: { view: true, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     },
     viewer: {
@@ -490,6 +493,7 @@ function renderProductsTable() {
       orders: { view: true, edit: false, cancel: false, refund: false },
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: false, alerts: false, reports: false },
+      reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     },
     customer: {
@@ -498,6 +502,7 @@ function renderProductsTable() {
       orders: { view: false, edit: false, cancel: false, refund: false },
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: false, update: false, alerts: false, reports: false },
+      reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     }
   };
