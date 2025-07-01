@@ -433,6 +433,9 @@
                                 <div class="sale-price">${salePrice}</div>
                                 ${originalPrice ? `<div class="original-price">${originalPrice}</div>` : ''}
                             </div>
+                            <div class="input-group input-group-sm mb-2">
+                                <input type="number" id="qty-${product.id}" class="form-control quantity-input" min="1" value="1">
+                            </div>
                             <button class="btn btn-danger w-100" onclick="addToCart('${product.id}')">
                                 <i class="fas fa-shopping-cart me-1"></i> ¡Aprovechar Oferta!
                             </button>
@@ -451,10 +454,13 @@
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             
             // Verificar si ya existe
+            const qtyInput = document.getElementById('qty-' + productId);
+            const qty = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
+
             const existingItem = cart.find(item => item.id === productId);
-            
+
             if (existingItem) {
-                existingItem.quantity += 1;
+                existingItem.quantity += qty;
             } else {
                 cart.push({
                     id: product.id,
@@ -462,7 +468,7 @@
                     price: product.price,
                     originalPrice: product.originalPrice,
                     image: product.image || product.imageUrl,
-                    quantity: 1,
+                    quantity: qty,
                     onSale: true
                 });
             }
@@ -474,7 +480,7 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Producto agregado',
-                text: `¡${product.name} agregado al carrito con descuento!`,
+                text: `¡${product.name} agregado al carrito (${qty} uds) con descuento!`,
                 timer: 2000,
                 showConfirmButton: false
             });

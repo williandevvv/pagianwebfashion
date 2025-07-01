@@ -152,6 +152,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
+            updateCartCounter();
         });
 
         async function loadProducts() {
@@ -187,6 +188,9 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${product.name}</h5>
                                     <p class="card-text text-muted">${product.description || ''}</p>
+                                    <div class="input-group input-group-sm mb-2">
+                                        <input type="number" id="qty-${doc.id}" class="form-control quantity-input" min="1" value="1">
+                                    </div>
                                     <button class="btn btn-primary w-100" onclick="addToCart('${doc.id}')">
                                         <i class="fas fa-shopping-cart me-1"></i> Agregar al Carrito
                                     </button>
@@ -206,14 +210,47 @@
         }
 
         function addToCart(productId) {
-            // Implementar lógica del carrito
+            const qtyInput = document.getElementById('qty-' + productId);
+            const qty = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
+
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const product = allProducts.find(p => p.id === productId) || {};
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += qty;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image || product.imageUrl,
+                    quantity: qty
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
             Swal.fire({
                 icon: 'success',
                 title: 'Producto agregado',
-                text: 'Producto agregado al carrito',
+                text: `Producto agregado al carrito (${qty} uds)`,
                 timer: 2000,
                 showConfirmButton: false
             });
+
+            updateCartCounter();
+        }
+
+        function updateCartCounter() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            const cartCounter = document.querySelector('.cart-counter');
+            if (cartCounter) {
+                cartCounter.textContent = totalItems;
+                cartCounter.style.display = totalItems > 0 ? 'inline' : 'none';
+            }
         }
     </script>
 </body>
