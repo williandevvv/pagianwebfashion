@@ -144,13 +144,16 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Firebase Config -->
     <script src="js/firebase-config.js"></script>
     
     <script>
+        let allProducts = [];
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
+            updateCartCounter();
         });
 
         async function loadProducts() {
@@ -167,18 +170,19 @@
                     .where('category', '==', 'Acero')
                     .get();
 
+                allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
                 // Ocultar estado de carga
                 loadingState.style.display = 'none';
 
                 // Renderizar productos
                 let html = '';
-                snapshot.forEach(doc => {
-                    const product = doc.data();
+                allProducts.forEach(product => {
                     html += `
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                             <div class="product-card">
                                 <div class="position-relative">
-                                    <img src="${product.image || 'https://via.placeholder.com/300'}" 
+                                    <img src="${product.image || 'https://via.placeholder.com/300'}"
                                          class="product-img" 
                                          alt="${product.name}">
                                     <div class="price-tag">L.${product.price}</div>
@@ -186,7 +190,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${product.name}</h5>
                                     <p class="card-text text-muted">${product.description || ''}</p>
-                                    <button class="btn btn-primary w-100" onclick="addToCart('${doc.id}')">
+                                    <button class="btn btn-primary w-100" onclick="addToCart('${product.id}')">
                                         <i class="fas fa-shopping-cart me-1"></i> Agregar al Carrito
                                     </button>
                                 </div>
@@ -205,9 +209,49 @@
         }
 
         function addToCart(productId) {
-            // Implementar lógica del carrito
-            alert('Producto agregado al carrito');
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            let cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image || product.imageUrl,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('fashionCart', JSON.stringify(cart));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Producto agregado',
+                text: `${product.name} agregado al carrito`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            updateCartCounter();
         }
+
+        function updateCartCounter() {
+            const cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            const cartCounter = document.querySelector('.cart-counter');
+            if (cartCounter) {
+                cartCounter.textContent = totalItems;
+                cartCounter.style.display = totalItems > 0 ? 'inline' : 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartCounter);
     </script>
 </body>
 </html>

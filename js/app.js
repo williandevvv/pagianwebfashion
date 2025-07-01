@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Cargar datos iniciales
             await loadCategories();
-            await loadFeaturedProducts();
+            loadInspirationGallery();
             
             // Configurar eventos
             setupEventListeners();
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'bisuteria', name: 'Bisutería', image: 'img/bisuteria.jpg', link: 'bisuteria.html' },
             { id: 'maquillaje', name: 'Maquillaje', image: 'img/maquillaje.jpg', link: 'maquillaje.html' },
             { id: 'acero', name: 'Acero', image: 'img/acero.jpg', link: 'acero.html' },
-            { id: 'acrilico', name: 'Acrílico', image: 'img/acrilico.jpeg', link: 'acrilico' },
+            { id: 'acrilico', name: 'Acrílico', image: 'img/acrilico.jpeg', link: 'acrilico.html' },
             { id: 'ofertas', name: 'Ofertas', image: 'img/ofertas.jpeg', link: 'ofertas.html' },
             { id: 'novedades', name: 'Novedades', image: 'img/ofertas.jpeg', link: 'novedades.html' }
         ];
@@ -48,9 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const snapshot = await firebase.firestore().collection('products').get();
         const allProducts = snapshot.docs.map(doc => doc.data());
 
-        // Contar cuántos productos hay por categoría
+        // Normalizar acentos para contar productos por categoría
+        const normalize = str => (str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
         categorias.forEach(cat => {
-            const count = allProducts.filter(p => (p.category || '').toLowerCase() === cat.id).length;
+            const count = allProducts.filter(p => normalize(p.category) === normalize(cat.id)).length;
             cat.productCount = count;
         });
 
@@ -80,98 +81,21 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    // Cargar productos destacados
-    async function loadFeaturedProducts() {
-        const container = document.getElementById('featured-products');
+    // Cargar galería de inspiración
+    function loadInspirationGallery() {
+        const container = document.getElementById('inspiration-gallery');
         if (!container) return;
 
-        try {
-            // Datos demo de productos destacados
-            const featuredProducts = [
-                {
-                    id: 'prod1',
-                    name: 'Collar de Perlas Elegante',
-                    price: 29.99,
-                    originalPrice: 39.99,
-                    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300',
-                    category: 'Bisutería',
-                    rating: 4.5,
-                    inStock: true
-                },
-                {
-                    id: 'prod2',
-                    name: 'Aretes de Acero Inoxidable',
-                    price: 19.99,
-                    image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300',
-                    category: 'Acero',
-                    rating: 4.8,
-                    inStock: true
-                },
-                {
-                    id: 'prod3',
-                    name: 'Set de Maquillaje Profesional',
-                    price: 49.99,
-                    originalPrice: 69.99,
-                    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300',
-                    category: 'Maquillaje',
-                    rating: 4.7,
-                    inStock: true
-                },
-                {
-                    id: 'prod4',
-                    name: 'Pulsera Acrílica Colorida',
-                    price: 15.99,
-                    image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=300',
-                    category: 'Acrílico',
-                    rating: 4.3,
-                    inStock: false
-                }
-            ];
+        const images = [
+            'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400',
+            'https://images.unsplash.com/photo-1520975698515-8297a5b32e0c?w=400',
+            'https://images.unsplash.com/photo-1555529771-35a38fb89fd2?w=400',
+            'https://images.unsplash.com/photo-1562158070-44a94e776d9c?w=400'
+        ];
 
-            products = featuredProducts;
-            renderFeaturedProducts(featuredProducts);
-            
-        } catch (error) {
-            console.error('❌ Error cargando productos destacados:', error);
-        }
-    }
-
-    // Renderizar productos destacados
-    function renderFeaturedProducts(products) {
-        const container = document.getElementById('featured-products');
-        if (!container) return;
-
-        container.innerHTML = products.map(product => `
+        container.innerHTML = images.map(src => `
             <div class="col-md-6 col-lg-3">
-                <div class="card h-100 product-card">
-                    <div class="position-relative">
-                        <img src="${product.image}" class="card-img-top" alt="${product.name}" style="height: 200px; object-fit: cover;">
-                        ${product.originalPrice ? `<span class="badge bg-danger position-absolute top-0 start-0 m-2">Oferta</span>` : ''}
-                        ${!product.inStock ? `<span class="badge bg-secondary position-absolute top-0 end-0 m-2">Agotado</span>` : ''}
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">${product.name}</h5>
-                        <p class="text-muted small">${product.category}</p>
-                        <div class="mb-2">
-                            ${renderStars(product.rating)}
-                            <small class="text-muted">(${product.rating})</small>
-                        </div>
-                        <div class="mt-auto">
-                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                <div>
-                                    <span class="h5 text-primary mb-0">$${product.price}</span>
-                                    ${product.originalPrice ? `<small class="text-muted text-decoration-line-through ms-2">$${product.originalPrice}</small>` : ''}
-                                </div>
-                            </div>
-                            <button class="btn btn-primary w-100 add-to-cart-btn" 
-                                    data-product-id="${product.id}" 
-                                    ${!product.inStock ? 'disabled' : ''}>
-                                <i class="fas fa-shopping-cart me-2"></i>
-                                ${product.inStock ? 'Agregar al Carrito' : 'Agotado'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <img src="${src}" class="img-fluid rounded shadow-sm" alt="Inspiración">
             </div>
         `).join('');
     }

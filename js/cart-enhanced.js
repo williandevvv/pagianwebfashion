@@ -9,7 +9,7 @@ class EnhancedCart {
     // Cargar carrito desde localStorage
     loadCart() {
         try {
-            const cartData = localStorage.getItem('cart');
+            const cartData = localStorage.getItem('fashionCart');
             return cartData ? JSON.parse(cartData) : [];
         } catch (error) {
             console.error('Error cargando carrito:', error);
@@ -20,7 +20,7 @@ class EnhancedCart {
     // Guardar carrito en localStorage
     saveCart() {
         try {
-            localStorage.setItem('cart', JSON.stringify(this.cart));
+            localStorage.setItem('fashionCart', JSON.stringify(this.cart));
             this.updateCartDisplay();
         } catch (error) {
             console.error('Error guardando carrito:', error);
@@ -360,7 +360,7 @@ class EnhancedCart {
     initializeEventListeners() {
         // Escuchar cambios en el localStorage para sincronizar entre pestañas
         window.addEventListener('storage', (e) => {
-            if (e.key === 'cart') {
+            if (e.key === 'fashionCart') {
                 this.cart = this.loadCart();
                 this.updateCartDisplay();
             }
