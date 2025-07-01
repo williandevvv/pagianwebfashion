@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     const productsPerPage = 12;
 
-    // Inicializar si estamos en página de productos
-    if (window.location.pathname.includes('productos.html') || 
-        window.location.pathname.includes('bisuteria.html') ||
-        window.location.pathname.includes('maquillaje.html')) {
+    // Inicializar si estamos en página de productos (soporta rutas sin extensión)
+    const prodPath = window.location.pathname.replace(/\.html$/, '');
+    if (prodPath.includes('productos') ||
+        prodPath.includes('bisuteria') ||
+        prodPath.includes('maquillaje')) {
         initializeProductsPage();
     }
 

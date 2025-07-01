@@ -8,8 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let shipping = 120.00;
     let total = 0;
 
-    // Inicializar si estamos en página de carrito
-    if (window.location.pathname.includes('carrito.html')) {
+    // Inicializar si estamos en página de carrito (soporta rutas sin extensión)
+    const cartPath = window.location.pathname.replace(/\.html$/, '');
+    if (cartPath.includes('carrito')) {
         initializeCart();
     }
 
