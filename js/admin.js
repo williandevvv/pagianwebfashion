@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let orders = [];
   let users = [];
   let productoEnEdicion = null;
+  let currentUserRole = null;
+  let currentPermissions = {};
 
   // Importar módulos de reportes y configuración
   import('./reports.js').then(module => {
@@ -23,54 +25,68 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Configuración en modo offline');
   });
 
-  // Función para verificar acceso de administrador
+  // Función para verificar acceso y establecer permisos
   async function checkAdminAccess() {
     try {
-      // Verificar si Firebase está disponible
       if (typeof firebase !== 'undefined' && firebase.auth) {
-        // Esperar a que Firebase se inicialice
         firebase.auth().onAuthStateChanged(async (user) => {
           if (!user) {
-            // No hay usuario autenticado
             redirectToLogin();
             return;
           }
 
-          // Verificar rol del usuario
           try {
             const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-            const userData = userDoc.data();
-            
-            if (!userData || userData.role !== 'admin') {
-              // Usuario no es administrador
+            const userData = userDoc.data() || {};
+
+            currentUserRole = userData.role || 'customer';
+            currentPermissions = userData.permissions || defaultPermissions[currentUserRole] || {};
+
+            const username = userData.displayName || user.email;
+            const nameEl = document.getElementById('admin-username');
+            if (nameEl) nameEl.textContent = username;
+
+            if (!currentPermissions.dashboard?.view) {
               showUnauthorizedMessage();
               return;
             }
 
-            // Usuario es administrador, continuar cargando el panel
-            console.log('✅ Acceso de administrador verificado');
-            
+            console.log(`✅ Acceso verificado para rol ${currentUserRole}`);
+            applyRolePermissions();
+            loadDataFromFirebase();
+            loadInventoryData();
+            setupAdminEvents();
           } catch (error) {
             console.error('Error verificando rol:', error);
             redirectToLogin();
           }
         });
       } else {
-        // Firebase no disponible, verificar datos offline
         const offlineData = localStorage.getItem('offlineData');
         if (offlineData) {
           try {
             const data = JSON.parse(offlineData);
-            if (data.user && data.user.role === 'admin') {
-              console.log('✅ Acceso de administrador offline verificado');
+            if (data.user) {
+              currentUserRole = data.user.role || 'customer';
+              currentPermissions = defaultPermissions[currentUserRole] || {};
+
+              if (!currentPermissions.dashboard?.view) {
+                showUnauthorizedMessage();
+                return;
+              }
+
+              applyRolePermissions();
+              loadDataFromFirebase();
+              loadInventoryData();
+              setupAdminEvents();
+              console.log('✅ Acceso offline verificado');
               return;
             }
           } catch (error) {
             console.error('Error verificando datos offline:', error);
           }
         }
-        
-        // No hay acceso válido
+
         redirectToLogin();
       }
     } catch (error) {
@@ -426,16 +442,8 @@ function renderProductsTable() {
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-warning editar-producto" data-id="${
-                            product.id
-                        }">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger eliminar-producto" data-id="${
-                            product.id
-                        }">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                        ${hasPermission('products','edit') ? `<button class="btn btn-sm btn-warning editar-producto" data-id="${product.id}"><i class="fas fa-edit"></i></button>` : ''}
+                        ${hasPermission('products','delete') ? `<button class="btn btn-sm btn-danger eliminar-producto" data-id="${product.id}"><i class="fas fa-trash-alt"></i></button>` : ''}
                     </td>
                 </tr>
             `
@@ -486,6 +494,31 @@ function renderProductsTable() {
       settings: { view: false, edit: false, backup: false, system: false }
     }
   };
+
+  function hasPermission(module, action) {
+    return !!currentPermissions?.[module]?.[action];
+  }
+
+  function applyRolePermissions() {
+    const modules = ['dashboard','products','orders','users','inventory','reports','settings'];
+    modules.forEach(m => {
+      const canView = hasPermission(m,'view');
+      const navEl = document.querySelector(`#sidebar [data-section="${m}"]`);
+      if (navEl) navEl.parentElement.style.display = canView ? '' : 'none';
+      const section = document.getElementById(`${m}-section`);
+      if (section && !canView) section.remove();
+    });
+
+    if (!hasPermission('products','create')) {
+      document.querySelector('#products-section [data-bs-target="#addProductModal"]')?.classList.add('d-none');
+    }
+    if (!hasPermission('users','create')) {
+      document.querySelector('[data-bs-target="#addUserModal"]')?.classList.add('d-none');
+    }
+    if (!hasPermission('users','roles')) {
+      document.querySelector('[data-bs-target="#rolesPermissionsModal"]')?.classList.add('d-none');
+    }
+  }
 
 function renderUsersTable() {
     const container = document.querySelector("#users-table tbody");
@@ -563,18 +596,10 @@ function renderUsersTable() {
                         <td>${user.lastAccess ? new Date(user.lastAccess.seconds * 1000).toLocaleDateString() : 'Nunca'}</td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')" title="Editar">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning cambiar-rol" data-id="${user.id}" data-rol="${user.role || ''}" title="Cambiar Rol">
-                                    <i class="fas fa-user-tag"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info" onclick="editUserPermissions('${user.id}')" title="Permisos">
-                                    <i class="fas fa-key"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')" title="Eliminar">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                ${hasPermission('users','edit') ? `<button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')" title="Editar"><i class="fas fa-edit"></i></button>` : ''}
+                                ${hasPermission('users','roles') ? `<button class="btn btn-sm btn-outline-warning cambiar-rol" data-id="${user.id}" data-rol="${user.role || ''}" title="Cambiar Rol"><i class="fas fa-user-tag"></i></button>` : ''}
+                                ${hasPermission('users','permissions') ? `<button class="btn btn-sm btn-outline-info" onclick="editUserPermissions('${user.id}')" title="Permisos"><i class="fas fa-key"></i></button>` : ''}
+                                ${hasPermission('users','delete') ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>` : ''}
                             </div>
                         </td>
                     </tr>
@@ -817,9 +842,8 @@ function renderUsersTable() {
                     </td>
                     <td>
                         ${
-                          estado === "pending" || estado === "pendiente"
-                            ? `
-                        <button class="btn btn-sm btn-success marcar-enviado" data-id="${order.id}">Marcar Enviado</button>`
+                          (estado === "pending" || estado === "pendiente") && hasPermission('orders','edit')
+                            ? `<button class="btn btn-sm btn-success marcar-enviado" data-id="${order.id}">Marcar Enviado</button>`
                             : ""
                         }
                     </td>
@@ -1929,8 +1953,5 @@ function renderUsersTable() {
     }
   }
 
-  // Inicializar
-  loadDataFromFirebase();
-  loadInventoryData();
-  setupAdminEvents();
+  // Inicialización se realiza tras validar permisos en checkAdminAccess
 });
