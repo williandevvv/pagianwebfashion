@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Fashion Collection</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+    <!-- Google Fonts: Para un toque más estético y moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos Generales */
+        body {
+            /* Fondo con degradado suave y tonos pastel/neutros */
+            background: linear-gradient(135deg, #f0e6ef, #e0eafc, #f5f5dc); /* Tonos lavanda, azul cielo suave, beige claro */
+            font-family: 'Open Sans', sans-serif; /* Fuente limpia y legible */
+            color: #4a4a4a; /* Texto gris oscuro suave */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Efecto de patrón sutil en el fondo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23dcdcdc" fill-opacity="0.2"%3E%3Ccircle cx="50" cy="50" r="30"/%3E%3C/g%3E%3C/svg%3E'); /* Círculos sutiles */
+            background-size: 100px 100px;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        /* Estilos del Encabezado */
+        .header {
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+            color: #4a4a4a;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra suave */
+            padding: 1.2rem 0;
+            border-bottom: 2px solid #d8bfd8; /* Borde inferior lavanda suave */
+            backdrop-filter: blur(10px); /* Efecto de desenfoque para un look "cristal" */
+        }
+
+        .header .navbar-brand h1 {
+            font-family: 'Playfair Display', serif; /* Fuente elegante para el título */
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #6a5acd; /* Tono morado medio */
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Contenedor de Autenticación */
+        .auth-container {
+            max-width: 450px;
+            margin: 3rem auto;
+            padding: 2.8rem;
+            background: rgba(255, 255, 255, 0.95); /* Fondo casi blanco, ligeramente transparente */
+            border-radius: 15px; /* Bordes suaves */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Sombra más definida */
+            animation: fadeInSlide 1s ease-out forwards; /* Animación de entrada */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(220, 220, 220, 0.8); /* Borde muy sutil */
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Encabezado del Formulario de Autenticación */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-header img {
+            width: 120px;
+            margin-bottom: 1.5rem;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(106, 90, 205, 0.4); /* Brillo morado suave */
+            border: 4px solid #d8bfd8; /* Borde lavanda */
+            transition: transform 0.4s ease;
+        }
+
+        .auth-header img:hover {
+            transform: scale(1.05); /* Zoom sutil */
+        }
+
+        .auth-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: #6a5acd; /* Título morado medio */
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            font-size: 2rem;
+        }
+
+        .auth-header p {
+            color: #777; /* Texto gris medio */
+            font-size: 1rem;
+        }
+
+        /* Estilos de los Campos de Formulario */
+        .form-label {
+            font-weight: 600;
+            color: #555; /* Etiquetas gris oscuro */
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            border-radius: 8px; /* Bordes suaves */
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+            padding: 0.9rem;
+            font-size: 1rem;
+            background-color: #fdfdfd; /* Fondo casi blanco */
+            color: #4a4a4a;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+        }
+
+        .form-control::placeholder {
+            color: #aaa; /* Placeholder gris claro */
+        }
+
+        .form-control:focus {
+            border-color: #d8bfd8; /* Borde lavanda al enfocar */
+            box-shadow: 0 0 0 0.25rem rgba(216, 191, 216, 0.4); /* Sombra lavanda al enfocar */
+            background-color: #ffffff;
+        }
+
+        /* Estilos para Input Group con Iconos */
+        .input-group-text {
+            background-color: #f0f0f0; /* Fondo gris muy claro para el icono */
+            border: 1px solid #dcdcdc;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            padding: 0.9rem 1.1rem;
+            color: #6a5acd; /* Icono morado */
+            font-size: 1.1rem;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Estilos del Botón Principal */
+        .btn-primary {
+            background: linear-gradient(45deg, #d8bfd8, #b0c4de); /* Degradado lavanda a azul suave */
+            border: none;
+            border-radius: 25px; /* Más redondeado */
+            padding: 0.9rem 2.2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(180, 196, 222, 0.4); /* Sombra suave */
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #4a4a4a; /* Texto oscuro para contraste */
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #b0c4de, #d8bfd8); /* Invertir degradado al hover */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(180, 196, 222, 0.6);
+        }
+
+        /* Pie de Página de Autenticación */
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid #eee; /* Borde sólido más claro */
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .auth-footer a {
+            color: #6a5acd; /* Enlaces morado medio */
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .auth-footer a:hover {
+            color: #483d8b; /* Morado más oscuro al hover */
+            text-decoration: underline;
+        }
+
+        /* Login Social */
+        .social-login {
+            margin: 2rem 0;
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
+            border: 1px solid #dcdcdc;
+            border-radius: 25px;
+            background: #ffffff; /* Fondo blanco */
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            font-size: 1rem;
+            color: #4a4a4a;
+        }
+
+        .social-btn:hover {
+            background: #f5f5f5; /* Fondo ligeramente gris al hover */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+        }
+
+        .social-btn i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .google-btn {
+            color: #ea4335;
+            border-color: #ea4335;
+        }
+
+        .google-btn:hover {
+            background-color: #ea4335;
+            color: white;
+        }
+
+        .facebook-btn {
+            color: #1877f2;
+            border-color: #1877f2;
+        }
+
+        .facebook-btn:hover {
+            background-color: #1877f2;
+            color: white;
+        }
+
+        /* Divisor "O continúa con" */
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background-color: #dcdcdc;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .divider span {
+            background-color: #ffffff; /* Fondo del span para que coincida con el contenedor */
+            padding: 0 1.2rem;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* Estilos para SweetAlert2 */
+        .swal2-popup {
+            border-radius: 10px !important;
+            background: #ffffff !important;
+            color: #4a4a4a !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+            border: 1px solid #dcdcdc !important;
+        }
+
+        .swal2-title {
+            color: #6a5acd !important;
+            font-weight: 700 !important;
+        }
+
+        .swal2-html-container {
+            color: #555 !important;
+        }
+
+        .swal2-confirm.btn-primary {
+            background: linear-gradient(45deg, #d8bfd8, #b0c4de) !important;
+            border: none !important;
+            color: #4a4a4a !important;
+            box-shadow: 0 3px 10px rgba(180, 196, 222, 0.4) !important;
+        }
+
+        .swal2-cancel.btn-secondary {
+            background-color: #e0e0e0 !important;
+            border-color: #e0e0e0 !important;
+            color: #4a4a4a !important;
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            .auth-container {
+                margin: 2rem 1rem;
+                padding: 2rem;
+            }
+            .header .navbar-brand h1 {
+                font-size: 1.5rem;
+            }
+            .auth-header h2 {
+                font-size: 1.8rem;
+            }
+            .auth-header img {
+                width: 100px;
+            }
+            .form-control, .social-btn, .btn-primary {
+                font-size: 0.95rem;
+                padding: 0.8rem;
+            }
+            .input-group-text {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 1.5rem;
+            }
+            .auth-header h2 {
+                font-size: 1.6rem;
+            }
+            .auth-header p {
+                font-size: 0.85rem;
+            }
+            .divider span {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="index.html">
+                    <h1 class="h4 mb-0">Fashion Collection</h1>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container d-flex flex-grow-1 align-items-center justify-content-center">
+        <!-- Contenedor de Inicio de Sesión -->
+        <div class="auth-container">
+            <div class="auth-header">
+                <img src="img/LOGOFS.png" alt="Logo" onerror="this.src='...'">
+                <h2>Bienvenida a tu Fashion</h2>
+                <p class="text-muted">Inicia sesión para descubrir tu belleza</p>
+            </div>
+
+            <!-- Formulario de Inicio de Sesión -->
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="login-email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="login-email" placeholder="tu.email@gmail.com" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="login-password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="login-password" placeholder="********" required>
+                    </div>
+                </div>
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember-me">
+                    <label class="form-check-label" for="remember-me">Recordarme</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                </button>
+            </form>
+
+            <!-- Login Social -->
+            <div class="social-login">
+                <div class="divider">
+                    <span>O continúa con</span>
+                </div>
+                <button class="social-btn google-btn mb-2 google-login-btn">
+                    <i class="fab fa-google"></i>Continuar con Google
+                </button>
+                <button class="social-btn facebook-btn">
+                    <i class="fab fa-facebook-f"></i>Continuar con Facebook
+                </button>
+            </div>
+
+            <!-- Pie de Página de Autenticación -->
+            <div class="auth-footer">
+                <p class="mb-0">¿Aún no tienes cuenta? <a href="#" id="show-register">Regístrate y crea tu cuenta</a></p>
+                <a href="#" class="d-block mt-2 small" id="forgot-password">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+
+        <!-- Contenedor de Registro (Oculto por defecto) -->
+        <div class="auth-container d-none" id="register-container">
+            <div class="auth-header">
+                <img src="img/LOGOFS.png" alt="Logo" onerror="this.src='...'">
+                <h2>Crea tu Cuenta</h2>
+                <p class="text-muted">Únete a la comunidad de belleza</p>
+            </div>
+
+            <form id="register-form">
+                <div class="mb-3">
+                    <label for="register-name" class="form-label">Nombre Completo</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="register-name" placeholder="Tu Nombre y Apellido" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="register-email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="register-email" placeholder="tu.email@gmail.com" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="register-password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="register-password" placeholder="Crea una contraseña segura" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="register-confirm-password" class="form-label">Confirmar Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="register-confirm" placeholder="Confirma tu contraseña" required>
+                    </div>
+                </div>
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" required>
+                    <label class="form-check-label" for="terms">
+                        Acepto los <a href="#">Términos y Condiciones</a>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-user-plus me-2"></i>Crear Cuenta
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="mb-0">¿Ya tienes una cuenta? <a href="#" id="show-login">Inicia Sesión</a></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contenedor de Toast (Notificaciones) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast-notification" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Firebase SDK (asegúrate de tener tus archivos firebase-config.js y auth.js) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginContainer = document.querySelector('.auth-container:not(#register-container)');
+            const registerContainer = document.querySelector('#register-container');
+            const showRegisterBtn = document.querySelector('#show-register');
+            const showLoginBtn = document.querySelector('#show-login');
+
+            // Alternar entre formularios de inicio de sesión y registro
+            showRegisterBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginContainer.classList.add('d-none');
+                registerContainer.classList.remove('d-none');
+            });
+
+            showLoginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerContainer.classList.add('d-none');
+                loginContainer.classList.remove('d-none');
+            });
+
+            // Manejar la funcionalidad de "Olvidé mi contraseña"
+            const forgotPasswordBtn = document.querySelector('#forgot-password');
+            forgotPasswordBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                const { value: email } = await Swal.fire({
+                    title: 'Recuperar Contraseña',
+                    input: 'email',
+                    inputLabel: 'Tu dirección de email',
+                    inputPlaceholder: 'Ingresa tu email',
+                    showCancelButton: true,
+                    confirmButtonText: 'Enviar',
+                    cancelButtonText: 'Cancelar',
+                    validationMessage: 'Debe ser un email válido',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary'
+                    },
+                    buttonsStyling: false
+                });
+
+                if (email) {
+                    try {
+                        // Asumiendo que firebase.auth() está inicializado en firebase-config.js
+                        await firebase.auth().sendPasswordResetEmail(email);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Email Enviado',
+                            text: 'Revisa tu bandeja de entrada para restablecer tu contraseña',
+                            customClass: {
+                                confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo enviar el email de recuperación. Verifica la dirección e intenta nuevamente.',
+                            customClass: {
+                                confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

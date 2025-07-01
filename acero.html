@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acero - Fashion Collection</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <style>
+        :root {
+            --primary-color: #6f42c1;
+            --secondary-color: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #6f42c1, #4a2d84);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card {
+            transition: all 0.3s;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .product-img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        .price-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .navbar {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="fas fa-gem me-2" style="color: var(--primary-color);"></i>Fashion Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bisuteria.html">Bisutería</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="maquillaje.html">Maquillaje</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="acero.html">Acero</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="acrilico.html">Acrílico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ofertas.html">Ofertas</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-primary" href="carrito.html">
+                            <i class="fas fa-shopping-cart me-1"></i> Carrito
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Acero Inoxidable</h1>
+            <p class="lead">Descubre nuestra colección de joyería en acero inoxidable</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Filter Controls -->
+        <div class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar productos...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="sortSelect">
+                        <option value="newest">Más recientes</option>
+                        <option value="price-asc">Precio: menor a mayor</option>
+                        <option value="price-desc">Precio: mayor a menor</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row" id="productsGrid">
+            <!-- Products will be loaded here -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+        });
+
+        async function loadProducts() {
+            try {
+                const productsGrid = document.getElementById('productsGrid');
+                const loadingState = document.getElementById('loadingState');
+
+                // Mostrar estado de carga
+                loadingState.style.display = 'block';
+
+                // Obtener productos de Firebase
+                const snapshot = await firebase.firestore()
+                    .collection('products')
+                    .where('category', '==', 'Acero')
+                    .get();
+
+                // Ocultar estado de carga
+                loadingState.style.display = 'none';
+
+                // Renderizar productos
+                let html = '';
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    html += `
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="product-card">
+                                <div class="position-relative">
+                                    <img src="${product.image || 'https://via.placeholder.com/300'}" 
+                                         class="product-img" 
+                                         alt="${product.name}">
+                                    <div class="price-tag">L.${product.price}</div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">${product.name}</h5>
+                                    <p class="card-text text-muted">${product.description || ''}</p>
+                                    <button class="btn btn-primary w-100" onclick="addToCart('${doc.id}')">
+                                        <i class="fas fa-shopping-cart me-1"></i> Agregar al Carrito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                productsGrid.innerHTML = html || '<div class="col-12 text-center py-5">No se encontraron productos</div>';
+
+            } catch (error) {
+                console.error('Error cargando productos:', error);
+                document.getElementById('productsGrid').innerHTML = 
+                    '<div class="col-12 text-center py-5">Error cargando productos</div>';
+            }
+        }
+
+        function addToCart(productId) {
+            // Implementar lógica del carrito
+            alert('Producto agregado al carrito');
+        }
+    </script>
+</body>
+</html>

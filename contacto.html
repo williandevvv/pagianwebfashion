@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Fashion Collection</title>
+    <link rel="stylesheet" href="css/...">
+    <style>
+     :root {
+    --primary: #ff6a3e;
+    --primaryLight: #ffba43;
+    --secondary: #ffba43;
+    --secondaryLight: #ffba43;
+    --headerColor: #1a1a1a;
+    --bodyTextColor: #4e4b66;
+    --bodyTextColorWhite: #fafbfc;
+    --topperFontSize: clamp(0.8125rem, 1.6vw, 1rem);
+    --headerFontSize: clamp(1.9375rem, 3.9vw, 3.0625rem);
+    --bodyFontSize: 1rem; 
+    --sectionPadding: clamp(3.75rem, 7.82vw, 6.25rem) 1rem;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+*, *:before, *:after {  
+    box-sizing: border-box;
+}
+
+.cs-topper {
+    font-size: var(--topperFontSize);
+    line-height: 1.2em;
+    text-transform: uppercase;
+    text-align: inherit;
+    letter-spacing: .1em;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.cs-title {
+    font-size: var(--headerFontSize);
+    font-weight: 900;
+    line-height: 1.2em;
+    text-align: inherit;
+    max-width: 43.75rem;
+    margin: 0 0 1rem 0;
+    color: var(--headerColor);
+    position: relative;
+}
+
+.cs-text {
+    font-size: var(--bodyFontSize);
+    line-height: 1.5em;
+    text-align: inherit;
+    width: 100%;
+    max-width: 40.625rem;
+    margin: 0;
+    color: var(--bodyTextColor);
+}
+@media only screen and (min-width: 0rem) {
+  #contact-1750 {
+    padding: var(--sectionPadding);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+  #contact-1750 .cs-container {
+    width: 100%;
+    max-width: 44rem;
+    margin: auto;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: clamp(3rem, 5vw, 4rem);
+  }
+  #contact-1750 .cs-content {
+    text-align: left;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #contact-1750 .cs-form-group {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #contact-1750 .cs-title {
+    margin: 0 0 1.5rem;
+  }
+  #contact-1750 .cs-form {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+  }
+  #contact-1750 .cs-label {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2em;
+    color: var(--headerColor);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    grid-column: span 12;
+    gap: 0.5rem;
+  }
+  #contact-1750 .cs-input {
+    font-size: 1rem;
+    width: 100%;
+    height: clamp(2.875rem, 4.5vw, 3.5rem);
+    box-sizing: border-box;
+    padding: 0;
+    padding-left: 1.5rem;
+    background-color: #f7f7f7;
+    color: var(--headerColor);
+    border: none;
+  }
+  #contact-1750 .cs-input::placeholder {
+    color: var(--bodyTextColor);
+  }
+  #contact-1750 .cs-textarea {
+    font-family: inherit;
+    min-height: 7.5rem;
+    padding-top: 1.5rem;
+  }
+  #contact-1750 .cs-button-solid {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: clamp(2.875em, 5.5vw, 3.5em);
+    text-align: center;
+    text-decoration: none;
+    min-width: 9.375rem;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0 1.5rem;
+    background-color: var(--primary);
+    overflow: hidden;
+    color: #1a1a1a;
+    border: none;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s;
+  }
+  #contact-1750 .cs-button-solid:before {
+    content: "";
+    width: 0%;
+    height: 100%;
+    background: #000;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: width 0.3s;
+  }
+  #contact-1750 .cs-button-solid:hover {
+    color: #ffffff;
+  }
+  #contact-1750 .cs-button-solid:hover:before {
+    width: 100%;
+  }
+  #contact-1750 .cs-submit {
+    margin: 1rem 0 0;
+    color: var(--bodyTextColorWhite);
+    grid-column: span 12;
+    justify-self: flex-start;
+  }
+  #contact-1750 .cs-submit:hover {
+    cursor: pointer;
+  }
+  #contact-1750 .cs-info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  #contact-1750 .cs-detail {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2em;
+    color: var(--bodyTextColor);
+    display: block;
+  }
+  #contact-1750 .cs-picture-group {
+    width: 110%;
+    height: 100vw;
+    max-height: 31.375rem;
+    margin-top: 3rem;
+    overflow: hidden;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  #contact-1750 .cs-iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding-right: 500px;
+  }
+  #contact-1750 .cs-graphic {
+    width: 100%;
+    min-width: 80rem;
+    height: auto;
+    object-fit: cover;
+    position: absolute;
+    left: 50%;
+    z-index: 0;
+    transform: translateX(-50%);
+  }
+  #contact-1750 .cs-top {
+    top: 0;
+  }
+  #contact-1750 .cs-left {
+    left: 4%;
+    transform: rotate(270deg);
+    transform-origin: left;
+  }
+  #contact-1750 .cs-bottom {
+    bottom: 0;
+    left: 0;
+    transform: rotateX(180deg);
+  }
+
+}
+@media only screen and (min-width: 48rem) {
+  #contact-1750 {
+    flex: 1;
+  }
+  #contact-1750 .cs-container {
+    flex-direction: row;
+    align-items: center;
+  }
+  #contact-1750 .cs-form-group {
+    flex: 1;
+  }
+  #contact-1750 .cs-info-group {
+    flex: 1;
+  }
+}
+@media only screen and (min-width: 64rem) {
+  #contact-1750 .cs-container {
+    width: 65%;
+    max-width: 64rem;
+    margin: 0 auto 0 0;
+    padding: 2.5rem 1.5rem;
+  }
+  #contact-1750 .cs-picture-group {
+    width: 90%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: -1;
+    transform: none;
+  }
+  #contact-1750 .cs-picture-group {
+    margin-left: -12.75rem;
+    left: 50%;
+  }
+}
+@media only screen and (min-width: 81.25rem) {
+  #contact-1750 .cs-label:nth-of-type(2),
+  #contact-1750 .cs-label:nth-of-type(3) {
+    grid-column: span 6;
+  }
+}
+@media only screen and (min-width: 120rem) {
+  #contact-1750 {
+    padding-top: 7vw;
+    padding-bottom: 9vw;
+  }
+  #contact-1750 .cs-container {
+    margin: 0 auto;
+    transform: translateX(-22rem);
+  }
+}
+                                
+
+    </style>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!--                   Contacto                  -->
+<!-- ============================================ -->
+
+<section id="contact-1750">
+    <div class="cs-container">
+        <div class="cs-form-group">
+            <div class="cs-content">
+              <a href="index.html" style="text-decoration: none;">
+                <span class="cs-topper" >Fashion Collection</span>
+              </a>
+                <h2 class="cs-title">Contacto</h2>
+              
+            </div>
+            <form class="cs-form" id="cs-form-1750" name="Contact Form" method="post">
+                <label class="cs-label">
+                    Nombre *
+                    <input class="cs-input" required type="text" id="name-1750" name="name" placeholder="Tu Nombre">
+                </label>
+                <label class="cs-label cs-email">
+                    Correo electronico *
+                    <input class="cs-input" required type="email" id="email-1750" name="email" placeholder="nombre@gmail.com">
+                </label>
+                <label class="cs-label cs-phone">
+                    Telefono *
+                    <input class="cs-input" required type="phone" id="phone-1750" name="phone" placeholder="+504 1122-3344">
+                </label>
+                <label class="cs-label">
+                    Mensaje *
+                    <textarea class="cs-input cs-textarea" required name="Message" id="message-1750" placeholder="Hola, Me interesa..."></textarea>
+                </label>
+                <button class="cs-button-solid cs-submit" type="submit">Enviar mensaje</button>
+            </form>
+        </div>
+        <div class="cs-info-group">
+            <div class="cs-info">
+                <span class="cs-topper">Ubicacion</span>
+                <span class="cs-detail">5ta avenida 6ta calle Barrio el centro<br>San Pedro Sula, Cortes</span>
+            </div>
+            <div class="cs-info">
+                <span class="cs-topper">Nuestros horarios</span>
+                <span class="cs-detail">Lunes - Sabado: 08:00 am - 05:30 pm</span>
+                <span class="cs-detail">Domingo: CERRADO</span>
+            </div>
+            <div class="cs-info">
+                <span class="cs-topper">Contacto</span>
+                <span class="cs-detail">N: +504 0000-0000</span>
+                <span class="cs-detail">E: fashion@collection.com</span>
+                <span class="cs-detail">IG: @fashionCollectionhn</span>
+                <span class="cs-detail">TK: @fashionCollectionhn</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="cs-picture-group">
+        <iframe class="cs-iframe" src="https://maps.google.com/maps?q=Fashion+Collection+5ta+Avenida+Barrio+Lempira+6Calle%2C+5+Avenida+S%2C+21104+San+Pedro+Sula%2C+Cort%C3%A9s&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://textcaseconvert.com/"></a><br><a href="https://www.time-date.net"></a>
+
+        <img class="cs-graphic cs-top cs-light" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Graphics/gym-hero-shape-top-light.svg" alt="graphic" height="161" width="1920" loading="lazy" decoding="async" >
+        <img class="cs-graphic cs-left cs-light" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Graphics/gym-hero-shape-top-light.svg" alt="graphic" height="161" width="1920" loading="lazy" decoding="async" >
+        <img class="cs-graphic cs-bottom cs-light" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Graphics/gym-hero-shape-top-light.svg" alt="graphic" height="161" width="1920" loading="lazy" decoding="async" >
+
+ 
+    </div>
+
+</section>
+                                
+</body>
+</html>
+

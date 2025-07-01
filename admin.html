@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administración - Fashion Collection</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
+    <!-- SweetAlert2 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css"
+      rel="stylesheet"
+    />
+    <!-- Chart.js -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css"
+    />
+    <style>
+      :root {
+        --sidebar-width: 250px;
+      }
+
+      body {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      /* Sidebar Styles */
+      #sidebar {
+        width: var(--sidebar-width);
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        background: #000;
+        color: white;
+        transition: all 0.3s;
+        z-index: 1000;
+      }
+
+      #sidebar.active {
+        margin-left: calc(-1 * var(--sidebar-width));
+      }
+
+      #sidebar .sidebar-header {
+        padding: 20px;
+        background: #000;
+      }
+
+      #sidebar ul.components {
+        padding: 20px 0;
+      }
+
+      #sidebar ul li a {
+        padding: 15px 20px;
+        display: block;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+
+      #sidebar ul li a:hover,
+      #sidebar ul li a.active {
+        background: #6a0dad;
+      }
+
+      #sidebar ul li a i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+      }
+
+      /* Content Styles */
+      #content {
+        width: calc(100% - var(--sidebar-width));
+        margin-left: var(--sidebar-width);
+        transition: all 0.3s;
+        padding: 20px;
+      }
+
+      #content.active {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      /* Card Styles */
+      .stats-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+      }
+
+      .stats-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stats-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+
+      /* Chart Styles */
+      .chart-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      /* Table Styles */
+      .table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .table th {
+        font-weight: 600;
+        background-color: #f8f9fa;
+      }
+
+      /* Form Styles */
+      .form-control {
+        border-radius: 8px;
+        border: 2px solid #eee;
+      }
+
+      .form-control:focus {
+        border-color: #6a0dad;
+        box-shadow: 0 0 0 0.2rem rgba(106, 13, 173, 0.25);
+      }
+
+      /* Button Styles */
+      .btn-primary {
+        background-color: #6a0dad;
+        border: none;
+      }
+
+      .btn-primary:hover {
+        background-color: #5a0cb0;
+      }
+
+      /* Status Badge Styles */
+      .status-badge {
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        #sidebar {
+          margin-left: calc(-1 * var(--sidebar-width));
+        }
+        #sidebar.active {
+          margin-left: 0;
+        }
+        #content {
+          width: 100%;
+          margin-left: 0;
+        }
+        #content.active {
+          margin-left: var(--sidebar-width);
+          width: calc(100% - var(--sidebar-width));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h3 class="mb-0">Fashion Collection</h3>
+      </div>
+
+      <ul class="list-unstyled components">
+        <li>
+          <a href="#" class="nav-link active" data-section="dashboard">
+            <i class="fas fa-chart-line"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="products">
+            <i class="fas fa-box"></i> Productos
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="orders">
+            <i class="fas fa-shopping-bag"></i> Pedidos
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="users">
+            <i class="fas fa-users"></i> Usuarios
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="inventory">
+            <i class="fas fa-warehouse"></i> Inventario
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="reports">
+            <i class="fas fa-file-alt"></i> Reportes
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="settings">
+            <i class="fas fa-cog"></i> Configuración
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-danger" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Content -->
+    <div id="content">
+      <!-- Navbar -->
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-white rounded-3 mb-4 shadow-sm"
+      >
+        <div class="container-fluid">
+          <button type="button" id="sidebarToggle" class="btn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="ms-3">
+            <h5 class="mb-0" id="section-title">Dashboard</h5>
+          </div>
+          <div class="ms-auto d-flex align-items-center">
+            <div class="dropdown">
+              <button
+                class="btn btn-link text-dark text-decoration-none dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="fas fa-user-circle me-1"></i>
+                <span id="admin-username">Admin</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="#"
+                    ><i class="fas fa-user me-2"></i>Perfil</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    ><i class="fas fa-cog me-2"></i>Configuración</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <button class="dropdown-item text-danger" id="nav-logout-btn">
+                    <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard-section" class="admin-section">
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="stats-card card">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="stats-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <div class="ms-3">
+                    <h6 class="mb-1 text-muted">Pedidos Hoy</h6>
+                    <h3 class="mb-0" id="ordersToday">0</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="stats-card card">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="stats-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                  <div class="ms-3">
+                    <h6 class="mb-1 text-muted">Stock Bajo</h6>
+                    <h3 class="mb-0" id="productsLowStock">0</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="stats-card card">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="stats-icon bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="ms-3">
+                    <h6 class="mb-1 text-muted">Nuevos Usuarios</h6>
+                    <h3 class="mb-0" id="newUsers">0</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="stats-card card">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="stats-icon bg-info bg-opacity-10 text-info">
+                    <i class="fas fa-dollar-sign"></i>
+                  </div>
+                  <div class="ms-3">
+                    <h6 class="mb-1 text-muted">Ventas del Mes</h6>
+                    <h3 class="mb-0" id="monthlyRevenue">L0</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Recent Orders -->
+        <div class="table-container">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Pedidos Recientes</h5>
+            <a href="#" class="btn btn-primary btn-sm" data-section="orders">
+              Ver Todos <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="recentOrdersTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Fecha</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Orders will be dynamically loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products Section -->
+      <section id="products-section" class="admin-section d-none">
+        <div class="table-container">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Gestión de Productos</h5>
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addProductModal"
+            >
+              <i class="fas fa-plus me-1"></i> Nuevo Producto
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="products-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th>Stock</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Products will be dynamically loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Section -->
+      <section id="orders-section" class="admin-section d-none">
+        <div class="table-container">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Gestión de Pedidos</h5>
+            <div class="btn-group">
+              <button
+                class="btn btn-outline-primary order-filter"
+                data-period="today"
+              >
+                Hoy
+              </button>
+              <button
+                class="btn btn-outline-primary order-filter"
+                data-period="week"
+              >
+                Esta Semana
+              </button>
+              <button
+                class="btn btn-outline-primary order-filter"
+                data-period="month"
+              >
+                Este Mes
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="orders-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Fecha</th>
+                  <th>Productos</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Orders will be dynamically loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Users Section -->
+      <section id="users-section" class="admin-section d-none">
+        <div class="table-container">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Gestión de Usuarios y Permisos</h5>
+            <div class="btn-group">
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="fas fa-user-plus me-1"></i> Nuevo Usuario
+              </button>
+              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#rolesPermissionsModal">
+                <i class="fas fa-shield-alt me-1"></i> Gestionar Roles
+              </button>
+            </div>
+          </div>
+          
+          <!-- Filtros de usuarios -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <select class="form-select" id="filterRole">
+                <option value="">Todos los roles</option>
+                <option value="admin">Administradores</option>
+                <option value="moderator">Moderadores</option>
+                <option value="editor">Editores</option>
+                <option value="viewer">Visualizadores</option>
+                <option value="customer">Clientes</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" id="filterStatus">
+                <option value="">Todos los estados</option>
+                <option value="active">Activos</option>
+                <option value="inactive">Inactivos</option>
+                <option value="suspended">Suspendidos</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" id="searchUsers" placeholder="Buscar por nombre o email...">
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" id="users-table">
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" id="selectAllUsers" class="form-check-input">
+                  </th>
+                  <th>Avatar</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Permisos</th>
+                  <th>Estado</th>
+                  <th>Último Acceso</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Users will be dynamically loaded here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Acciones masivas -->
+          <div class="mt-3" id="bulkActions" style="display: none;">
+            <div class="alert alert-info">
+              <span id="selectedCount">0</span> usuarios seleccionados
+              <div class="btn-group ms-3">
+                <button class="btn btn-sm btn-warning" onclick="bulkChangeRole()">
+                  <i class="fas fa-user-tag me-1"></i> Cambiar Rol
+                </button>
+                <button class="btn btn-sm btn-success" onclick="bulkActivateUsers()">
+                  <i class="fas fa-check me-1"></i> Activar
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="bulkSuspendUsers()">
+                  <i class="fas fa-ban me-1"></i> Suspender
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="bulkDeleteUsers()">
+                  <i class="fas fa-trash me-1"></i> Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inventory Section -->
+      <section id="inventory-section" class="admin-section d-none">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="chart-container">
+              <h5 class="mb-4">Estado del Inventario</h5>
+              <canvas id="inventoryChart"></canvas>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="table-container">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4"
+              >
+                <h5 class="mb-0">Control de Inventario</h5>
+                <div class="btn-group">
+                  <button
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addStockModal"
+                  >
+                    <i class="fas fa-plus me-1"></i> Agregar Stock
+                  </button>
+                  <button class="btn btn-info" onclick="generateExcelReport('inventory')">
+                    <i class="fas fa-file-excel me-1"></i> Exportar
+                  </button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table" id="inventory-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Producto</th>
+                      <th>Stock Actual</th>
+                      <th>Stock Mínimo</th>
+                      <th>Última Actualización</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Inventory will be dynamically loaded here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reports Section -->
+      <section id="reports-section" class="admin-section d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Reportes y Análisis</h2>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="refreshReports()">
+              <i class="fas fa-sync-alt me-1"></i>Actualizar
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Reportes de Exportación -->
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5><i class="fas fa-download me-2"></i>Exportar Reportes</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-grid gap-2">
+                  <button class="btn btn-outline-success" onclick="generateExcelReport('inventory')">
+                    <i class="fas fa-boxes me-2"></i>Reporte de Inventario
+                  </button>
+                  <button class="btn btn-outline-primary" onclick="generateExcelReport('sales')">
+                    <i class="fas fa-chart-line me-2"></i>Reporte de Ventas
+                  </button>
+                  <button class="btn btn-outline-info" onclick="generateExcelReport('products')">
+                    <i class="fas fa-shopping-bag me-2"></i>Reporte de Productos
+                  </button>
+                  <button class="btn btn-outline-warning" onclick="generateExcelReport('users')">
+                    <i class="fas fa-users me-2"></i>Reporte de Usuarios
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estadísticas Rápidas -->
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5><i class="fas fa-chart-bar me-2"></i>Estadísticas Rápidas</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-6 mb-3">
+                    <div class="border rounded p-3">
+                      <h4 class="text-primary" id="totalProducts">0</h4>
+                      <small class="text-muted">Total Productos</small>
+                    </div>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <div class="border rounded p-3">
+                      <h4 class="text-success" id="totalOrders">0</h4>
+                      <small class="text-muted">Total Pedidos</small>
+                    </div>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <div class="border rounded p-3">
+                      <h4 class="text-info" id="totalUsers">0</h4>
+                      <small class="text-muted">Total Usuarios</small>
+                    </div>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <div class="border rounded p-3">
+                      <h4 class="text-warning" id="lowStockCount">0</h4>
+                      <small class="text-muted">Stock Bajo</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos y Análisis -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="fas fa-chart-pie me-2"></i>Análisis de Ventas</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <canvas id="salesChart" width="400" height="200"></canvas>
+                  </div>
+                  <div class="col-md-6">
+                    <canvas id="categoryChart" width="400" height="200"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings-section" class="admin-section d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>Configuración del Sistema</h2>
+          <div class="btn-group">
+            <button class="btn btn-success" onclick="systemSettings.saveSettings()">
+              <i class="fas fa-save me-1"></i>Guardar Todo
+            </button>
+          </div>
+        </div>
+
+        <div id="settings-content">
+          <!-- El contenido se cargará dinámicamente desde settings.js -->
+        </div>
+      </section>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Nuevo Producto</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="addProductForm">
+              <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="name" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select class="form-select" name="category" required>
+                  <option value="Bisutería">Bisutería</option>
+                  <option value="Maquillaje">Maquillaje</option>
+                  <option value="Acero">Acero</option>
+                  <option value="Acrílico">Acrílico</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Precio</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="price"
+                  step="0.01"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Stock</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="stock"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea
+                  class="form-control"
+                  name="description"
+                  rows="3"
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Imagen</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  name="image"
+                  accept="image/*"
+                />
+              </div>
+              <div class="form-check mb-3">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="status"
+                  checked
+                />
+                <label class="form-check-label">Activo</label>
+              </div>
+              <div class="mb-3 text-center">
+                <img
+                  id="previewImage"
+                  src="https://via.placeholder.com/150"
+                  class="img-thumbnail"
+                  style="max-height: 150px"
+                  alt="..."
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-save me-1"></i> Guardar Producto
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Stock Modal -->
+    <div class="modal fade" id="addStockModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Agregar Stock</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addStockForm">
+              <div class="mb-3">
+                <label class="form-label">Producto</label>
+                <select class="form-select" name="productId" required>
+                  <!-- Products will be dynamically loaded here -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Cantidad</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="quantity"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Notas</label>
+                <textarea class="form-control" name="notes" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-plus me-1"></i> Agregar Stock
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal para agregar tarea -->
+    <div class="modal fade" id="modalAgregarTarea" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="formTarea" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Agregar Tarea</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Tipo de Tarea</label>
+              <select class="form-select" name="tipo" required>
+                <option value="">Seleccionar...</option>
+                <option value="cambiar_precio">Cambiar Precio</option>
+                <option value="cambiar_stock">Cambiar Stock</option>
+                <option value="eliminar_producto">Eliminar Producto</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">ID del Producto</label>
+              <input
+                type="text"
+                class="form-control"
+                name="productoId"
+                placeholder="Ej: abc123"
+                required
+              />
+            </div>
+            <div class="mb-3 d-none" id="campoValor">
+              <label class="form-label" id="labelValor">Nuevo Valor</label>
+              <input type="number" class="form-control" name="valor" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary w-100" type="submit">
+              Guardar Tarea
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para agregar usuario -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Nuevo Usuario</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="addUserForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" name="displayName" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" name="password" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Rol</label>
+                    <select class="form-select" name="role" required>
+                      <option value="customer">Cliente</option>
+                      <option value="viewer">Visualizador</option>
+                      <option value="editor">Editor</option>
+                      <option value="moderator">Moderador</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <select class="form-select" name="status">
+                  <option value="active">Activo</option>
+                  <option value="inactive">Inactivo</option>
+                  <option value="suspended">Suspendido</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus me-1"></i> Crear Usuario
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para gestionar roles y permisos -->
+    <div class="modal fade" id="rolesPermissionsModal" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title">Gestión de Roles y Permisos</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!-- Lista de roles -->
+              <div class="col-md-4">
+                <h6>Roles del Sistema</h6>
+                <div class="list-group" id="rolesList">
+                  <button type="button" class="list-group-item list-group-item-action active" data-role="admin">
+                    <i class="fas fa-crown text-warning me-2"></i>
+                    <strong>Administrador</strong>
+                    <small class="d-block text-muted">Acceso completo al sistema</small>
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action" data-role="moderator">
+                    <i class="fas fa-shield-alt text-primary me-2"></i>
+                    <strong>Moderador</strong>
+                    <small class="d-block text-muted">Gestión de usuarios y contenido</small>
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action" data-role="editor">
+                    <i class="fas fa-edit text-success me-2"></i>
+                    <strong>Editor</strong>
+                    <small class="d-block text-muted">Gestión de productos y pedidos</small>
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action" data-role="viewer">
+                    <i class="fas fa-eye text-info me-2"></i>
+                    <strong>Visualizador</strong>
+                    <small class="d-block text-muted">Solo lectura de datos</small>
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action" data-role="customer">
+                    <i class="fas fa-user text-secondary me-2"></i>
+                    <strong>Cliente</strong>
+                    <small class="d-block text-muted">Usuario final del sistema</small>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Permisos del rol seleccionado -->
+              <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 id="selectedRoleTitle">Permisos para: Administrador</h6>
+                  <button class="btn btn-sm btn-success" onclick="saveRolePermissions()">
+                    <i class="fas fa-save me-1"></i> Guardar Cambios
+                  </button>
+                </div>
+                
+                <div id="permissionsContainer">
+                  <!-- Dashboard -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Dashboard</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="dashboard_view" checked>
+                            <label class="form-check-label" for="dashboard_view">Ver Dashboard</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="dashboard_export" checked>
+                            <label class="form-check-label" for="dashboard_export">Exportar Reportes</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Productos -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6 class="mb-0"><i class="fas fa-box me-2"></i>Productos</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="products_view" checked>
+                            <label class="form-check-label" for="products_view">Ver Productos</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="products_create" checked>
+                            <label class="form-check-label" for="products_create">Crear Productos</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="products_edit" checked>
+                            <label class="form-check-label" for="products_edit">Editar Productos</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="products_delete" checked>
+                            <label class="form-check-label" for="products_delete">Eliminar Productos</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Pedidos -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6 class="mb-0"><i class="fas fa-shopping-bag me-2"></i>Pedidos</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="orders_view" checked>
+                            <label class="form-check-label" for="orders_view">Ver Pedidos</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="orders_edit" checked>
+                            <label class="form-check-label" for="orders_edit">Editar Estado</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="orders_cancel" checked>
+                            <label class="form-check-label" for="orders_cancel">Cancelar Pedidos</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="orders_refund" checked>
+                            <label class="form-check-label" for="orders_refund">Procesar Reembolsos</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Usuarios -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6 class="mb-0"><i class="fas fa-users me-2"></i>Usuarios</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="users_view" checked>
+                            <label class="form-check-label" for="users_view">Ver Usuarios</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="users_create" checked>
+                            <label class="form-check-label" for="users_create">Crear Usuarios</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="users_edit" checked>
+                            <label class="form-check-label" for="users_edit">Editar Usuarios</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="users_delete" checked>
+                            <label class="form-check-label" for="users_delete">Eliminar Usuarios</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="users_roles" checked>
+                            <label class="form-check-label" for="users_roles">Cambiar Roles</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="users_permissions" checked>
+                            <label class="form-check-label" for="users_permissions">Gestionar Permisos</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Inventario -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6 class="mb-0"><i class="fas fa-warehouse me-2"></i>Inventario</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inventory_view" checked>
+                            <label class="form-check-label" for="inventory_view">Ver Inventario</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inventory_update" checked>
+                            <label class="form-check-label" for="inventory_update">Actualizar Stock</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inventory_alerts" checked>
+                            <label class="form-check-label" for="inventory_alerts">Configurar Alertas</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inventory_reports" checked>
+                            <label class="form-check-label" for="inventory_reports">Generar Reportes</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Configuración -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6 class="mb-0"><i class="fas fa-cog me-2"></i>Configuración</h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="settings_view" checked>
+                            <label class="form-check-label" for="settings_view">Ver Configuración</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="settings_edit" checked>
+                            <label class="form-check-label" for="settings_edit">Editar Configuración</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="settings_backup" checked>
+                            <label class="form-check-label" for="settings_backup">Crear Respaldos</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="settings_system" checked>
+                            <label class="form-check-label" for="settings_system">Configuración del Sistema</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para editar permisos de usuario específico -->
+    <div class="modal fade" id="editUserPermissionsModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title">Permisos Específicos de Usuario</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>
+              Los permisos específicos sobrescriben los permisos del rol asignado.
+            </div>
+            <form id="userPermissionsForm">
+              <input type="hidden" id="editUserId" name="userId">
+              <div id="userSpecificPermissions">
+                <!-- Se cargará dinámicamente -->
+              </div>
+              <button type="submit" class="btn btn-warning w-100">
+                <i class="fas fa-save me-1"></i> Guardar Permisos Específicos
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div
+        id="toast-notification"
+        class="toast align-items-center text-white border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
+<!-- Tu configuración -->
+<script type="module" src="firebase-config.js"></script>
+
+    <!-- Application Scripts -->
+    <script type="module" src="admin-tareas-funcionales.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="reports.js"></script>
+    <script type="module" src="settings.js"></script>
+    <script type="module" src="admin.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
