@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let orders = [];
     let currentUser = null;
 
-    // Inicializar si estamos en página de pedidos (soporta rutas sin extensión)
-    const ordersPath = window.location.pathname.replace(/\.html$/, '');
-    if (ordersPath.includes('pedidos')) {
+    // Inicializar si existe un contenedor de pedidos
+    const ordersContainer = document.getElementById('orders-container');
+    if (ordersContainer) {
         initializeOrders();
     }
 
