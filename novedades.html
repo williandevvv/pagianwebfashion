@@ -227,6 +227,7 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Firebase Config -->
     <script src="js/firebase-config.js"></script>
@@ -485,8 +486,14 @@
             // Guardar carrito
             localStorage.setItem('cart', JSON.stringify(cart));
             
-            // Mostrar notificación
-            alert(`¡${product.name} agregado al carrito!`);
+            // Mostrar notificación con SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: 'Producto agregado',
+                text: `¡${product.name} agregado al carrito!`,
+                timer: 2000,
+                showConfirmButton: false
+            });
             
             // Actualizar contador
             updateCartCounter();
