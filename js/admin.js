@@ -186,34 +186,41 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Cambiar rol de usuario (cliente/admin)
+    // Cambiar rol de usuario mostrando lista de roles
     document.addEventListener("click", async (e) => {
       const btn = e.target.closest(".cambiar-rol");
       if (!btn) return;
 
       const id = btn.dataset.id;
       const actual = btn.dataset.rol;
-      const nuevoRol = actual === "admin" ? "cliente" : "admin";
 
-      const resultado = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: `¿Cambiar el rol de este usuario a "${nuevoRol}"?`,
-        icon: "question",
+      const { value: nuevoRol } = await Swal.fire({
+        title: 'Cambiar Rol',
+        html: `
+          <select id="rolNuevo" class="form-select">
+            <option value="customer" ${actual === 'customer' ? 'selected' : ''}>Cliente</option>
+            <option value="viewer" ${actual === 'viewer' ? 'selected' : ''}>Visualizador</option>
+            <option value="editor" ${actual === 'editor' ? 'selected' : ''}>Editor</option>
+            <option value="moderator" ${actual === 'moderator' ? 'selected' : ''}>Moderador</option>
+            <option value="admin" ${actual === 'admin' ? 'selected' : ''}>Administrador</option>
+          </select>
+        `,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: "Sí, cambiar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#6610f2",
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => document.getElementById('rolNuevo').value
       });
 
-      if (!resultado.isConfirmed) return;
+      if (!nuevoRol || nuevoRol === actual) return;
 
       try {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(id)
-          .update({ role: nuevoRol });
-        users = users.map((u) => (u.id === id ? { ...u, role: nuevoRol } : u));
+        await firebase.firestore().collection('users').doc(id).update({
+          role: nuevoRol,
+          permissions: defaultPermissions[nuevoRol] || {},
+          updatedAt: new Date()
+        });
+        users = users.map(u => u.id === id ? { ...u, role: nuevoRol, permissions: defaultPermissions[nuevoRol] || {} } : u);
         renderUsersTable();
         Swal.fire({
           title: '¡Éxito!',
@@ -222,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
           confirmButtonColor: '#198754'
         });
       } catch (err) {
-        console.error("❌ Error al cambiar rol:", err);
+        console.error('❌ Error al cambiar rol:', err);
         Swal.fire({
           title: 'Error',
           text: 'No se pudo cambiar el rol del usuario',
