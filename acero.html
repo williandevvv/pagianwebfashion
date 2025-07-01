@@ -61,6 +61,12 @@
             background-color: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .quantity-input {
+            max-width: 70px;
+            text-align: center;
+            border-radius: 20px;
+            border: 1px solid var(--primary-color);
+        }
     </style>
 </head>
 <body>
@@ -213,7 +219,7 @@
             const qtyInput = document.getElementById('qty-' + productId);
             const qty = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
 
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            let cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
             const product = allProducts.find(p => p.id === productId) || {};
             const existingItem = cart.find(item => item.id === productId);
 
@@ -229,7 +235,7 @@
                 });
             }
 
-            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('fashionCart', JSON.stringify(cart));
 
             Swal.fire({
                 icon: 'success',
@@ -243,14 +249,14 @@
         }
 
         function updateCartCounter() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-            const cartCounter = document.querySelector('.cart-counter');
-            if (cartCounter) {
-                cartCounter.textContent = totalItems;
-                cartCounter.style.display = totalItems > 0 ? 'inline' : 'none';
-            }
+            const badges = document.querySelectorAll('.cart-badge, .cart-counter, .cart-count');
+            badges.forEach(el => {
+                el.textContent = totalItems;
+                el.style.display = totalItems > 0 ? 'inline' : 'none';
+            });
         }
     </script>
 </body>

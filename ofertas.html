@@ -100,6 +100,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
         }
+        .quantity-input {
+            max-width: 70px;
+            text-align: center;
+            border-radius: 20px;
+            border: 1px solid #ff6b6b;
+        }
         .countdown-timer {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
@@ -451,7 +457,7 @@
             if (!product) return;
 
             // Obtener carrito actual
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            let cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
             
             // Verificar si ya existe
             const qtyInput = document.getElementById('qty-' + productId);
@@ -474,7 +480,7 @@
             }
             
             // Guardar carrito
-            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('fashionCart', JSON.stringify(cart));
             
             // Mostrar notificación con SweetAlert
             Swal.fire({
@@ -490,14 +496,14 @@
         }
 
         function updateCartCounter() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             
-            const cartCounter = document.querySelector('.cart-counter');
-            if (cartCounter) {
-                cartCounter.textContent = totalItems;
-                cartCounter.style.display = totalItems > 0 ? 'inline' : 'none';
-            }
+            const badges = document.querySelectorAll('.cart-badge, .cart-counter, .cart-count');
+            badges.forEach(el => {
+                el.textContent = totalItems;
+                el.style.display = totalItems > 0 ? 'inline' : 'none';
+            });
         }
 
         function startCountdown() {
