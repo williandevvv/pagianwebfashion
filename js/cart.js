@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables globales
     let cartItems = [];
     let subtotal = 0;
-    let shipping = 120.00;
+    const SHIPPING_RATE = 120.00; // costo de envío por artículo
+    let shipping = 0;
     let total = 0;
 
     // Inicializar si estamos en página de carrito (soporta rutas sin extensión)
@@ -240,6 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Actualizar totales del carrito con formato hondureño
     function updateCartTotals(discount = 0) {
+        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        shipping = SHIPPING_RATE * totalItems;
         subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         total = subtotal + shipping - discount;
 
