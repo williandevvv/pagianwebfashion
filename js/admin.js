@@ -320,6 +320,20 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       modal.show();
     });
+
+    // Gestionar ofertas
+    const searchOffersInput = document.getElementById('searchOffers');
+    if (searchOffersInput) {
+      searchOffersInput.addEventListener('input', renderOffersTable);
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.toggle-offer');
+      if (btn) {
+        e.preventDefault();
+        toggleProductOffer(btn.dataset.id);
+      }
+    });
   }
 
   function showSection(sectionName) {
@@ -347,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
       orders: 'Pedidos',
       users: 'Usuarios',
       inventory: 'Inventario',
+      offers: 'Ofertas',
       reports: 'Reportes',
       messages: 'Mensajes',
       settings: 'Configuración'
@@ -364,6 +379,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'dashboard':
         renderDashboard();
+        break;
+      case 'offers':
+        renderOffersTable();
         break;
       case 'products':
         renderProductsTable();
@@ -413,6 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }));
 
       renderDashboard();
+      renderOffersTable();
     } catch (error) {
       console.error("❌ Error cargando datos desde Firebase:", error);
     }
@@ -462,6 +481,71 @@ function renderProductsTable() {
         .join("");
 }
 
+function renderOffersTable() {
+    const container = document.querySelector('#offers-table tbody');
+    if (!container) return;
+
+    const searchTerm = document.getElementById('searchOffers')?.value?.toLowerCase() || '';
+    let filtered = Array.isArray(products) ? [...products] : [];
+    if (searchTerm) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = `<tr><td colspan="6" class="text-center">No hay productos</td></tr>`;
+        return;
+    }
+
+    container.innerHTML = filtered.map(p => `
+        <tr>
+            <td>${p.id || ''}</td>
+            <td><img src="${p.image || 'https://via.placeholder.com/40'}" style="width:40px;height:40px;object-fit:cover;" class="rounded"></td>
+            <td>${p.name}</td>
+            <td>L.${p.price}</td>
+            <td>${p.onSale ? 'Sí' : 'No'}</td>
+            <td>
+                <button class="btn btn-sm ${p.onSale ? 'btn-warning' : 'btn-primary'} toggle-offer" data-id="${p.id}">
+                    ${p.onSale ? 'Quitar' : 'Agregar'}
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function toggleProductOffer(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    if (!product.onSale) {
+        const { value: price } = await Swal.fire({
+            title: 'Precio de oferta',
+            input: 'number',
+            inputValue: product.price,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar'
+        });
+        if (!price) return;
+        product.originalPrice = product.originalPrice || product.price;
+        product.price = parseFloat(price);
+        product.onSale = true;
+    } else {
+        product.price = product.originalPrice || product.price;
+        product.onSale = false;
+    }
+
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        await firebase.firestore().collection('products').doc(productId).update({
+            onSale: product.onSale,
+            price: product.price,
+            originalPrice: product.originalPrice || null
+        });
+    }
+
+    renderOffersTable();
+    renderProductsTable();
+}
+
   // Sistema de permisos
   const defaultPermissions = {
     admin: {
@@ -470,6 +554,7 @@ function renderProductsTable() {
       orders: { view: true, edit: true, cancel: true, refund: true },
       users: { view: true, create: true, edit: true, delete: true, roles: true, permissions: true },
       inventory: { view: true, update: true, alerts: true, reports: true },
+      offers: { view: true, edit: true },
       reports: { view: true, export: true },
       settings: { view: true, edit: true, backup: true, system: true }
     },
@@ -479,6 +564,7 @@ function renderProductsTable() {
       orders: { view: true, edit: true, cancel: true, refund: false },
       users: { view: true, create: false, edit: true, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: true, alerts: false, reports: true },
+      offers: { view: true, edit: true },
       reports: { view: true, export: true },
       settings: { view: true, edit: false, backup: false, system: false }
     },
@@ -488,6 +574,7 @@ function renderProductsTable() {
       orders: { view: true, edit: true, cancel: false, refund: false },
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: true, alerts: false, reports: false },
+      offers: { view: true, edit: true },
       reports: { view: true, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     },
@@ -497,6 +584,7 @@ function renderProductsTable() {
       orders: { view: true, edit: false, cancel: false, refund: false },
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: false, alerts: false, reports: false },
+      offers: { view: false, edit: false },
       reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     },
@@ -506,6 +594,7 @@ function renderProductsTable() {
       orders: { view: false, edit: false, cancel: false, refund: false },
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: false, update: false, alerts: false, reports: false },
+      offers: { view: false, edit: false },
       reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     }
@@ -516,7 +605,7 @@ function renderProductsTable() {
   }
 
   function applyRolePermissions() {
-    const modules = ['dashboard','products','orders','users','inventory','reports','settings'];
+    const modules = ['dashboard','products','orders','users','inventory','offers','reports','settings'];
     modules.forEach(m => {
       const canView = hasPermission(m,'view');
       const navEl = document.querySelector(`#sidebar [data-section="${m}"]`);
