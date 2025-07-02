@@ -520,6 +520,7 @@ async function toggleProductOffer(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
+    // Si el producto no está en oferta, solicitar precio y fecha fin
     if (!product.onSale) {
         const { value: price } = await Swal.fire({
             title: 'Precio de oferta',
@@ -530,20 +531,52 @@ async function toggleProductOffer(productId) {
             cancelButtonText: 'Cancelar'
         });
         if (!price) return;
+
+        const { value: endDate } = await Swal.fire({
+            title: 'Fin de la oferta',
+            input: 'datetime-local',
+            showCancelButton: true,
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar'
+        });
+        if (!endDate) return;
+
+        // Guardar datos originales para poder restaurar
         product.originalPrice = product.originalPrice || product.price;
+        product.originalCategory = product.originalCategory || product.category;
+
+        // Actualizar datos de la oferta
         product.price = parseFloat(price);
+        product.category = 'ofertas';
         product.onSale = true;
+        product.offerEndDate = endDate;
     } else {
+        // Restaurar datos originales al quitar la oferta
         product.price = product.originalPrice || product.price;
+        product.category = product.originalCategory || product.category;
         product.onSale = false;
+        delete product.offerEndDate;
     }
 
     if (typeof firebase !== 'undefined' && firebase.firestore) {
-        await firebase.firestore().collection('products').doc(productId).update({
+        const prodRef = firebase.firestore().collection('products').doc(productId);
+        const updateData = {
             onSale: product.onSale,
             price: product.price,
-            originalPrice: product.originalPrice || null
-        });
+            category: product.category
+        };
+
+        if (product.onSale) {
+            updateData.originalPrice = product.originalPrice;
+            updateData.originalCategory = product.originalCategory;
+            updateData.offerEndDate = new Date(product.offerEndDate);
+        } else {
+            updateData.originalPrice = firebase.firestore.FieldValue.delete();
+            updateData.originalCategory = firebase.firestore.FieldValue.delete();
+            updateData.offerEndDate = firebase.firestore.FieldValue.delete();
+        }
+
+        await prodRef.update(updateData);
     }
 
     renderOffersTable();
