@@ -348,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
       users: 'Usuarios',
       inventory: 'Inventario',
       reports: 'Reportes',
+      messages: 'Mensajes',
       settings: 'Configuración'
     };
     
@@ -378,6 +379,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'reports':
         loadReportsSection();
+        break;
+      case 'messages':
+        window.loadMessages && loadMessages();
         break;
     }
   }

@@ -88,10 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Procesar pago
     document.getElementById('checkout-btn').addEventListener('click', function() {
         if (cartItems.length === 0) {
-            alert('Tu carrito está vacío');
+            Swal.fire({ icon: 'info', title: 'Tu carrito está vacío' });
             return;
         }
-        alert('Redirigiendo a pasarela de pago...');
+        Swal.fire({ icon: 'info', title: 'Redirigiendo a pasarela de pago...' });
         // Aquí iría la lógica real de pago
     });
 

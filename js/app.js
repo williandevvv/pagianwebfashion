@@ -255,7 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const bsToast = new bootstrap.Toast(toast);
                 bsToast.show();
             } else {
-                alert(message);
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: type, title: message });
+                }
             }
         }
     }
