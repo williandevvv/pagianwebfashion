@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables globales
     let cartItems = [];
     let subtotal = 0;
-    const SHIPPING_RATE = 120.00; // costo de envío por artículo
+    const SHIPPING_RATE = 120.00; // costo de envío fijo
     let shipping = 0;
     let total = 0;
 
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actualizar totales del carrito con formato hondureño
     function updateCartTotals(discount = 0) {
         const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        shipping = SHIPPING_RATE * totalItems;
+        shipping = cartItems.length > 0 ? SHIPPING_RATE : 0;
         subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         total = subtotal + shipping - discount;
 
@@ -475,7 +475,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: 'top-end'
             });
         } else {
-            alert(message);
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ icon: type, title: message });
+            }
         }
     }
 

@@ -507,7 +507,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: 'top-end'
             });
         } else {
-            alert(message);
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ icon: type, title: message });
+            }
         }
     }
 

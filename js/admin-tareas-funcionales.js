@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${new Date(tarea.fecha.toDate()).toLocaleString()}</td>
                 <td>
                     <button class="btn btn-sm btn-success ejecutar-tarea" data-id="${tarea.id}">Ejecutar</button>
+                    <button class="btn btn-sm btn-danger eliminar-tarea ms-1" data-id="${tarea.id}">Eliminar</button>
                 </td>
             </tr>
         `).join('');
@@ -43,6 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
         ejecutarTarea(tarea);
     });
 
+    // Evento para eliminar tarea
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.eliminar-tarea');
+        if (!btn) return;
+
+        const tareaId = btn.dataset.id;
+        const confirm = await Swal.fire({
+            title: '¿Eliminar tarea?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#dc3545'
+        });
+        if (!confirm.isConfirmed) return;
+
+        try {
+            await firebase.firestore().collection('tareas').doc(tareaId).delete();
+            Swal.fire({ icon: 'success', title: 'Tarea eliminada' });
+            cargarTareas();
+        } catch (error) {
+            console.error('Error eliminando tarea:', error);
+            Swal.fire({ icon: 'error', title: 'No se pudo eliminar la tarea' });
+        }
+    });
+
     // Función para ejecutar tareas según tipo
     async function ejecutarTarea(tarea) {
         try {
@@ -51,24 +78,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     await firebase.firestore().collection('products').doc(tarea.productoId).update({
                         price: tarea.nuevoPrecio
                     });
-                    alert(`✅ Precio actualizado a L.${tarea.nuevoPrecio}`);
+                    Swal.fire({ icon: 'success', title: `Precio actualizado a L.${tarea.nuevoPrecio}` });
                     break;
                 case 'cambiar_stock':
                     await firebase.firestore().collection('products').doc(tarea.productoId).update({
                         stock: tarea.nuevoStock
                     });
-                    alert(`✅ Stock actualizado a ${tarea.nuevoStock}`);
+                    Swal.fire({ icon: 'success', title: `Stock actualizado a ${tarea.nuevoStock}` });
                     break;
                 case 'eliminar_producto':
                     await firebase.firestore().collection('products').doc(tarea.productoId).delete();
-                    alert('🗑️ Producto eliminado exitosamente');
+                    Swal.fire({ icon: 'success', title: 'Producto eliminado exitosamente' });
                     break;
                 default:
-                    alert('❌ Tipo de tarea no reconocido');
+                    Swal.fire({ icon: 'error', title: 'Tipo de tarea no reconocido' });
             }
         } catch (error) {
             console.error('Error ejecutando tarea:', error);
-            alert('❌ Error al ejecutar la tarea');
+            Swal.fire({ icon: 'error', title: 'Error al ejecutar la tarea' });
         }
     }
 
@@ -116,10 +143,10 @@ document.getElementById('formTarea').addEventListener('submit', async (e) => {
         await firebase.firestore().collection('tareas').add(nuevaTarea);
         form.reset();
         bootstrap.Modal.getInstance(document.getElementById('modalAgregarTarea')).hide();
-        alert('✅ Tarea guardada correctamente');
+        Swal.fire({ icon: 'success', title: 'Tarea guardada correctamente' });
         cargarTareas(); // recargar tabla
     } catch (error) {
         console.error('Error guardando tarea:', error);
-        alert('❌ No se pudo guardar la tarea');
+        Swal.fire({ icon: 'error', title: 'No se pudo guardar la tarea' });
     }
 });
