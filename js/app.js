@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         const categorias = [
-            { id: 'bisuteria', name: 'Bisutería', image: 'img/bisuteria.jpg', link: 'bisuteria.html' },
-            { id: 'maquillaje', name: 'Maquillaje', image: 'img/maquillaje.jpg', link: 'maquillaje.html' },
-            { id: 'acero', name: 'Acero', image: 'img/acero.jpg', link: 'acero.html' },
+            { id: 'bisuteria', name: 'Bisutería', image: 'img/bisuteria.png', link: 'bisuteria.html' },
+            { id: 'maquillaje', name: 'Maquillaje', image: 'img/maquillaje.png', link: 'maquillaje.html' },
+            { id: 'acero', name: 'Acero', image: 'img/acero.png', link: 'acero.html' },
             { id: 'acrilico', name: 'Acrílico', image: 'img/acrilico.jpeg', link: 'acrilico.html' },
             { id: 'ofertas', name: 'Ofertas', image: 'img/ofertas.jpeg', link: 'ofertas.html' },
             { id: 'novedades', name: 'Novedades', image: 'img/ofertas.jpeg', link: 'novedades.html' }
