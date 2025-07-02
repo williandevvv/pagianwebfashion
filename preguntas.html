@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preguntas Frecuentes - Fashion Collection</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-rose-gold: #bd8c7d;
+      --color-shimmer: #f4e4e1;
+      --color-nude: #e8c6b6;
+      --color-blush: #f7cac9;
+      --color-accent: #c06c84;
+    }
+    body { background-color:#fff; font-family:'Poppins',sans-serif; }
+    header {
+      background: linear-gradient(135deg, rgba(189,140,125,0.95), rgba(192,108,132,0.95));
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1rem 0;
+    }
+    footer {
+      background: linear-gradient(to right,#2c2c2c,#1a1a1a);
+      color: white;
+      padding: 60px 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand text-white" href="index" style="font-family:'Playfair Display', serif;">Fashion Collection</a>
+      <nav class="d-none d-md-flex">
+        <a href="index" class="text-white text-decoration-none me-4">Inicio</a>
+        <a href="ofertas" class="text-white text-decoration-none me-4">Ofertas</a>
+        <a href="contacto" class="text-white text-decoration-none">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container py-5">
+    <h1 class="mb-4" style="color: var(--color-accent); font-family:'Playfair Display',serif;">Preguntas Frecuentes</h1>
+    <div class="accordion" id="faq">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="q1">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#a1">¿Cuál es el tiempo de entrega?</button>
+        </h2>
+        <div id="a1" class="accordion-collapse collapse show" data-bs-parent="#faq">
+          <div class="accordion-body">Nuestros envíos tardan de 2 a 3 días hábiles dentro de Honduras.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="q2">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a2">¿Cómo puedo pagar?</button>
+        </h2>
+        <div id="a2" class="accordion-collapse collapse" data-bs-parent="#faq">
+          <div class="accordion-body">Aceptamos tarjetas de crédito y débito. Todos los precios están en lempiras (L).</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="q3">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a3">¿Puedo cambiar un producto?</button>
+        </h2>
+        <div id="a3" class="accordion-collapse collapse" data-bs-parent="#faq">
+          <div class="accordion-body">Sí, cuentas con 30 días para cambios o devoluciones.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container text-center">
+      <p class="mb-0">&copy; 2025 Fashion Collection. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

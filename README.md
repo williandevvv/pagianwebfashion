@@ -12,3 +12,5 @@ npm start
 ```
 
 El comando inicia `js/server.js`, que expone la aplicación en [http://localhost:8080](http://localhost:8080).
+
+Además de la página principal, el sitio cuenta con secciones de **Envíos**, **Devoluciones**, **Preguntas Frecuentes** y **Términos y Condiciones** accesibles desde el pie de página.
