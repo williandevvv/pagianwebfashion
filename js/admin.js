@@ -1219,6 +1219,8 @@ function renderUsersTable() {
       e.preventDefault();
 
       const form = e.target;
+      // ID personalizado (opcional)
+      const customId = form.id.value.trim();
       const name = form.name.value.trim();
       const category = form.category.value;
       const price = parseFloat(form.price.value);
@@ -1408,7 +1410,17 @@ function renderUsersTable() {
           console.log('Producto actualizado:', productoEnEdicion.id);
         } else {
           newProduct.createdAt = new Date();
-          const docRef = await firebase.firestore().collection("products").add(newProduct);
+          // Si el usuario ingresa un ID se utiliza,
+          // de lo contrario generamos uno automático
+          let docRef;
+          if (customId) {
+            // Usamos el ID proporcionado
+            docRef = firebase.firestore().collection("products").doc(customId);
+          } else {
+            // Creamos un ID automático
+            docRef = firebase.firestore().collection("products").doc();
+          }
+          await docRef.set(newProduct);
           console.log('Producto creado:', docRef.id);
         }
 
