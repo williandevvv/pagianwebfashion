@@ -2,6 +2,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔐 Auth.js cargado");
 
+  // Estado de autenticación global
+  window.usuarioAutenticadoFirebase = false;
+
   // Referencias a elementos del DOM
   const loginForm = document.getElementById("login-form");
   const registerForm = document.getElementById("register-form");
@@ -81,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "👤 Estado de auth cambió:",
         user ? "autenticado" : "no autenticado"
       );
+      window.usuarioAutenticadoFirebase = !!user;
       updateAuthUI(user);
     });
   } else {
