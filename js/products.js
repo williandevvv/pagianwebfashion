@@ -61,19 +61,22 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const db = firebase.firestore();
             let query = db.collection('products');
-            
+
             if (currentCategory) {
                 query = query.where('category', '==', currentCategory);
             }
-            
+
             const snapshot = await query.get();
             allProducts = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-            
+
             console.log(`📦 ${allProducts.length} productos cargados desde Firebase`);
-            
+
+            // Revisar si hay ofertas vencidas y actualizarlas
+            await handleExpiredOffers(db);
+
         } catch (error) {
             console.error('❌ Error cargando desde Firebase:', error);
             throw error;
@@ -249,6 +252,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         console.log(`📦 ${allProducts.length} productos demo cargados`);
+
+        // Revisar ofertas vencidas para los datos de demostración
+        handleExpiredOffers();
+    }
+
+    // Verificar si alguna oferta expiró y restaurar categoría y precio
+    async function handleExpiredOffers(db) {
+        const now = new Date();
+        const updates = [];
+
+        allProducts.forEach(product => {
+            if (product.onSale && product.offerEndDate && new Date(product.offerEndDate) <= now) {
+                // Restaurar datos locales
+                product.onSale = false;
+                if (product.originalPrice) {
+                    product.price = product.originalPrice;
+                    delete product.originalPrice;
+                }
+                if (product.originalCategory) {
+                    product.category = product.originalCategory;
+                    delete product.originalCategory;
+                }
+                delete product.offerEndDate;
+
+                // Si tenemos conexión a Firebase, actualizar la base de datos
+                if (db) {
+                    const ref = db.collection('products').doc(product.id);
+                    updates.push(ref.update({
+                        onSale: false,
+                        price: product.price,
+                        category: product.category,
+                        originalPrice: firebase.firestore.FieldValue.delete(),
+                        originalCategory: firebase.firestore.FieldValue.delete(),
+                        offerEndDate: firebase.firestore.FieldValue.delete()
+                    }));
+                }
+            }
+        });
+
+        if (updates.length) {
+            try {
+                await Promise.all(updates);
+                console.log('🔄 Ofertas vencidas actualizadas');
+            } catch (err) {
+                console.error('❌ Error actualizando ofertas vencidas:', err);
+            }
+        }
     }
 
     // Aplicar filtros
