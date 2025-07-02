@@ -13,67 +13,119 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <style>
+        /* Paleta de colores unificada */
         :root {
-            --primary-color: #6f42c1;
-            --secondary-color: #f8f9fa;
+            --color-rose-gold: #bd8c7d;
+            --color-shimmer: #f4e4e1;
+            --color-nude: #e8c6b6;
+            --color-blush: #f7cac9;
+            --color-accent: #c06c84;
+            --color-deep-rose: #86424b;
         }
+
+        /* Estilos base */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
             color: #333;
         }
+
+        /* Encabezado degradado */
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
             color: white;
-            padding: 3rem 0;
+            padding: 4rem 0;
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
         }
+        /* Tarjetas de producto */
         .product-card {
             transition: all 0.3s;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: none;
             margin-bottom: 20px;
             background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
+
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 30px rgba(192,108,132,0.15);
         }
+
         .product-img {
             height: 200px;
             object-fit: cover;
             width: 100%;
+            transition: all 0.3s;
         }
+
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+
         .price-tag {
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: #ff6b6b;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-deep-rose));
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
             font-weight: bold;
+            box-shadow: 0 4px 15px rgba(192,108,132,0.2);
         }
+
+        /* Barra de navegación */
         .navbar {
             backdrop-filter: blur(10px);
             background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
         }
+
         .filter-controls {
             background: white;
             padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
+            border: 1px solid var(--color-shimmer);
         }
+
         .quantity-input {
             max-width: 70px;
             text-align: center;
             border-radius: 20px;
-            border: 1px solid #ff6b6b;
+            border: 1px solid var(--color-accent);
+        }
+
+        /* Botones personalizados */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-deep-rose));
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(192,108,132,0.3);
+        }
+
+        .btn-outline-primary {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--color-shimmer);
+            color: var(--color-accent);
         }
     </style>
 </head>
@@ -82,7 +134,7 @@
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index">
-                <i class="fas fa-gem me-2" style="color: var(--primary-color);"></i>Fashion Collection
+                <i class="fas fa-gem me-2" style="color: var(--color-accent);"></i>Fashion Collection
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
