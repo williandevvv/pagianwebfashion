@@ -1,0 +1,103 @@
+:root {
+    --color-rose-gold: #bd8c7d;
+    --color-shimmer: #f4e4e1;
+    --color-nude: #e8c6b6;
+    --color-blush: #f7cac9;
+    --color-accent: #c06c84;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--color-shimmer);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+h1 {
+    text-align: center;
+    color: var(--color-accent);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background: var(--color-nude);
+}
+
+.thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.actions button {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+}
+
+.summary {
+    background: white;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+}
+
+.summary label {
+    margin-right: 1rem;
+}
+
+.summary input[type="text"] {
+    width: 150px;
+    margin-right: 0.5rem;
+}
+
+.total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+.buttons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+button.primary {
+    background: var(--color-accent);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .table th, .table td {
+        font-size: 0.9rem;
+    }
+}
