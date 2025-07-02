@@ -43,10 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
             navbarUsername.textContent = displayName;
           }
         }
+        const profileLink = document.getElementById('profile-link');
+        if (profileLink) profileLink.style.display = 'block';
       } else {
         // Usuario no autenticado
         if (authButtons) authButtons.classList.remove("d-none");
         if (profileButton) profileButton.classList.add("d-none");
+        const profileLink = document.getElementById('profile-link');
+        if (profileLink) profileLink.style.display = 'none';
       }
     } catch (error) {
       console.error("❌ Error actualizando UI:", error);
