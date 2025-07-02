@@ -256,6 +256,9 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex justify-content-end mt-2">
+            <span id="productCount" class="text-muted"></span>
+        </div>
 
         <!-- Products Grid -->
         <div class="row" id="productsGrid">
@@ -294,6 +297,7 @@
         const categoryFilter = document.getElementById('categoryFilter');
         const dateFilter = document.getElementById('dateFilter');
         const sortSelect = document.getElementById('sortSelect');
+        const productCount = document.getElementById('productCount');
 
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
@@ -460,6 +464,8 @@
         }
 
         function displayProducts(products) {
+            // Mostrar cantidad total de artículos
+            productCount.textContent = `${products.length} artículos`;
             productsGrid.innerHTML = '';
             
             if (products.length === 0) {
@@ -503,7 +509,6 @@
                                 <span class="date-badge">${dateText}</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Stock: ${product.stock || 0}</small>
                                 <div class="input-group input-group-sm me-2" style="width:80px;">
                                     <input type="number" id="qty-${product.id}" class="form-control quantity-input" min="1" value="1">
                                 </div>
