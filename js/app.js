@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'acero', name: 'Acero', image: 'img/acero.png', link: 'acero.html' },
             { id: 'acrilico', name: 'Acrílico', image: 'img/acrilico.jpeg', link: 'acrilico.html' },
             { id: 'ofertas', name: 'Ofertas', image: 'img/ofertas.jpeg', link: 'ofertas.html' },
-            { id: 'novedades', name: 'Novedades', image: 'img/ofertas.jpeg', link: 'novedades.html' }
+            { id: 'novedades', name: 'Novedades', image: 'img/novedades.png', link: 'novedades.html' }
         ];
 
         // Contar productos reales desde Firestore
