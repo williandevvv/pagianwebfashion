@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <!-- Google Fonts: Para un toque más estético y moderno -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         /* Estilos Generales */
         body {
@@ -367,17 +368,29 @@
         }
     </style>
 </head>
-<body>
+<body class="general">
     <!-- Header -->
-    <header class="header py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index">
-                    <h1 class="h4 mb-0">Fashion Collection</h1>
-                </a>
-            </div>
+    <header class="glass-header">
+      <nav class="d-flex align-items-center justify-content-between">
+        <div class="fw-bold fs-4">Fashion Collection</div>
+        <div class="d-none d-md-flex align-items-center gap-4">
+          <a href="index.html">Inicio</a>
+          <a href="ofertas.html">Ofertas</a>
+          <a href="contacto.html">Contacto</a>
         </div>
+        <div class="d-flex align-items-center gap-3">
+          <input type="text" placeholder="Buscar productos..." class="search-bar">
+          <a href="perfil.html" id="profile-link" style="display:none;">👤</a>
+          <a href="carrito.html">🛒</a>
+        </div>
+      </nav>
     </header>
+    <div class="makeup-decorations">
+      <div class="floating-makeup lipstick">💄</div>
+      <div class="floating-makeup brush">🖌️</div>
+      <div class="floating-makeup compact">🪞</div>
+      <div class="floating-makeup sparkle">✨</div>
+    </div>
 
     <!-- Main Content -->
     <main class="container d-flex flex-grow-1 align-items-center justify-content-center">

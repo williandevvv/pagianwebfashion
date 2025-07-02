@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         /* Comentarios en español para cada sección */
         
@@ -214,72 +215,29 @@
         }
     </style>
 </head>
-<body>
+<body class="index">
     <!-- Header -->
-    <header class="header py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <a class="navbar-brand me-5" href="index">
-                        <h1 class="h4 text-white mb-0" style="font-family: 'Playfair Display', serif;">Fashion Collection</h1>
-                    </a>
-                    <nav class="d-none d-md-flex align-items-center">
-                        <a class="text-white text-decoration-none me-5" href="index">Inicio</a>
-                        <a class="text-white text-decoration-none me-5" href="ofertas">Ofertas</a>
-                        <a class="text-white text-decoration-none" href="contacto">Contacto</a>
-                    </nav>
-                </div>
-                <div class="d-flex align-items-center">
-                    <a href="carrito" class="position-relative text-white me-4">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <span class="cart-badge">0</span>
-                    </a>
-                    
-                    <!-- Botones de autenticación (para invitados) -->
-                    <div id="auth-buttons" class="auth-buttons d-flex gap-2">
-                        <a href="login">
-                            <button class="btn btn-outline-light" data-bs-toggle="modal">
-                                Iniciar Sesión
-                            </button>
-                        </a>
-                        <a href="login">
-                            <button class="btn btn-light" data-bs-toggle="modal">
-                                Registrarse
-                            </button>
-                        </a>
-                    </div>
-
-                    <!-- Menú desplegable de perfil (para usuarios autenticados) -->
-                    <div id="profile-button" class="profile-dropdown d-none">
-                        <div class="dropdown">
-                            <button class="btn btn-link text-white text-decoration-none dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i>
-                                <span id="navbar-username">Usuario</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="perfil"><i class="fas fa-user"></i> Mi Perfil</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><button class="dropdown-item text-danger" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <button class="d-md-none btn text-white ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
-                        <i class="fas fa-bars fa-lg"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Menú móvil -->
-            <div class="collapse d-md-none" id="mobileMenu">
-                <div class="py-3">
-                    <a class="d-block text-white py-2 text-decoration-none" href="index">Inicio</a>
-                    <a class="d-block text-white py-2 text-decoration-none" href="ofertas">Ofertas</a>
-                    <a class="d-block text-white py-2 text-decoration-none" href="contacto">Contacto</a>
-                </div>
-            </div>
+    <header class="glass-header">
+      <nav class="d-flex align-items-center justify-content-between">
+        <div class="fw-bold fs-4">Fashion Collection</div>
+        <div class="d-none d-md-flex align-items-center gap-4">
+          <a href="index.html">Inicio</a>
+          <a href="ofertas.html">Ofertas</a>
+          <a href="contacto.html">Contacto</a>
         </div>
+        <div class="d-flex align-items-center gap-3">
+          <input type="text" placeholder="Buscar productos..." class="search-bar">
+          <a href="perfil.html" id="profile-link" style="display:none;">👤</a>
+          <a href="carrito.html">🛒</a>
+        </div>
+      </nav>
     </header>
+    <div class="makeup-decorations">
+      <div class="floating-makeup lipstick">💄</div>
+      <div class="floating-makeup brush">🖌️</div>
+      <div class="floating-makeup compact">🪞</div>
+      <div class="floating-makeup sparkle">✨</div>
+    </div>
 
     <!-- Sección Hero -->
     <section class="hero-section">
