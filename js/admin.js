@@ -362,6 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
       users: 'Usuarios',
       inventory: 'Inventario',
       offers: 'Ofertas',
+      tasks: 'Tareas',
       reports: 'Reportes',
       messages: 'Mensajes',
       settings: 'Configuración'
@@ -397,6 +398,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'reports':
         loadReportsSection();
+        break;
+      case 'tasks':
+        window.cargarTareas && cargarTareas();
         break;
       case 'messages':
         window.loadMessages && loadMessages();
@@ -555,6 +559,8 @@ async function toggleProductOffer(productId) {
       users: { view: true, create: true, edit: true, delete: true, roles: true, permissions: true },
       inventory: { view: true, update: true, alerts: true, reports: true },
       offers: { view: true, edit: true },
+      tasks: { view: true, create: true, run: true, delete: true },
+      messages: { view: true, delete: true },
       reports: { view: true, export: true },
       settings: { view: true, edit: true, backup: true, system: true }
     },
@@ -565,6 +571,8 @@ async function toggleProductOffer(productId) {
       users: { view: true, create: false, edit: true, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: true, alerts: false, reports: true },
       offers: { view: true, edit: true },
+      tasks: { view: true, create: true, run: true, delete: false },
+      messages: { view: true, delete: true },
       reports: { view: true, export: true },
       settings: { view: true, edit: false, backup: false, system: false }
     },
@@ -575,6 +583,8 @@ async function toggleProductOffer(productId) {
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: true, alerts: false, reports: false },
       offers: { view: true, edit: true },
+      tasks: { view: true, create: true, run: false, delete: false },
+      messages: { view: true, delete: false },
       reports: { view: true, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     },
@@ -585,6 +595,8 @@ async function toggleProductOffer(productId) {
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: true, update: false, alerts: false, reports: false },
       offers: { view: false, edit: false },
+      tasks: { view: false, create: false, run: false, delete: false },
+      messages: { view: false, delete: false },
       reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     },
@@ -595,9 +607,29 @@ async function toggleProductOffer(productId) {
       users: { view: false, create: false, edit: false, delete: false, roles: false, permissions: false },
       inventory: { view: false, update: false, alerts: false, reports: false },
       offers: { view: false, edit: false },
+      tasks: { view: false, create: false, run: false, delete: false },
+      messages: { view: false, delete: false },
       reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
     }
+  };
+
+  const permissionLabels = {
+    view: 'Ver',
+    create: 'Crear',
+    edit: 'Editar',
+    delete: 'Eliminar',
+    cancel: 'Cancelar',
+    refund: 'Reembolsar',
+    roles: 'Roles',
+    permissions: 'Permisos',
+    update: 'Actualizar',
+    alerts: 'Alertas',
+    reports: 'Reportes',
+    export: 'Exportar',
+    backup: 'Respaldar',
+    system: 'Sistema',
+    run: 'Ejecutar'
   };
 
   function hasPermission(module, action) {
@@ -605,7 +637,7 @@ async function toggleProductOffer(productId) {
   }
 
   function applyRolePermissions() {
-    const modules = ['dashboard','products','orders','users','inventory','offers','reports','settings'];
+    const modules = ['dashboard','products','orders','users','inventory','offers','tasks','reports','messages','settings'];
     modules.forEach(m => {
       const canView = hasPermission(m,'view');
       const navEl = document.querySelector(`#sidebar [data-section="${m}"]`);
@@ -845,8 +877,9 @@ function renderUsersTable() {
       permissionsHtml += `<h6>${module.charAt(0).toUpperCase() + module.slice(1)}</h6><ul>`;
       Object.keys(defaultPermissions.admin[module]).forEach(permission => {
         const hasPermission = userPermissions[module]?.[permission] || false;
+        const label = permissionLabels[permission] || permission;
         permissionsHtml += `<li class="${hasPermission ? 'text-success' : 'text-danger'}">
-          <i class="fas fa-${hasPermission ? 'check' : 'times'}"></i> ${permission}
+          <i class="fas fa-${hasPermission ? 'check' : 'times'}"></i> ${label}
         </li>`;
       });
       permissionsHtml += '</ul>';
@@ -870,8 +903,8 @@ function renderUsersTable() {
     const userPermissions = user.permissions || defaultPermissions[user.role] || {};
     const container = document.getElementById('userSpecificPermissions');
     
-    let html = '';
-    Object.keys(defaultPermissions.admin).forEach(module => {
+  let html = '';
+  Object.keys(defaultPermissions.admin).forEach(module => {
       html += `
         <div class="card mb-3">
           <div class="card-header">
@@ -883,15 +916,16 @@ function renderUsersTable() {
       
       Object.keys(defaultPermissions.admin[module]).forEach(permission => {
         const isChecked = userPermissions[module]?.[permission] || false;
+        const label = permissionLabels[permission] || permission.charAt(0).toUpperCase() + permission.slice(1);
         html += `
           <div class="col-md-6">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" 
-                     id="user_${module}_${permission}" 
-                     name="${module}_${permission}" 
+              <input class="form-check-input" type="checkbox"
+                     id="user_${module}_${permission}"
+                     name="${module}_${permission}"
                      ${isChecked ? 'checked' : ''}>
               <label class="form-check-label" for="user_${module}_${permission}">
-                ${permission.charAt(0).toUpperCase() + permission.slice(1)}
+                ${label}
               </label>
             </div>
           </div>

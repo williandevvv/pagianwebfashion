@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    window.cargarTareas = cargarTareas;
+
     function renderizarTareas() {
         const tbody = document.querySelector('#tablaTareas tbody');
         if (!tbody) return;
