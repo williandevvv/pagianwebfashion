@@ -18,11 +18,14 @@
         
         /* Estilos base con nueva paleta de colores inspirada en maquillaje */
         :root {
-            --color-rose-gold: #fca5a5;
-            --color-shimmer: #f9a8d4;
-            --color-nude: #fed7aa;
-            --color-blush: #f472b6;
-            --color-accent: #fb923c;
+            --color-rose: #f7cac9;
+            --color-blush: #f4e4e1;
+            --color-nude: #e8c6b6;
+            --color-accent: #c06c84;
+            --color-white: #ffffff;
+            /* Variables heredadas para compatibilidad */
+            --color-rose-gold: var(--color-rose);
+            --color-shimmer: var(--color-blush);
         }
         
         /* Estilos generales del cuerpo */
@@ -41,23 +44,22 @@
             box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
         
-        /* Tarjetas de categorías con efecto de brillo */
+        /* Tarjetas de categorías con efecto cosmético */
         .category-card {
             height: 300px;
-            border-radius: 30px;
+            border-radius: 2rem;
             overflow: hidden;
             position: relative;
-            transition: all 0.4s ease;
-            background-size: cover;
-            background-position: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            background: linear-gradient(135deg, var(--color-rose), var(--color-accent));
+            color: var(--color-white);
             margin-bottom: 24px;
-            border: none;
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
         }
-        
+
         .category-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(236,72,153,0.2);
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
         
         /* Overlay con efecto degradado suave */
@@ -67,18 +69,18 @@
             left: 0;
             right: 0;
             padding: 30px;
-            background: linear-gradient(to top, 
-                rgba(252,165,165,0.9) 0%, 
-                rgba(252,165,165,0.6) 30%, 
+            background: linear-gradient(to top,
+                rgba(0,0,0,0.4) 0%,
+                rgba(0,0,0,0.2) 40%,
                 transparent 100%);
-            color: white;
+            color: var(--color-white);
         }
         
         /* Sección hero con diseño moderno y elegante */
         .hero-section {
-            background: linear-gradient(45deg, 
-                rgba(252,165,165,0.9), 
-                rgba(236,72,153,0.9)), 
+            background: linear-gradient(45deg,
+                rgba(247,202,201,0.9),
+                rgba(192,108,132,0.9)),
                 url('img/banner.jpg');
             background-size: cover;
             background-position: center;
@@ -189,7 +191,7 @@
             right: 5px;
             top: 50%;
             transform: translateY(-50%);
-            background: var(--color-accent);
+            background: linear-gradient(to right, var(--color-rose), var(--color-accent));
             border: none;
             width: 45px;
             height: 45px;
@@ -199,8 +201,20 @@
         }
 
         .search-container button:hover {
-            background: var(--color-rose-gold);
             transform: translateY(-50%) scale(1.05);
+            opacity: 0.9;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(to right, var(--color-rose), var(--color-accent));
+            border: none;
+            color: white;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
         }
         
         /* Estilos responsivos */
@@ -217,15 +231,30 @@
 </head>
 <body class="index">
     <!-- Header -->
-    <header class="modern-header">
-      <div class="logo">Fashion Collection</div>
-      <div class="search-box">
-        <input type="text" placeholder="Buscar..." />
-      </div>
-      <div class="icons">
-        <a href="perfil.html" id="profile-link" style="display:none;">👤</a>
-        <a href="carrito.html">🛒</a>
-      </div>
+    <header class="main-header bg-white bg-opacity-75 backdrop-blur rounded-2xl shadow-xl py-3 px-4 mb-4">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-4">
+                <a href="index.html" class="navbar-brand fw-bold" style="font-family: 'Playfair Display', serif;">Fashion Collection</a>
+                <nav class="d-none d-lg-flex gap-4">
+                    <a href="index.html" class="text-dark text-decoration-none">Inicio</a>
+                    <a href="#" class="text-dark text-decoration-none">Categorías <i class="fas fa-chevron-down"></i></a>
+                    <a href="#" class="text-dark text-decoration-none">Marcas</a>
+                    <a href="#" class="text-dark text-decoration-none">Cosméticos</a>
+                    <a href="#" class="text-dark text-decoration-none">Páginas <i class="fas fa-chevron-down"></i></a>
+                </nav>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="position-relative">
+                    <input type="text" class="form-control rounded-pill shadow-sm ps-4 pe-5" placeholder="Buscar productos...">
+                    <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                </div>
+                <a href="perfil.html" id="profile-link" class="btn btn-light rounded-circle" style="display:none;"><i class="fas fa-user"></i></a>
+                <a href="carrito.html" class="btn btn-light rounded-circle position-relative">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">0</span>
+                </a>
+            </div>
+        </div>
     </header>
     <div class="makeup-decorations">
       <div class="floating-makeup lipstick">💄</div>
@@ -244,7 +273,7 @@
                 <div class="col-md-8 col-lg-6">
                     <div class="search-container">
                         <input type="text" id="searchProducts" class="form-control" placeholder="Buscar productos...">
-                        <button type="button">
+                        <button type="button" class="btn-gradient">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -256,8 +285,19 @@
     <!-- Sección de Categorías -->
     <section class="py-5">
         <div class="container">
-            <div class="row g-4" id="categories">
-                <!-- Las categorías se cargarán dinámicamente aquí -->
+            <div id="categoriesCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators" id="category-indicators"></div>
+                <div class="carousel-inner" id="categories">
+                    <!-- Categorías dinámicas -->
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#categoriesCarousel" data-bs-slide="prev">
+                    <span class="fas fa-chevron-left" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#categoriesCarousel" data-bs-slide="next">
+                    <span class="fas fa-chevron-right" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
             </div>
         </div>
     </section>
