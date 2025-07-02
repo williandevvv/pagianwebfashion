@@ -244,14 +244,38 @@
                     </div>
                     <div class="summary-item">
                         <span>Envío</span>
-                        <span id="cart-shipping">L120.00</span>
+                        <span id="cart-shipping">L0.00</span>
+                    </div>
+                    <div class="mb-3" id="shipping-options">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="shipping" id="shipping-sps" value="80" checked>
+                            <label class="form-check-label" for="shipping-sps">San Pedro Sula (L80.00)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="shipping" id="shipping-nacional" value="90">
+                            <label class="form-check-label" for="shipping-nacional">Nacional (L90.00)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="shipping" id="shipping-tienda" value="0">
+                            <label class="form-check-label" for="shipping-tienda">Recoger en tienda (L0.00)</label>
+                        </div>
+                    </div>
+                    <div class="summary-item" id="discount-row" style="display:none;">
+                        <span>Descuento</span>
+                        <span id="cart-discount">-L0.00</span>
                     </div>
                     <hr>
                     <div class="summary-item grand-total">
                         <span>Total</span>
                         <span id="cart-total">L0.00</span>
                     </div>
-                    <button id="checkout-btn" class="btn btn-primary checkout-btn w-100 mt-4">
+                    <form id="coupon-form" class="input-group mb-3">
+                        <input type="text" id="coupon-code" class="form-control" placeholder="Código de cupón">
+                        <button class="btn btn-outline-secondary" type="submit">Aplicar</button>
+                    </form>
+                    <p class="text-danger small" id="coupon-msg"></p>
+                    <button id="update-cart-btn" class="btn btn-secondary w-100 mb-2">Actualizar carrito</button>
+                    <button id="checkout-btn" class="btn btn-primary checkout-btn w-100 mt-2">
                         <i class="fas fa-lock me-2"></i>Proceder al Pago 💳
                     </button>
                     <div class="text-center mt-3">

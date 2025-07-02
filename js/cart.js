@@ -5,8 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables globales
     let cartItems = [];
     let subtotal = 0;
-    const SHIPPING_RATE = 120.00; // costo de envío fijo
+    const SHIPPING_OPTIONS = {
+        sps: 80.00,
+        nacional: 90.00,
+        tienda: 0.00
+    };
+    let selectedShipping = SHIPPING_OPTIONS.sps;
     let shipping = 0;
+    let couponDiscount = 0;
+    let orderNumber = parseInt(localStorage.getItem('orderNumber') || '1000');
     let total = 0;
 
     // Inicializar si estamos en página de carrito (soporta rutas sin extensión)
@@ -153,12 +160,28 @@ document.addEventListener('DOMContentLoaded', () => {
             clearCartBtn.addEventListener('click', clearCart);
         }
 
-        // Código de descuento
-        const discountForm = document.getElementById('discount-form');
-        if (discountForm) {
-            discountForm.addEventListener('submit', (e) => {
+        // Selección de envío
+        const shippingOptions = document.querySelectorAll('input[name="shipping"]');
+        shippingOptions.forEach(opt => opt.addEventListener('change', () => {
+            selectedShipping = parseFloat(opt.value);
+            updateCartTotals();
+        }));
+
+        // Formulario de cupón
+        const couponForm = document.getElementById('coupon-form');
+        if (couponForm) {
+            couponForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                applyDiscount(e.target.querySelector('input').value);
+                applyDiscount(document.getElementById('coupon-code').value);
+            });
+        }
+
+        const updateBtn = document.getElementById('update-cart-btn');
+        if (updateBtn) {
+            updateBtn.addEventListener('click', () => {
+                saveCartToStorage();
+                updateCartTotals();
+                showNotification('Carrito actualizado', 'success');
             });
         }
     }
@@ -218,6 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 cartItems = [];
+                couponDiscount = 0;
+                localStorage.removeItem('welcomeCouponUsed');
                 saveCartToStorage();
                 renderCart();
                 updateCartTotals();
@@ -228,23 +253,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Aplicar descuento
     function applyDiscount(code) {
-        // Demo: código WELCOME10 da 10% de descuento
-        if (code.toUpperCase() === 'FASHION10') {
-            const discount = subtotal * 0.1;
-            total = subtotal + shipping - discount;
-            updateCartTotals(discount);
+        const role = localStorage.getItem('userRole') || 'cliente';
+        const used = localStorage.getItem('welcomeCouponUsed');
+        if (code.toUpperCase() === 'BIENVENIDA10' && (role === 'admin' || !used)) {
+            couponDiscount = subtotal * 0.1;
+            localStorage.setItem('welcomeCouponUsed', 'true');
             showNotification('¡Descuento aplicado!', 'success');
         } else {
-            showNotification('Código de descuento inválido', 'error');
+            couponDiscount = 0;
+            showNotification('Cupón inválido o ya usado', 'error');
         }
+        updateCartTotals();
     }
 
     // Actualizar totales del carrito con formato hondureño
-    function updateCartTotals(discount = 0) {
+    function updateCartTotals() {
         const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        shipping = cartItems.length > 0 ? SHIPPING_RATE : 0;
+        shipping = cartItems.length > 0 ? selectedShipping : 0;
         subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        total = subtotal + shipping - discount;
+        total = subtotal + shipping - couponDiscount;
 
         // Actualizar UI con formato hondureño
         const subtotalElement = document.getElementById('cart-subtotal');
@@ -254,7 +281,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (subtotalElement) subtotalElement.textContent = `L. ${formatCurrencyHonduras(subtotal)}`;
         if (shippingElement) shippingElement.textContent = `L. ${formatCurrencyHonduras(shipping)}`;
-        if (discountElement) discountElement.textContent = `-L. ${formatCurrencyHonduras(discount)}`;
+        if (discountElement) {
+            discountElement.textContent = couponDiscount > 0 ? `-L. ${formatCurrencyHonduras(couponDiscount)}` : '-L. 0.00';
+            document.getElementById('discount-row').style.display = couponDiscount > 0 ? 'flex' : 'none';
+        }
         if (totalElement) totalElement.textContent = `L. ${formatCurrencyHonduras(total)}`;
 
         // Actualizar estado del botón de checkout
@@ -336,7 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Crear pedido con formato hondureño
-            const orderId = 'FC-' + Date.now();
+            orderNumber += 1;
+            localStorage.setItem('orderNumber', orderNumber.toString());
+            const orderId = 'FC-' + orderNumber;
             const order = {
                 id: orderId,
                 userId: userId,
@@ -386,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 icon: 'success',
                 title: '¡Pedido enviado por WhatsApp!',
                 html: `
-                    <p>Tu pedido <strong>#${orderId.substring(0, 8)}</strong> ha sido enviado.</p>
+                    <p>Tu pedido <strong>#${orderId}</strong> ha sido enviado.</p>
                     <p>Se abrirá WhatsApp para completar tu pedido.</p>
                     <p><strong>Total: L. ${formatCurrencyHonduras(total)}</strong></p>
                     ${userId ? '<p class="text-success"><i class="fas fa-check"></i> Pedido guardado en tu perfil</p>' : '<p class="text-info"><i class="fas fa-info"></i> Inicia sesión para guardar tus pedidos</p>'}
@@ -419,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
         message += `👤 *Cliente:* ${order.userName}\n`;
         message += `📧 *Correo:* ${order.userEmail}\n`;
         message += `🗓️ *Fecha:* ${formatDateHonduras(new Date())}\n`;
-        message += `🆔 *Pedido:* #${order.id.substring(0, 8)}\n`;
+        message += `🆔 *Pedido:* #${order.id}\n`;
         if (savedOrderId) {
             message += `🔑 *ID Sistema:* ${savedOrderId}\n`;
         }
