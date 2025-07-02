@@ -224,11 +224,21 @@
             <i class="fas fa-warehouse"></i> Inventario
           </a>
         </li>
+          <li>
+            <a href="#" class="nav-link" data-section="tasks">
+              <i class="fas fa-tasks"></i> Tareas
+            </a>
+          </li>
         <li>
           <a href="#" class="nav-link" data-section="reports">
             <i class="fas fa-file-alt"></i> Reportes
           </a>
         </li>
+          <li>
+            <a href="#" class="nav-link" data-section="messages">
+              <i class="fas fa-envelope"></i> Mensajes
+            </a>
+          </li>
         <li>
           <a href="#" class="nav-link" data-section="settings">
             <i class="fas fa-cog"></i> Configuración
@@ -577,9 +587,13 @@
                   >
                     <i class="fas fa-plus me-1"></i> Agregar Stock
                   </button>
-                  <button class="btn btn-info" onclick="generateExcelReport('inventory')">
-                    <i class="fas fa-file-excel me-1"></i> Exportar
-                  </button>
+                    <button class="btn btn-info" onclick="generateExcelReport('inventory')">
+                      <i class="fas fa-file-excel me-1"></i> Exportar
+                    </button>
+                    <button class="btn btn-secondary" id="importInventoryBtn">
+                      <i class="fas fa-file-import me-1"></i> Importar
+                    </button>
+                    <input type="file" id="importInventoryInput" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="d-none">
                 </div>
               </div>
               <div class="table-responsive">
@@ -604,6 +618,25 @@
           </div>
         </div>
       </section>
+        <!-- Tasks Section -->
+        <section id="tasks-section" class="admin-section d-none">
+          <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="mb-0">Tareas Automatizadas</h5>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarTarea">
+                <i class="fas fa-plus me-1"></i> Nueva Tarea
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="tablaTareas">
+                <thead>
+                  <tr><th>Tipo</th><th>Descripción</th><th>Fecha</th><th>Acciones</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
 
       <!-- Reports Section -->
       <section id="reports-section" class="admin-section d-none">
@@ -701,6 +734,20 @@
           </div>
         </div>
       </section>
+        <!-- Messages Section -->
+        <section id="messages-section" class="admin-section d-none">
+          <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="mb-0">Mensajes de Contacto</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="messagesTable">
+                <thead><tr><th>Fecha</th><th>Nombre</th><th>Email</th><th>Mensaje</th></tr></thead>
+                <tbody><tr><td colspan="4" class="text-center">Sin mensajes</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
 
       <!-- Settings Section -->
       <section id="settings-section" class="admin-section d-none">
@@ -757,6 +804,20 @@
                   required
                 />
               </div>
+                <div class="form-check mb-3">
+                  <input type="checkbox" class="form-check-input" id="offerActive" name="offerActive">
+                  <label class="form-check-label" for="offerActive">Producto en oferta</label>
+                </div>
+                <div id="offerFields" class="row g-2 mb-3 d-none">
+                  <div class="col">
+                    <label class="form-label">Precio de Oferta</label>
+                    <input type="number" step="0.01" class="form-control" name="offerPrice">
+                  </div>
+                  <div class="col">
+                    <label class="form-label">Fin de Oferta</label>
+                    <input type="date" class="form-control" name="offerEnd">
+                  </div>
+                </div>
               <div class="mb-3">
                 <label class="form-label">Stock</label>
                 <input
