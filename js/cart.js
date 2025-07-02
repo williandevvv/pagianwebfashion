@@ -288,24 +288,40 @@ document.addEventListener('DOMContentLoaded', () => {
             let userEmail = 'Cliente Anónimo';
             let userId = null;
             let userName = 'Cliente';
-            
+
             if (typeof firebase !== 'undefined' && firebase.auth) {
                 const user = firebase.auth().currentUser;
-                if (user) {
-                    userEmail = user.email;
-                    userId = user.uid;
-                    
-                    // Obtener datos adicionales del usuario
-                    try {
-                        const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-                        const userData = userDoc.data();
-                        if (userData && userData.name) {
-                            userName = userData.lastname ? `${userData.name} ${userData.lastname}` : userData.name;
-                        }
-                    } catch (error) {
-                        console.log('No se pudieron obtener datos adicionales del usuario');
-                    }
+                if (!user) {
+                    await Swal.fire({
+                        icon: 'info',
+                        title: 'Inicia sesión',
+                        text: 'Debes iniciar sesión para realizar un pedido',
+                        confirmButtonText: 'Ir a Login'
+                    });
+                    window.location.href = 'login';
+                    return;
                 }
+
+                userEmail = user.email;
+                userId = user.uid;
+
+                // Obtener datos adicionales del usuario
+                try {
+                    const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                    const userData = userDoc.data();
+                    if (userData && userData.name) {
+                        userName = userData.lastname ? `${userData.name} ${userData.lastname}` : userData.name;
+                    }
+                } catch (error) {
+                    console.log('No se pudieron obtener datos adicionales del usuario');
+                }
+            } else {
+                await Swal.fire({
+                    icon: 'info',
+                    title: 'Servicio no disponible',
+                    text: 'No es posible verificar tu sesión en este momento.'
+                });
+                return;
             }
 
             // Proceder con el checkout
