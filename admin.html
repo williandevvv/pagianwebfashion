@@ -32,6 +32,12 @@
     <style>
       :root {
         --sidebar-width: 250px;
+        /* Colores principales utilizados en el encabezado del sitio */
+        --color-rose-gold: #bd8c7d;
+        --color-shimmer: #f4e4e1;
+        --color-nude: #e8c6b6;
+        --color-blush: #f7cac9;
+        --color-accent: #c06c84;
       }
 
       body {
@@ -59,7 +65,8 @@
 
       #sidebar .sidebar-header {
         padding: 20px;
-        background: #000;
+        background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
+        color: white;
       }
 
       #sidebar ul.components {
@@ -164,6 +171,12 @@
         background-color: #5a0cb0;
       }
 
+      /* Estilo de degradado para el encabezado del panel */
+      .navbar-gradient {
+        background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
+        color: white;
+      }
+
       /* Status Badge Styles */
       .status-badge {
         padding: 5px 10px;
@@ -261,7 +274,7 @@
     <div id="content">
       <!-- Navbar -->
       <nav
-        class="navbar navbar-expand-lg navbar-light bg-white rounded-3 mb-4 shadow-sm"
+        class="navbar navbar-expand-lg navbar-dark navbar-gradient rounded-3 mb-4 shadow-sm"
       >
         <div class="container-fluid">
           <button type="button" id="sidebarToggle" class="btn">
@@ -271,6 +284,10 @@
             <h5 class="mb-0" id="section-title">Dashboard</h5>
           </div>
           <div class="ms-auto d-flex align-items-center">
+            <!-- Botón para activar o desactivar el modo mantenimiento -->
+            <button id="maintenanceBtn" class="btn btn-warning me-3">
+              Modo Mantenimiento
+            </button>
             <div class="dropdown">
               <button
                 class="btn btn-link text-dark text-decoration-none dropdown-toggle"
@@ -1457,5 +1474,31 @@
     <script type="module" src="js/admin.js"></script>
     <script type="module" src="js/app.js"></script>
     <script type="module" src="js/maintenance.js"></script>
+    <!-- Script para manejar el botón de modo mantenimiento -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('maintenanceBtn');
+        if (!btn || !window.systemSettings) return;
+
+        // Cargar estado actual del mantenimiento
+        window.systemSettings.loadSettings().then(settings => {
+          const activo = settings.general?.maintenanceMode;
+          actualizarTexto(activo);
+          btn.dataset.activo = activo ? '1' : '0';
+        });
+
+        btn.addEventListener('click', async () => {
+          const activo = btn.dataset.activo === '1';
+          const nuevoEstado = !activo;
+          await window.systemSettings.saveSettings({ general: { maintenanceMode: nuevoEstado } });
+          actualizarTexto(nuevoEstado);
+          btn.dataset.activo = nuevoEstado ? '1' : '0';
+        });
+
+        function actualizarTexto(activo) {
+          btn.textContent = activo ? 'Desactivar Mantenimiento' : 'Activar Mantenimiento';
+        }
+      });
+    </script>
   </body>
 </html>
