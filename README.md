@@ -1,16 +1,18 @@
 # Pagian Web Fashion
 
-Este proyecto utiliza un pequeño servidor en Express para servir el contenido.
+Ahora la aplicación está construida con **React**, **TailwindCSS** y **Firebase**.
+El proyecto original en HTML se migró a componentes de React y la autenticación
+usa el SDK modular de Firebase.
 
 ## Uso
 
-1. Instale las dependencias con `npm install`.
-2. Inicie el servidor ejecutando:
+1. Instalar dependencias (requiere conexión a internet):
+   ```bash
+   npm install --prefix webapp
+   ```
+2. Ejecutar el entorno de desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm start
-```
-
-El comando inicia `js/server.js`, que expone la aplicación en [http://localhost:8080](http://localhost:8080).
-
-Además de la página principal, el sitio cuenta con secciones de **Envíos**, **Devoluciones**, **Preguntas Frecuentes** y **Términos y Condiciones** accesibles desde el pie de página.
+Para más información sobre la configuración de Firebase consulta `Txt/README.md`.
