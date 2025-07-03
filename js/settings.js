@@ -32,7 +32,8 @@ export class SystemSettings {
                         siteName: 'Fashion Collection',
                         currency: 'L',
                         language: 'es',
-                        timezone: 'America/Tegucigalpa'
+                        timezone: 'America/Tegucigalpa',
+                        maintenanceMode: false
                     }
                 };
                 await this.saveSettings(defaultSettings);
@@ -296,6 +297,21 @@ export class SystemSettings {
                         </div>
                     </div>
 
+                    <!-- Modo Mantenimiento -->
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5><i class="fas fa-tools me-2"></i>Mantenimiento</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="maintenanceToggle">
+                                    <label class="form-check-label" for="maintenanceToggle">Activar modo mantenimiento</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Respaldos -->
                     <div class="col-md-6">
                         <div class="card mb-4">
@@ -346,14 +362,18 @@ export function loadSettingsSection() {
         // Cargar configuración actual
         systemSettings.loadSettings().then(settings => {
             // Llenar formularios con datos actuales
-            if (settings.general) {
-                const generalForm = document.getElementById('generalSettingsForm');
-                if (generalForm) {
-                    generalForm.siteName.value = settings.general.siteName || 'Fashion Collection';
-                    generalForm.currency.value = settings.general.currency || 'L';
-                    generalForm.language.value = settings.general.language || 'es';
+           if (settings.general) {
+               const generalForm = document.getElementById('generalSettingsForm');
+               if (generalForm) {
+                   generalForm.siteName.value = settings.general.siteName || 'Fashion Collection';
+                   generalForm.currency.value = settings.general.currency || 'L';
+                   generalForm.language.value = settings.general.language || 'es';
+               }
+                const maintenanceToggle = document.getElementById('maintenanceToggle');
+                if (maintenanceToggle) {
+                    maintenanceToggle.checked = settings.general.maintenanceMode || false;
                 }
-            }
+           }
             
             if (settings.theme) {
                 const themeForm = document.getElementById('themeSettingsForm');
@@ -433,6 +453,17 @@ function setupSettingsEventListeners() {
                     newOrders: formData.has('newOrders'),
                     userRegistrations: formData.has('userRegistrations')
                 }
+            };
+            await systemSettings.saveSettings(settings);
+        });
+    }
+
+    // Toggle de mantenimiento
+    const maintenanceToggle = document.getElementById('maintenanceToggle');
+    if (maintenanceToggle) {
+        maintenanceToggle.addEventListener('change', async () => {
+            const settings = {
+                general: { maintenanceMode: maintenanceToggle.checked }
             };
             await systemSettings.saveSettings(settings);
         });
