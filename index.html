@@ -12,20 +12,16 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
     <style>
         /* Comentarios en español para cada sección */
         
         /* Estilos base con nueva paleta de colores inspirada en maquillaje */
         :root {
-            --color-rose: #f7cac9;
-            --color-blush: #f4e4e1;
+            --color-rose-gold: #bd8c7d;
+            --color-shimmer: #f4e4e1;
             --color-nude: #e8c6b6;
+            --color-blush: #f7cac9;
             --color-accent: #c06c84;
-            --color-white: #ffffff;
-            /* Variables heredadas para compatibilidad */
-            --color-rose-gold: var(--color-rose);
-            --color-shimmer: var(--color-blush);
         }
         
         /* Estilos generales del cuerpo */
@@ -36,7 +32,7 @@
         
         /* Encabezado con efecto de cristal y degradado */
         .header {
-            background: linear-gradient(135deg, rgba(252,165,165,0.95), rgba(236,72,153,0.95));
+            background: linear-gradient(135deg, rgba(189,140,125,0.95), rgba(192,108,132,0.95));
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
@@ -44,22 +40,23 @@
             box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
         
-        /* Tarjetas de categorías con efecto cosmético */
+        /* Tarjetas de categorías con efecto de brillo */
         .category-card {
             height: 300px;
-            border-radius: 2rem;
+            border-radius: 20px;
             overflow: hidden;
             position: relative;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            background: linear-gradient(135deg, var(--color-rose), var(--color-accent));
-            color: var(--color-white);
+            transition: all 0.4s ease;
+            background-size: cover;
+            background-position: center;
             margin-bottom: 24px;
+            border: none;
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
         }
-
+        
         .category-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(192,108,132,0.2);
         }
         
         /* Overlay con efecto degradado suave */
@@ -69,18 +66,18 @@
             left: 0;
             right: 0;
             padding: 30px;
-            background: linear-gradient(to top,
-                rgba(0,0,0,0.4) 0%,
-                rgba(0,0,0,0.2) 40%,
+            background: linear-gradient(to top, 
+                rgba(189,140,125,0.9) 0%, 
+                rgba(189,140,125,0.6) 30%, 
                 transparent 100%);
-            color: var(--color-white);
+            color: white;
         }
         
         /* Sección hero con diseño moderno y elegante */
         .hero-section {
-            background: linear-gradient(45deg,
-                rgba(247,202,201,0.9),
-                rgba(192,108,132,0.9)),
+            background: linear-gradient(45deg, 
+                rgba(189,140,125,0.9), 
+                rgba(192,108,132,0.9)), 
                 url('img/banner.jpg');
             background-size: cover;
             background-position: center;
@@ -191,7 +188,7 @@
             right: 5px;
             top: 50%;
             transform: translateY(-50%);
-            background: linear-gradient(to right, var(--color-rose), var(--color-accent));
+            background: var(--color-accent);
             border: none;
             width: 45px;
             height: 45px;
@@ -201,20 +198,8 @@
         }
 
         .search-container button:hover {
+            background: var(--color-rose-gold);
             transform: translateY(-50%) scale(1.05);
-            opacity: 0.9;
-        }
-
-        .btn-gradient {
-            background: linear-gradient(to right, var(--color-rose), var(--color-accent));
-            border: none;
-            color: white;
-        }
-
-        .main-header {
-            position: sticky;
-            top: 0;
-            z-index: 1020;
         }
         
         /* Estilos responsivos */
@@ -229,39 +214,72 @@
         }
     </style>
 </head>
-<body class="index">
+<body>
     <!-- Header -->
-    <header class="main-header bg-white bg-opacity-75 backdrop-blur rounded-2xl shadow-xl py-3 px-4 mb-4">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-4">
-                <a href="index.html" class="navbar-brand fw-bold" style="font-family: 'Playfair Display', serif;">Fashion Collection</a>
-                <nav class="d-none d-lg-flex gap-4">
-                    <a href="index.html" class="text-dark text-decoration-none">Inicio</a>
-                    <a href="#" class="text-dark text-decoration-none">Categorías <i class="fas fa-chevron-down"></i></a>
-                    <a href="#" class="text-dark text-decoration-none">Marcas</a>
-                    <a href="#" class="text-dark text-decoration-none">Cosméticos</a>
-                    <a href="#" class="text-dark text-decoration-none">Páginas <i class="fas fa-chevron-down"></i></a>
-                </nav>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="position-relative">
-                    <input type="text" class="form-control rounded-pill shadow-sm ps-4 pe-5" placeholder="Buscar productos...">
-                    <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+    <header class="header py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand me-5" href="index">
+                        <h1 class="h4 text-white mb-0" style="font-family: 'Playfair Display', serif;">Fashion Collection</h1>
+                    </a>
+                    <nav class="d-none d-md-flex align-items-center">
+                        <a class="text-white text-decoration-none me-5" href="index">Inicio</a>
+                        <a class="text-white text-decoration-none me-5" href="ofertas">Ofertas</a>
+                        <a class="text-white text-decoration-none" href="contacto">Contacto</a>
+                    </nav>
                 </div>
-                <a href="perfil.html" id="profile-link" class="btn btn-light rounded-circle" style="display:none;"><i class="fas fa-user"></i></a>
-                <a href="carrito.html" class="btn btn-light rounded-circle position-relative">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="cart-count cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">0</span>
-                </a>
+                <div class="d-flex align-items-center">
+                    <a href="carrito" class="position-relative text-white me-4">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    
+                    <!-- Botones de autenticación (para invitados) -->
+                    <div id="auth-buttons" class="auth-buttons d-flex gap-2">
+                        <a href="login">
+                            <button class="btn btn-outline-light" data-bs-toggle="modal">
+                                Iniciar Sesión
+                            </button>
+                        </a>
+                        <a href="login">
+                            <button class="btn btn-light" data-bs-toggle="modal">
+                                Registrarse
+                            </button>
+                        </a>
+                    </div>
+
+                    <!-- Menú desplegable de perfil (para usuarios autenticados) -->
+                    <div id="profile-button" class="profile-dropdown d-none">
+                        <div class="dropdown">
+                            <button class="btn btn-link text-white text-decoration-none dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <span id="navbar-username">Usuario</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="perfil"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item text-danger" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <button class="d-md-none btn text-white ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Menú móvil -->
+            <div class="collapse d-md-none" id="mobileMenu">
+                <div class="py-3">
+                    <a class="d-block text-white py-2 text-decoration-none" href="index">Inicio</a>
+                    <a class="d-block text-white py-2 text-decoration-none" href="ofertas">Ofertas</a>
+                    <a class="d-block text-white py-2 text-decoration-none" href="contacto">Contacto</a>
+                </div>
             </div>
         </div>
     </header>
-    <div class="makeup-decorations">
-      <div class="floating-makeup lipstick">💄</div>
-      <div class="floating-makeup brush">🖌️</div>
-      <div class="floating-makeup compact">🪞</div>
-      <div class="floating-makeup sparkle">✨</div>
-    </div>
 
     <!-- Sección Hero -->
     <section class="hero-section">
@@ -273,7 +291,7 @@
                 <div class="col-md-8 col-lg-6">
                     <div class="search-container">
                         <input type="text" id="searchProducts" class="form-control" placeholder="Buscar productos...">
-                        <button type="button" class="btn-gradient">
+                        <button type="button">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -285,19 +303,8 @@
     <!-- Sección de Categorías -->
     <section class="py-5">
         <div class="container">
-            <div id="categoriesCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators" id="category-indicators"></div>
-                <div class="carousel-inner" id="categories">
-                    <!-- Categorías dinámicas -->
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#categoriesCarousel" data-bs-slide="prev">
-                    <span class="fas fa-chevron-left" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#categoriesCarousel" data-bs-slide="next">
-                    <span class="fas fa-chevron-right" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
-                </button>
+            <div class="row g-4" id="categories">
+                <!-- Las categorías se cargarán dinámicamente aquí -->
             </div>
         </div>
     </section>
