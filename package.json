@@ -1,13 +1,10 @@
 {
   "name": "pagianwebfashion",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "start": "node js/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+    "dev": "npm run dev --prefix webapp",
+    "build": "npm run build --prefix webapp",
+    "preview": "npm run preview --prefix webapp"
+  }
 }
