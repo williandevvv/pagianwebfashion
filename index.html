@@ -12,6 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Comentarios en español para cada sección */
         
@@ -216,86 +218,77 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <a class="navbar-brand me-5" href="index">
-                        <h1 class="h4 text-white mb-0" style="font-family: 'Playfair Display', serif;">Fashion Collection</h1>
-                    </a>
-                    <nav class="d-none d-md-flex align-items-center">
-                        <a class="text-white text-decoration-none me-5" href="index">Inicio</a>
-                        <a class="text-white text-decoration-none me-5" href="ofertas">Ofertas</a>
-                        <a class="text-white text-decoration-none" href="contacto">Contacto</a>
-                    </nav>
-                </div>
-                <div class="d-flex align-items-center">
-                    <a href="carrito" class="position-relative text-white me-4">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <span class="cart-badge">0</span>
-                    </a>
-                    
-                    <!-- Botones de autenticación (para invitados) -->
-                    <div id="auth-buttons" class="auth-buttons d-flex gap-2">
-                        <a href="login">
-                            <button class="btn btn-outline-light" data-bs-toggle="modal">
-                                Iniciar Sesión
-                            </button>
-                        </a>
-                        <a href="login">
-                            <button class="btn btn-light" data-bs-toggle="modal">
-                                Registrarse
-                            </button>
-                        </a>
-                    </div>
-
-                    <!-- Menú desplegable de perfil (para usuarios autenticados) -->
-                    <div id="profile-button" class="profile-dropdown d-none">
-                        <div class="dropdown">
-                            <button class="btn btn-link text-white text-decoration-none dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i>
-                                <span id="navbar-username">Usuario</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="perfil"><i class="fas fa-user"></i> Mi Perfil</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><button class="dropdown-item text-danger" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <button class="d-md-none btn text-white ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
-                        <i class="fas fa-bars fa-lg"></i>
-                    </button>
-                </div>
+    <header class="bg-gradient-to-br from-pink-300 via-rose-200 to-orange-200 sticky top-0 z-50 shadow">
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
+            <div class="flex items-center">
+                <a class="navbar-brand me-5 text-gray-800 font-bold text-xl" href="index">Fashion Collection</a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-gray-800 hover:text-pink-600" href="index">Inicio</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="ofertas">Ofertas</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="contacto">Contacto</a>
+                </nav>
             </div>
-            
-            <!-- Menú móvil -->
-            <div class="collapse d-md-none" id="mobileMenu">
-                <div class="py-3">
-                    <a class="d-block text-white py-2 text-decoration-none" href="index">Inicio</a>
-                    <a class="d-block text-white py-2 text-decoration-none" href="ofertas">Ofertas</a>
-                    <a class="d-block text-white py-2 text-decoration-none" href="contacto">Contacto</a>
+            <div class="flex items-center">
+                <a href="carrito" class="relative text-gray-800 me-4">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                    <span class="cart-badge absolute -top-2 -right-2 bg-pink-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
+                </a>
+                <div id="auth-buttons" class="auth-buttons flex gap-2">
+                    <a href="login">
+                        <button class="btn btn-outline-light" data-bs-toggle="modal">Iniciar Sesión</button>
+                    </a>
+                    <a href="login">
+                        <button class="btn btn-light" data-bs-toggle="modal">Registrarse</button>
+                    </a>
                 </div>
+                <div id="profile-button" class="profile-dropdown d-none">
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle text-gray-800" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span id="navbar-username">Usuario</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="perfil"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item text-danger" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+            </div>
+        </div>
+        <div class="collapse md:hidden" id="mobileMenu">
+            <div class="py-3 px-4">
+                <a class="block py-2 text-gray-800" href="index">Inicio</a>
+                <a class="block py-2 text-gray-800" href="ofertas">Ofertas</a>
+                <a class="block py-2 text-gray-800" href="contacto">Contacto</a>
             </div>
         </div>
     </header>
 
     <!-- Sección Hero -->
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="hero-title display-4 fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Descubre tu Belleza Interior</h1>
-            <p class="fs-5 mb-5">Encuentra los mejores productos de maquillaje y accesorios</p>
-            
-            <div class="row justify-content-center">
-                <div class="col-md-8 col-lg-6">
-                    <div class="search-container">
-                        <input type="text" id="searchProducts" class="form-control" placeholder="Buscar productos...">
-                        <button type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+    <section class="py-10 bg-gradient-to-br from-pink-300 via-rose-200 to-orange-200">
+        <div class="container mx-auto px-4 flex flex-col-reverse lg:flex-row items-center gap-8">
+            <div class="flex-1 text-center lg:text-left">
+                <p class="text-pink-600 font-semibold mb-2">Producto Cosmético Facial</p>
+                <h1 class="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">Un Cosmético Perfecto e Increíble</h1>
+                <p class="text-gray-600 mb-6">Elige nuestros productos de belleza herbal para verte bien todo el día. Consigue una piel suave, radiante y un cabello sedoso.</p>
+                <button class="bg-gradient-to-r from-pink-500 to-orange-400 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300">Comprar Ahora</button>
+                <div class="mt-6 relative max-w-md mx-auto lg:mx-0 search-container">
+                    <input type="text" id="searchProducts" class="w-full px-5 py-3 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="Buscar productos...">
+                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-pink-500"><i class="fas fa-search"></i></button>
                 </div>
+            </div>
+            <div class="flex-1 relative">
+                <div class="bg-white shadow-xl rounded-3xl p-8 text-center relative">
+                    <img src="img/maquillaje.jpg" alt="Maquillaje" class="w-40 h-40 mx-auto rounded-full shadow-lg" />
+                    <h3 class="text-xl font-bold text-gray-800 mt-4">Crema Facial de Rosa</h3>
+                    <p class="text-gray-500">Crema nutritiva con extracto natural de rosa</p>
+                </div>
+                <span class="absolute top-4 left-4 bg-white text-pink-500 font-semibold px-3 py-1 rounded-full shadow">ROSA</span>
+                <span class="absolute bottom-4 right-4 bg-white text-orange-500 font-semibold px-3 py-1 rounded-full shadow">SUAVE</span>
             </div>
         </div>
     </section>
