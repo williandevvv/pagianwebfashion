@@ -11,6 +11,16 @@
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <style>
+        /* Paleta de colores unificada */
+        :root {
+            --color-rose-gold: #bd8c7d;
+            --color-shimmer: #f4e4e1;
+            --color-nude: #e8c6b6;
+            --color-blush: #f7cac9;
+            --color-accent: #c06c84;
+            --color-deep-rose: #86424b;
+        }
+
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', sans-serif;
@@ -23,7 +33,7 @@
         }
 
         .header {
-            background-color: #000;
+            background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
             color: white;
             position: sticky;
             top: 0;
@@ -70,7 +80,7 @@
         .product-price {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #6a0dad;
+            color: var(--color-accent);
         }
 
         .quantity-control {
@@ -83,9 +93,9 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            border: 2px solid #6a0dad;
+            border: 2px solid var(--color-accent);
             background: none;
-            color: #6a0dad;
+            color: var(--color-accent);
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -96,7 +106,7 @@
         }
 
         .quantity-btn:hover {
-            background: #6a0dad;
+            background: var(--color-accent);
             color: white;
         }
 
@@ -141,11 +151,11 @@
         .grand-total {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #6a0dad;
+            color: var(--color-accent);
         }
 
         .checkout-btn {
-            background: #6a0dad;
+            background: var(--color-accent);
             border: none;
             padding: 1rem;
             border-radius: 50px;
@@ -154,7 +164,7 @@
         }
 
         .checkout-btn:hover {
-            background: #5a0cb0;
+            background: var(--color-deep-rose);
             transform: translateY(-2px);
         }
 
