@@ -2,9 +2,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔐 Auth.js cargado");
 
-  // Estado de autenticación global
-  window.usuarioAutenticadoFirebase = false;
-
   // Referencias a elementos del DOM
   const loginForm = document.getElementById("login-form");
   const registerForm = document.getElementById("register-form");
@@ -46,14 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
             navbarUsername.textContent = displayName;
           }
         }
-        const profileLink = document.getElementById('profile-link');
-        if (profileLink) profileLink.style.display = 'block';
       } else {
         // Usuario no autenticado
         if (authButtons) authButtons.classList.remove("d-none");
         if (profileButton) profileButton.classList.add("d-none");
-        const profileLink = document.getElementById('profile-link');
-        if (profileLink) profileLink.style.display = 'none';
       }
     } catch (error) {
       console.error("❌ Error actualizando UI:", error);
@@ -84,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "👤 Estado de auth cambió:",
         user ? "autenticado" : "no autenticado"
       );
-      window.usuarioAutenticadoFirebase = !!user;
       updateAuthUI(user);
     });
   } else {

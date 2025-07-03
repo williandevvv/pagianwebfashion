@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -16,12 +15,12 @@
     <style>
         /* Paleta de colores unificada */
         :root {
-            --color-rose-gold: #fca5a5;
-            --color-shimmer: #f9a8d4;
-            --color-nude: #fed7aa;
-            --color-blush: #f472b6;
-            --color-accent: #fb923c;
-            --color-deep-rose: #ec4899;
+            --color-rose-gold: #bd8c7d;
+            --color-shimmer: #f4e4e1;
+            --color-nude: #e8c6b6;
+            --color-blush: #f7cac9;
+            --color-accent: #c06c84;
+            --color-deep-rose: #86424b;
         }
 
         /* Estilos base */
@@ -63,7 +62,7 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(236,72,153,0.15);
+            box-shadow: 0 15px 30px rgba(192,108,132,0.15);
         }
 
         .product-img {
@@ -86,7 +85,7 @@
             padding: 5px 15px;
             border-radius: 20px;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(236,72,153,0.2);
+            box-shadow: 0 4px 15px rgba(192,108,132,0.2);
         }
         .category-badge {
             background-color: #e9ecef;
@@ -118,7 +117,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(236,72,153,0.3);
+            box-shadow: 0 5px 15px rgba(192,108,132,0.3);
         }
         .filter-controls {
             background: white;
@@ -138,24 +137,30 @@
         }
     </style>
 </head>
-<body class="general">
+<body>
     <!-- Navbar -->
-    <header class="modern-header">
-      <div class="logo">Fashion Collection</div>
-      <div class="search-box">
-        <input type="text" placeholder="Buscar..." />
-      </div>
-      <div class="icons">
-        <a href="perfil.html" id="profile-link" style="display:none;">👤</a>
-        <a href="carrito.html">🛒</a>
-      </div>
-    </header>
-    <div class="makeup-decorations">
-      <div class="floating-makeup lipstick">💄</div>
-      <div class="floating-makeup brush">🖌️</div>
-      <div class="floating-makeup compact">🪞</div>
-      <div class="floating-makeup sparkle">✨</div>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-gem me-2" style="color: var(--color-accent);"></i>Fashion Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bisuteria">Bisutería</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
     <div class="header text-center">
         <div class="container">
             <h1 class="display-4 fw-bold mb-3">Bisutería Exclusiva</h1>
@@ -280,7 +285,6 @@
     
     <!-- Incluir configuración de Firebase -->
     <script type="module" src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
     
     <script>
         // Variables

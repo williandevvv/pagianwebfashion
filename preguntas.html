@@ -7,18 +7,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
   <style>
     :root {
-      --color-rose-gold: #fca5a5;
-      --color-shimmer: #f9a8d4;
-      --color-nude: #fed7aa;
-      --color-blush: #f472b6;
-      --color-accent: #fb923c;
+      --color-rose-gold: #bd8c7d;
+      --color-shimmer: #f4e4e1;
+      --color-nude: #e8c6b6;
+      --color-blush: #f7cac9;
+      --color-accent: #c06c84;
     }
     body { background-color:#fff; font-family:'Poppins',sans-serif; }
     header {
-      background: linear-gradient(135deg, rgba(252,165,165,0.95), rgba(236,72,153,0.95));
+      background: linear-gradient(135deg, rgba(189,140,125,0.95), rgba(192,108,132,0.95));
       backdrop-filter: blur(10px);
       color: white;
       padding: 1rem 0;
@@ -31,14 +30,14 @@
   </style>
 </head>
 <body>
-  <header class="modern-header">
-    <div class="logo">Fashion Collection</div>
-    <div class="search-box">
-      <input type="text" placeholder="Buscar..." />
-    </div>
-    <div class="icons">
-      <a href="perfil.html" id="profile-link" style="display:none;">👤</a>
-      <a href="carrito.html">🛒</a>
+  <header class="header">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand text-white" href="index" style="font-family:'Playfair Display', serif;">Fashion Collection</a>
+      <nav class="d-none d-md-flex">
+        <a href="index" class="text-white text-decoration-none me-4">Inicio</a>
+        <a href="ofertas" class="text-white text-decoration-none me-4">Ofertas</a>
+        <a href="contacto" class="text-white text-decoration-none">Contacto</a>
+      </nav>
     </div>
   </header>
 
@@ -79,12 +78,5 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    if (window.usuarioAutenticadoFirebase) {
-      document.getElementById('profile-link').style.display = 'block';
-    } else {
-      document.getElementById('profile-link').style.display = 'none';
-    }
-  </script>
 </body>
 </html>

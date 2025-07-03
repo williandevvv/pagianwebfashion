@@ -67,27 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Renderizar categorías
     function renderCategories(categories) {
         const container = document.getElementById('categories');
-        const indicators = document.getElementById('category-indicators');
         if (!container) return;
 
-        const emojis = ['🌹','💧','✨','💄','🪞','🎀'];
-
-        container.innerHTML = categories.map((category, index) => `
-            <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                <a href="${category.link}" class="categoria-card d-flex flex-column justify-content-center align-items-center text-center position-relative">
-                    <span class="fs-1 mb-3">${emojis[index % emojis.length]}</span>
-                    <span class="badge bg-white text-dark shadow position-absolute top-0 start-0 m-2">ROSE</span>
-                    <h3 class="h4 fw-bold">${category.name}</h3>
-                    <p class="mb-0">${category.productCount} productos</p>
+        container.innerHTML = categories.map(category => `
+            <div class="col-md-6 col-lg-4">
+                <a href="${category.link}" class="category-card d-block" style="background-image: url(${category.image})">
+                    <div class="category-overlay">
+                        <h3 class="h4 fw-bold mb-2">${category.name}</h3>
+                        <p class="mb-0">${category.productCount} productos</p>
+                    </div>
                 </a>
             </div>
         `).join('');
-
-        if (indicators) {
-            indicators.innerHTML = categories.map((_, i) => `
-                <button type="button" data-bs-target="#categoriesCarousel" data-bs-slide-to="${i}" ${i === 0 ? 'class="active" aria-current="true"' : ''} aria-label="Slide ${i+1}"></button>
-            `).join('');
-        }
     }
 
     // Cargar galería de inspiración
