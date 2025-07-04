@@ -2,6 +2,7 @@
 class EnhancedCart {
     constructor() {
         this.cart = this.loadCart();
+        this.orderNumber = parseInt(localStorage.getItem('orderNumber') || '1000');
         this.initializeEventListeners();
         this.updateCartDisplay();
     }
@@ -310,8 +311,14 @@ class EnhancedCart {
 
         if (result.isConfirmed) {
             try {
+                // Generar ID de pedido
+                this.orderNumber += 1;
+                localStorage.setItem('orderNumber', this.orderNumber.toString());
+                const orderId = 'FC-' + this.orderNumber;
+
                 // Crear pedido en Firebase
                 const order = {
+                    id: orderId,
                     userId: user.uid,
                     userEmail: user.email,
                     items: this.cart,
@@ -321,7 +328,10 @@ class EnhancedCart {
                     shippingAddress: null // Se puede agregar después
                 };
 
-                await firebase.firestore().collection('orders').add(order);
+                await firebase.firestore()
+                    .collection('orders')
+                    .doc(orderId)
+                    .set(order);
 
                 // Limpiar carrito
                 this.cart = [];
