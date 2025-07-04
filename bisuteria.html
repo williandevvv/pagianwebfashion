@@ -261,7 +261,7 @@
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-primary w-100" id="tipBtn">
-                        <i class="fas fa-magic me-1"></i> Tip de Maquillaje
+                        <i class="fas fa-lightbulb me-1"></i> Tip de Bisutería
                     </button>
                 </div>
             </div>
@@ -542,17 +542,17 @@
         // Actualizar contador al cargar la página
         document.addEventListener('DOMContentLoaded', updateCartCounter);
 
-        // Mostrar un consejo de maquillaje al azar
+        // Mostrar un consejo de bisutería al azar
         const tips = [
-            'Aplica primero una prebase para prolongar la duración de tu maquillaje.',
-            'Utiliza brochas limpias para un acabado profesional.',
-            'Difumina bien las sombras para un look suave y elegante.',
-            'No olvides hidratar tu piel antes de maquillarte.'
+            'Usa ganchos de buena calidad para evitar reacciones en la piel.',
+            'Aplica esmalte transparente para mantener el brillo de tus accesorios.',
+            'Guarda tus collares colgados para que no se enreden.',
+            'Limpia cada pieza con un paño suave después de usarla.'
         ];
 
         document.getElementById('tipBtn').addEventListener('click', () => {
             const tip = tips[Math.floor(Math.random() * tips.length)];
-            Swal.fire('Consejo de maquillaje', tip, 'info');
+            Swal.fire('Consejo de bisutería', tip, 'info');
         });
     </script>
   <!--<script>
