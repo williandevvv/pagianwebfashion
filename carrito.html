@@ -208,6 +208,17 @@
                 font-size: 1.1rem;
             }
         }
+
+        /* Sección de recomendados */
+        .recommended-section .card {
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .recommended-section .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -285,6 +296,9 @@
                     </form>
                     <p class="text-danger small" id="coupon-msg"></p>
                     <button id="update-cart-btn" class="btn btn-secondary w-100 mb-2">Actualizar carrito</button>
+                    <button id="clear-cart-btn" class="btn btn-outline-danger w-100 mb-2">
+                        <i class="fas fa-trash me-2"></i>Vaciar carrito
+                    </button>
                     <button id="checkout-btn" class="btn btn-primary checkout-btn w-100 mt-2">
                         <i class="fas fa-lock me-2"></i>Proceder al Pago 💳
                     </button>
@@ -297,7 +311,44 @@
                 </div>
             </div>
         </div>
-    </main>
+</main>
+
+    <!-- Recommended Products -->
+    <section class="container my-5 recommended-section">
+        <h3 class="mb-4 emoji-title"><span>✨</span>Te puede interesar</h3>
+        <div class="row" id="recommended-items">
+            <div class="col-md-4 mb-3">
+                <div class="card product-item h-100 text-center">
+                    <img src="img/bisuteria.jpg" class="card-img-top product-img" alt="Bisutería">
+                    <div class="card-body">
+                        <h5 class="product-title">Bisutería Elegante</h5>
+                        <p class="product-price mb-2">L. 150.00</p>
+                        <button class="btn btn-sm btn-outline-primary" onclick="cartManager.addToCart({id:'rec-bisuteria', name:'Bisutería Elegante', price:150, image:'img/bisuteria.jpg', stock:10});">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card product-item h-100 text-center">
+                    <img src="img/maquillaje.jpg" class="card-img-top product-img" alt="Maquillaje">
+                    <div class="card-body">
+                        <h5 class="product-title">Maquillaje Natural</h5>
+                        <p class="product-price mb-2">L. 350.00</p>
+                        <button class="btn btn-sm btn-outline-primary" onclick="cartManager.addToCart({id:'rec-maquillaje', name:'Maquillaje Natural', price:350, image:'img/maquillaje.jpg', stock:10});">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card product-item h-100 text-center">
+                    <img src="img/acero.jpg" class="card-img-top product-img" alt="Acero Inoxidable">
+                    <div class="card-body">
+                        <h5 class="product-title">Joyería de Acero</h5>
+                        <p class="product-price mb-2">L. 200.00</p>
+                        <button class="btn btn-sm btn-outline-primary" onclick="cartManager.addToCart({id:'rec-acero', name:'Joyería de Acero', price:200, image:'img/acero.jpg', stock:10});">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Toast Container -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
