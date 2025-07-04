@@ -184,7 +184,7 @@
                         <a class="nav-link" href="index">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="bisuteria">Bisutería</a>
+                        <a class="nav-link" href="contacto">Contacto</a>
                     </li>
                 </ul>
             </div>
@@ -212,11 +212,12 @@
                 </div>
                 <div class="col-md-3">
                     <div class="sort-dropdown">
-                        <select class="form-select" id="sortSelect">
-                            <option value="newest">Más recientes</option>
-                            <option value="price-asc">Precio: menor a mayor</option>
-                            <option value="price-desc">Precio: mayor a menor</option>
-                            <option value="name-asc">Nombre: A-Z</option>
+                        <select class="form-select" id="sortFilter">
+                            <option value="newest">Más reciente</option>
+                            <option value="high-low">Precio: Mayor a menor</option>
+                            <option value="low-high">Precio: Menor a mayor</option>
+                            <option value="az">A - Z</option>
+                            <option value="za">Z - A</option>
                         </select>
                     </div>
                 </div>
@@ -229,7 +230,7 @@
         </div>
 
         <!-- Product Grid -->
-        <div class="row" id="productsGrid">
+        <div class="row" id="productGrid">
             <!-- Los productos se cargarán aquí con JavaScript -->
         </div>
 
@@ -316,242 +317,65 @@
     
     <!-- Incluir configuración de Firebase -->
     <script type="module" src="js/firebase-config.js"></script>
-    
+
     <script>
-        // Variables
-        let db;
-        let isOffline = false;
-        let allProducts = [];
-        const productsGrid = document.getElementById('productsGrid');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const emptyState = document.getElementById('emptyState');
-        const searchInput = document.getElementById('searchInput');
-        const sortSelect = document.getElementById('sortSelect');
+    // Lista de productos de ejemplo
+    const productos = [
+        { nombre: "Aretes Rosados", precio: 45 },
+        { nombre: "Collar Glamour", precio: 85 },
+        { nombre: "Pulsera Perlas", precio: 60 },
+        { nombre: "Anillo Dorado", precio: 30 }
+    ];
 
-        // Inicializar cuando el documento esté listo
-        document.addEventListener('DOMContentLoaded', () => {
-            // Verificar si Firebase está disponible
-            if (typeof firebase !== 'undefined' && firebase.firestore) {
-                db = firebase.firestore();
-            } else {
-                console.log('Firebase no disponible, usando modo offline');
-                isOffline = true;
-            }
-            loadProducts();
-            updateCartCounter();
+    // Función para mostrar productos en pantalla
+    function mostrarProductos(lista) {
+        const contenedor = document.getElementById("productGrid");
+        contenedor.innerHTML = "";
+        lista.forEach(producto => {
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.innerHTML = `
+                <div class="product-info">
+                    <h3>${producto.nombre}</h3>
+                    <p>L. ${producto.precio}</p>
+                </div>
+            `;
+            contenedor.appendChild(card);
         });
-
-        // Event listeners
-        searchInput.addEventListener('input', filterProducts);
-        sortSelect.addEventListener('change', filterProducts);
-
-        async function loadProducts() {
-            try {
-                loadingSpinner.style.display = 'block';
-                emptyState.style.display = 'none';
-                
-                if (isOffline || !db) {
-                    // Cargar productos demo para bisutería
-                    allProducts = getDemoProducts();
-                } else {
-                    // Buscar productos con diferentes variaciones de categoría
-                    const snapshot = await db.collection('products')
-                        .where('category', 'in', ['bisuteria', 'Bisutería', 'bisutería', 'Bisuteria'])
-                        .get();
-                    
-                    allProducts = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                }
-                
-                displayProducts(allProducts);
-            } catch (error) {
-                console.error("Error cargando productos:", error);
-                // Fallback a productos demo
-                allProducts = getDemoProducts();
-                displayProducts(allProducts);
-            } finally {
-                loadingSpinner.style.display = 'none';
-            }
-        }
-
-        // Productos demo para bisutería
-      
-        function filterProducts() {
-            let filtered = [...allProducts];
-            
-            // Filtrar por búsqueda
-            const searchTerm = searchInput.value.toLowerCase();
-            if (searchTerm) {
-                filtered = filtered.filter(product => 
-                    product.name.toLowerCase().includes(searchTerm) || 
-                    product.description.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            // Ordenar
-            const sortValue = sortSelect.value;
-            switch (sortValue) {
-                case 'price-asc':
-                    filtered.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price-desc':
-                    filtered.sort((a, b) => b.price - a.price);
-                    break;
-                case 'name-asc':
-                    filtered.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                default: // newest
-                    filtered.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
-                    break;
-            }
-            
-            displayProducts(filtered);
-        }
-
-        function displayProducts(products) {
-            productsGrid.innerHTML = '';
-            
-            if (products.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            }
-            
-            emptyState.style.display = 'none';
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'col-lg-3 col-md-4 col-sm-6 mb-4';
-                
-                // Usar el campo correcto para la imagen (image o imageUrl)
-                const imageUrl = product.image || product.imageUrl || 'https://ivyottos.com/cdn/shop/articles/rs_w_1280_11.jpg?v=1628038418&width=1100';
-                
-                // Formatear precio en Lempiras
-                const formattedPrice = typeof window.formatPrice === 'function' 
-                    ? window.formatPrice(product.price) 
-                    : `L.${parseFloat(product.price).toFixed(2)}`;
-                
-                productCard.innerHTML = `
-                    <div class="product-card h-100">
-                        <div class="position-relative">
-                            <img src="${imageUrl}" 
-                                 class="product-img" 
-                                 alt="${product.name}"
-                                 onerror="this.src='https://ivyottos.com/cdn/shop/articles/rs_w_1280_11.jpg?v=1628038418&width=1100'">
-                            <div class="price-tag">${formattedPrice}</div>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="card-text text-muted">${(product.description || '').substring(0, 60)}${product.description && product.description.length > 60 ? '...' : ''}</p>
-                            <span class="category-badge">${product.category}</span>
-                            <div class="mt-3">
-                                <div class="input-group input-group-sm mb-2">
-                                    <input type="number" id="qty-${product.id}" class="form-control quantity-input" min="1" value="1">
-                                </div>
-                                <button class="btn btn-primary btn-sm w-100" onclick="addToCart('${product.id}')">
-                                    <i class="fas fa-shopping-cart me-1"></i> Agregar al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                productsGrid.appendChild(productCard);
-            });
-        }
-
-        // Función para agregar al carrito
-        function addToCart(productId) {
-            const product = allProducts.find(p => p.id === productId);
-            if (!product) return;
-
-            // Obtener carrito actual del localStorage
-            let cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
-            
-            // Verificar si el producto ya está en el carrito
-            const qtyInput = document.getElementById('qty-' + productId);
-            const qty = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
-
-            const existingItem = cart.find(item => item.id === productId);
-
-            if (existingItem) {
-                existingItem.quantity += qty;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image || product.imageUrl,
-                    quantity: qty
-                });
-            }
-            
-            // Guardar carrito actualizado
-            localStorage.setItem('fashionCart', JSON.stringify(cart));
-            
-            // Mostrar notificación con SweetAlert
-            Swal.fire({
-                icon: 'success',
-                title: 'Producto agregado',
-                text: `${product.name} agregado al carrito (${qty} uds)`,
-                timer: 2000,
-                showConfirmButton: false
-            });
-            
-            // Actualizar contador del carrito si existe
-            updateCartCounter();
-        }
-
-        // Función para actualizar contador del carrito
-        function updateCartCounter() {
-            const cart = JSON.parse(localStorage.getItem('fashionCart') || '[]');
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            
-            const badges = document.querySelectorAll('.cart-badge, .cart-counter, .cart-count');
-            badges.forEach(el => {
-                el.textContent = totalItems;
-                el.style.display = totalItems > 0 ? 'inline' : 'none';
-            });
-        }
-
-        // Actualizar contador al cargar la página
-        document.addEventListener('DOMContentLoaded', updateCartCounter);
-    </script>
-  <!--<script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    try {
-      const container = document.getElementById("product-list"); // o el id donde irán los productos
-
-      const snapshot = await firebase.firestore()
-        .collection('products')
-        .where('category', '==', 'Bisutería')
-        .where('status', '==', 'active')
-        .get();
-
-      let html = '';
-      snapshot.forEach(doc => {
-        const product = doc.data();
-        html += `
-          <div class="col-md-4 mb-4">
-            <div class="card shadow">
-              <img src="${product.image}" class="card-img-top" alt="${product.name}" style="height: 250px; object-fit: cover;">
-              <div class="card-body">
-                <h5 class="card-title">${product.name}</h5>
-                <p class="card-text">L${product.price.toFixed(2)}</p>
-                <button class="btn btn-primary w-100">Agregar al carrito</button>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-
-    } catch (error) {
-      console.error("Error cargando productos:", error);
     }
-  });
-</script> -->
+
+    // Buscar productos en tiempo real
+    function searchProducts() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(query));
+        mostrarProductos(filtrados);
+    }
+
+    // Ordenar productos según el filtro seleccionado
+    function sortProducts() {
+        const criterio = document.getElementById("sortFilter").value;
+        let listaOrdenada = [...productos];
+
+        if (criterio === "high-low") {
+            listaOrdenada.sort((a, b) => b.precio - a.precio);
+        } else if (criterio === "low-high") {
+            listaOrdenada.sort((a, b) => a.precio - b.precio);
+        } else if (criterio === "az") {
+            listaOrdenada.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        } else if (criterio === "za") {
+            listaOrdenada.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        }
+        mostrarProductos(listaOrdenada);
+    }
+
+    // Mostrar productos y asignar eventos al cargar
+    window.onload = function() {
+        mostrarProductos(productos);
+        document.getElementById("searchInput").addEventListener("input", searchProducts);
+        document.getElementById("sortFilter").addEventListener("change", sortProducts);
+    };
+    </script>
+
 <script type="module" src="js/maintenance.js"></script>
 </body>
 </html>
