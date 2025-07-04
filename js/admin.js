@@ -335,6 +335,14 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleProductOffer(btn.dataset.id);
       }
     });
+
+    // Ver factura del pedido
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ver-factura");
+      if (!btn) return;
+      const pedidoId = btn.dataset.id;
+      if (pedidoId) generateInvoice(pedidoId);
+    });
   }
 
   function showSection(sectionName) {
@@ -1015,6 +1023,9 @@ function renderUsersTable() {
                         }">${estado}</span>
                     </td>
                     <td>
+                        <button class="btn btn-sm btn-outline-primary ver-factura" data-id="${order.id}">
+                          <i class="fas fa-file-invoice"></i>
+                        </button>
                         ${
                           (estado === "pending" || estado === "pendiente") && hasPermission('orders','edit')
                             ? `<button class="btn btn-sm btn-success marcar-enviado" data-id="${order.id}">Marcar Enviado</button>`
@@ -1157,6 +1168,9 @@ function renderUsersTable() {
               <button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.id}')">
                 <i class="fas fa-eye"></i>
               </button>
+              <button class="btn btn-sm btn-outline-success ver-factura" data-id="${order.id}">
+                <i class="fas fa-file-invoice"></i>
+              </button>
             </td>
           </tr>
         `;
@@ -1207,6 +1221,65 @@ function renderUsersTable() {
           <hr>
           <h6>Productos:</h6>
           ${itemsHtml}
+        </div>
+      `,
+      width: '800px',
+      confirmButtonText: 'Cerrar'
+    });
+  };
+
+  // Generar factura detallada del pedido
+  window.generateInvoice = function(orderId) {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+
+    const fechaHora = order.createdAt?.seconds
+      ? new Date(order.createdAt.seconds * 1000).toLocaleString('es-HN')
+      : new Date().toLocaleString('es-HN');
+
+    const total = order.total || order.items?.reduce((sum, i) => sum + i.price * i.quantity, 0) || 0;
+    const subtotal = order.subtotal ?? total;
+    const envio = order.shipping || 0;
+    const descuento = order.couponDiscount || order.discount || 0;
+    const cup = order.couponCode || order.coupon || '';
+
+    let itemsHtml = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>ID Producto</th><th>Nombre</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr></thead><tbody>';
+    if (order.items) {
+      order.items.forEach(item => {
+        const sub = item.price * item.quantity;
+        itemsHtml += `
+          <tr>
+            <td>${item.id || ''}</td>
+            <td>${item.name || 'Producto'}</td>
+            <td>${item.quantity}</td>
+            <td>L${item.price.toFixed(2)}</td>
+            <td>L${sub.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+    }
+    itemsHtml += '</tbody></table></div>';
+
+    let resumenHtml = `
+        <p><strong>Subtotal:</strong> L${subtotal.toFixed(2)}</p>
+        <p><strong>Envío:</strong> L${envio.toFixed(2)}</p>
+    `;
+    if (descuento) {
+      resumenHtml += `<p><strong>Descuento ${cup ? '(' + cup + ')' : ''}:</strong> -L${descuento.toFixed(2)}</p>`;
+    }
+    resumenHtml += `<p><strong>Total:</strong> L${total.toFixed(2)}</p>`;
+
+    Swal.fire({
+      title: 'Factura',
+      html: `
+        <div class="text-start">
+          <h5 class="text-center mb-3">Fashion Collection</h5>
+          <p><strong>Pedido:</strong> #${order.id}</p>
+          <p><strong>Cliente:</strong> ${order.userEmail || 'Desconocido'}</p>
+          <p><strong>Fecha y Hora:</strong> ${fechaHora}</p>
+          <hr>
+          ${itemsHtml}
+          ${resumenHtml}
         </div>
       `,
       width: '800px',
