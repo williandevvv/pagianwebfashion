@@ -265,26 +265,44 @@ document.addEventListener("DOMContentLoaded", () => {
         const batch = firebase.firestore().batch();
 
         for (const item of pedido.items || []) {
-          const prodRef = firebase
-            .firestore()
-            .collection("products")
-            .doc(item.id);
+          const prodRef = firebase.firestore().collection("products").doc(item.id);
+          const invRef = firebase.firestore().collection("inventory").doc(item.id);
           const doc = await prodRef.get();
           if (doc.exists) {
             const actual = doc.data().stock || 0;
             const nuevo = Math.max(actual - item.quantity, 0);
             batch.update(prodRef, { stock: nuevo });
+            batch.update(invRef, { stock: nuevo, lastUpdated: new Date() });
+
+            await firebase.firestore().collection("inventory_history").add({
+              itemId: item.id,
+              adjustment: -item.quantity,
+              reason: "sale",
+              notes: `Pedido ${pedidoId} enviado`,
+              previousStock: actual,
+              newStock: nuevo,
+              timestamp: new Date(),
+              userId: firebase.auth().currentUser?.uid,
+            });
           }
         }
 
-        const pedidoRef = firebase
-          .firestore()
-          .collection("orders")
-          .doc(pedidoId);
+        const pedidoRef = firebase.firestore().collection("orders").doc(pedidoId);
         batch.update(pedidoRef, { status: "enviado" });
+
+        if (pedido.userId) {
+          const userOrderRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(pedido.userId)
+            .collection("orders")
+            .doc(pedidoId);
+          batch.update(userOrderRef, { status: "enviado" });
+        }
 
         await batch.commit();
         await loadDataFromFirebase();
+        await loadInventoryData();
 
         Swal.fire(
           "✅ Pedido actualizado",
