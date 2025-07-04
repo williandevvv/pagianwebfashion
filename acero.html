@@ -169,6 +169,126 @@
             background-color: var(--color-shimmer);
             color: var(--color-accent);
         }
+
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .product-card {
+            width: 300px;
+            background: #fff0f5;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .price-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ffc8dd, #f9c6d3);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            color: #a84d7a;
+            margin: 10px 0 5px;
+        }
+
+        .product-description {
+            font-size: 0.95rem;
+            color: #7b2b51;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .quantity-btn {
+            background: #ffc8dd;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #f9a1bb;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ffc8dd;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: linear-gradient(135deg, #f9c6d3, #f7a4b8);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(249, 198, 211, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -250,7 +370,7 @@
         </div>
 
         <!-- Products Grid -->
-        <div class="row" id="productsGrid">
+        <div class="product-grid" id="productsGrid">
             <!-- Products will be loaded here -->
         </div>
 
@@ -297,23 +417,21 @@
                 snapshot.forEach(doc => {
                     const product = doc.data();
                     html += `
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div>
                             <div class="product-card">
-                                <div class="position-relative">
-                                    <img src="${product.image || 'https://via.placeholder.com/300'}" 
-                                         class="product-img" 
-                                         alt="${product.name}">
-                                    <div class="price-tag">L.${product.price}</div>
+                                <div class="product-image">
+                                    <img src="${product.image || 'https://via.placeholder.com/300'}" alt="${product.name}">
+                                    <div class="price-badge">L.${product.price}</div>
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">${product.name}</h5>
-                                    <p class="card-text text-muted">${product.description || ''}</p>
-                                    <div class="input-group input-group-sm mb-2">
-                                        <input type="number" id="qty-${doc.id}" class="form-control quantity-input" min="1" value="1">
+                                <div class="product-info">
+                                    <h3 class="product-title">${product.name}</h3>
+                                    <p class="product-description">${product.description || ''}</p>
+                                    <div class="quantity-selector">
+                                        <button class="quantity-btn" onclick="decreaseQuantity(this)">-</button>
+                                        <input type="number" id="qty-${doc.id}" class="quantity-input" value="1" min="1">
+                                        <button class="quantity-btn" onclick="increaseQuantity(this)">+</button>
                                     </div>
-                                    <button class="btn btn-primary w-100" onclick="addToCart('${doc.id}')">
-                                        <i class="fas fa-shopping-cart me-1"></i> Agregar al Carrito
-                                    </button>
+                                    <button class="add-to-cart" onclick="addToCart('${doc.id}')">🛒 Agregar al Carrito</button>
                                 </div>
                             </div>
                         </div>
@@ -387,5 +505,18 @@
         });
     </script>
     <script type="module" src="js/maintenance.js"></script>
+    <script>
+    function increaseQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        input.value = parseInt(input.value) + 1;
+    }
+
+    function decreaseQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+    </script>
 </body>
 </html>
