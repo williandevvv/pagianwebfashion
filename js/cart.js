@@ -407,8 +407,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let savedOrderId = null;
             try {
                 if (typeof firebase !== 'undefined' && firebase.firestore && userId) {
-                    const docRef = await firebase.firestore().collection('orders').add(order);
-                    savedOrderId = docRef.id;
+                    await firebase.firestore()
+                        .collection('orders')
+                        .doc(orderId)
+                        .set(order);
+                    savedOrderId = orderId;
                     console.log('✅ Pedido guardado en Firebase con ID:', savedOrderId);
 
                     // Guardar una copia en la subcolección del usuario
