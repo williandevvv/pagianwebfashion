@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileDisplayName = document.getElementById('profile-display-name');
     const profileEmailDisplay = document.getElementById('profile-email');
     const ordersContainer = document.getElementById('orders-container');
+    const addressesContainer = document.getElementById('addresses-container');
+    const addressForm = document.getElementById('address-form');
+    const addressLine = document.getElementById('address-line');
+    const addressCity = document.getElementById('address-city');
+    const addressState = document.getElementById('address-state');
+    const addressZip = document.getElementById('address-zip');
     const navbarUsername = document.getElementById('navbar-username');
 
     let currentUser = null;
@@ -25,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await checkAuth();
             await loadUserProfile();
             await loadUserOrders();
+            await loadUserAddresses();
             setupEventListeners();
             console.log('✅ Perfil inicializado correctamente');
         } catch (error) {
@@ -135,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Renderizar pedidos
-    function renderOrders(orders) {
+function renderOrders(orders) {
         if (!ordersContainer) return;
 
         if (orders.length === 0) {
@@ -167,6 +174,84 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
+    // Cargar direcciones del usuario
+    async function loadUserAddresses() {
+        try {
+            const snapshot = await firebase.firestore()
+                .collection('users').doc(currentUser.uid)
+                .collection('addresses').orderBy('createdAt', 'desc').get();
+
+            const addresses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderAddresses(addresses);
+        } catch (error) {
+            console.error('❌ Error cargando direcciones:', error);
+            renderAddresses([]);
+        }
+    }
+
+    // Renderizar direcciones
+    function renderAddresses(addresses) {
+        if (!addressesContainer) return;
+
+        if (addresses.length === 0) {
+            addressesContainer.innerHTML = `
+                <div class="col-12 text-center text-muted">Sin direcciones registradas</div>
+            `;
+            return;
+        }
+
+        addressesContainer.innerHTML = addresses.map(addr => `
+            <div class="col-md-6">
+                <div class="border rounded p-3 position-relative">
+                    <p class="mb-1">${addr.line}</p>
+                    <p class="mb-1">${addr.city}, ${addr.state}</p>
+                    ${addr.zip ? `<p class="mb-1">CP: ${addr.zip}</p>` : ''}
+                    <button class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 delete-address" data-id="${addr.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function handleAddAddress(e) {
+        e.preventDefault();
+        try {
+            const address = {
+                line: addressLine.value.trim(),
+                city: addressCity.value.trim(),
+                state: addressState.value.trim(),
+                zip: addressZip.value.trim(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            await firebase.firestore()
+                .collection('users').doc(currentUser.uid)
+                .collection('addresses').add(address);
+
+            addressForm.reset();
+            showNotification('Dirección agregada', 'success');
+            loadUserAddresses();
+        } catch (error) {
+            console.error('❌ Error agregando dirección:', error);
+            showNotification('Error al guardar la dirección', 'error');
+        }
+    }
+
+    async function handleDeleteAddress(id) {
+        try {
+            await firebase.firestore()
+                .collection('users').doc(currentUser.uid)
+                .collection('addresses').doc(id).delete();
+
+            showNotification('Dirección eliminada', 'success');
+            loadUserAddresses();
+        } catch (error) {
+            console.error('❌ Error eliminando dirección:', error);
+            showNotification('Error al eliminar la dirección', 'error');
+        }
+    }
+
     // Configurar event listeners
     function setupEventListeners() {
         // Formulario de perfil
@@ -191,6 +276,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (detailsBtn) {
                     const orderId = detailsBtn.dataset.orderId;
                     showOrderDetails(orderId);
+                }
+            });
+        }
+
+        // Formulario de direcciones
+        if (addressForm) {
+            addressForm.addEventListener('submit', handleAddAddress);
+        }
+
+        if (addressesContainer) {
+            addressesContainer.addEventListener('click', (e) => {
+                const delBtn = e.target.closest('.delete-address');
+                if (delBtn) {
+                    handleDeleteAddress(delBtn.dataset.id);
                 }
             });
         }
@@ -414,7 +513,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="col-6"><strong>Envío:</strong></div>
                             <div class="col-6 text-end">L. ${formatCurrencyHonduras(order.shipping)}</div>
                         </div>
-                        <hr>
+                        ${order.address ? `
+                        <div class="mb-3 mt-3">
+                            <h6 class="mb-1">📍 Dirección de envío</h6>
+                            <p class="mb-0">${order.address.line}</p>
+                            <p class="mb-0">${order.address.city}, ${order.address.state}</p>
+                            ${order.address.zip ? `<p class="mb-0">CP: ${order.address.zip}</p>` : ''}
+                        </div>
+                        <hr>` : '<hr>'}
                         <div class="row">
                             <div class="col-6"><strong>💰 Total:</strong></div>
                             <div class="col-6 text-end"><strong>L. ${formatCurrencyHonduras(order.total)}</strong></div>
