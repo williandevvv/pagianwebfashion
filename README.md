@@ -20,3 +20,7 @@ Además de la página principal, el sitio cuenta con secciones de **Envíos**, *
 Al realizar una compra desde el carrito, el pedido se guarda en Firebase Firestore. Cada pedido se almacena en la colección global `orders` y también dentro de `users/<UID>/orders` para que quede asociado a la cuenta del cliente.
 
 En la página **Mi Perfil** se muestran estos pedidos en la pestaña "Pedidos" y la información se actualiza en tiempo real cuando cambia su estado.
+
+## Panel de administración
+
+Desde `admin.html` los usuarios con permisos pueden gestionar productos, usuarios e inventario. Al marcar un pedido como **enviado** desde la sección de pedidos, el sistema actualiza el estado del pedido tanto en la colección global como en la subcolección del usuario. Además se descuenta el stock de los productos involucrados y se registra el movimiento en la colección `inventory_history`.
