@@ -70,14 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
 
         container.innerHTML = categories.map(category => `
-            <div class="col-md-6 col-lg-4">
-                <a href="${category.link}" class="category-card d-block" style="background-image: url(${category.image})">
-                    <div class="category-overlay">
-                        <h3 class="h4 fw-bold mb-2">${category.name}</h3>
-                        <p class="mb-0">${category.productCount} productos</p>
-                    </div>
-                </a>
-            </div>
+            <a href="${category.link}" class="category-card categoria-card">
+                <img src="${category.image}" alt="${category.name}">
+                <h3>${category.name}</h3>
+                <p>${category.productCount} productos</p>
+            </a>
         `).join('');
     }
 
