@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initializeApp() {
         try {
             // Cargar datos iniciales
-            // await loadCategories();
+            await loadCategories();
             loadInspirationGallery();
             
             // Configurar eventos
