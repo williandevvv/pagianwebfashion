@@ -410,6 +410,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const docRef = await firebase.firestore().collection('orders').add(order);
                     savedOrderId = docRef.id;
                     console.log('✅ Pedido guardado en Firebase con ID:', savedOrderId);
+
+                    // Guardar una copia en la subcolección del usuario
+                    await firebase.firestore()
+                        .collection('users')
+                        .doc(userId)
+                        .collection('orders')
+                        .doc(savedOrderId)
+                        .set({ id: savedOrderId, ...order });
                 } else if (!userId) {
                     console.log('⚠️ Usuario no autenticado, pedido no guardado en Firebase');
                 } else {

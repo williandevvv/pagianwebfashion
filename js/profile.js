@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbarUsername = document.getElementById('navbar-username');
 
     let currentUser = null;
+    let ordersUnsubscribe = null;
 
     // Inicializar perfil
     async function initializeProfile() {
@@ -115,28 +116,35 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadUserOrders() {
         try {
             console.log('📦 Cargando pedidos para usuario:', currentUser.uid);
-            
-            const snapshot = await firebase.firestore()
+
+            // Detener listener previo si existe
+            if (ordersUnsubscribe) {
+                ordersUnsubscribe();
+            }
+
+            ordersUnsubscribe = firebase.firestore()
                 .collection('orders')
                 .where('userId', '==', currentUser.uid)
                 .orderBy('createdAt', 'desc')
-                .get();
+                .onSnapshot(snapshot => {
+                    const orders = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return {
+                            id: doc.id,
+                            ...data,
+                            createdAt: data.createdAt?.toDate() || new Date()
+                        };
+                    });
 
-            const orders = snapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    id: doc.id,
-                    ...data,
-                    createdAt: data.createdAt?.toDate() || new Date()
-                };
-            });
-
-            console.log(`📦 ${orders.length} pedidos encontrados`);
-            renderOrders(orders);
+                    console.log(`📦 ${orders.length} pedidos actualizados`);
+                    renderOrders(orders);
+                }, error => {
+                    console.error('❌ Error recibiendo pedidos:', error);
+                    renderOrders([]);
+                });
 
         } catch (error) {
             console.error('❌ Error cargando pedidos:', error);
-            // Si hay error, mostrar mensaje sin pedidos
             renderOrders([]);
         }
     }
