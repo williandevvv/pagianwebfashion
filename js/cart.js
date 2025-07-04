@@ -369,6 +369,23 @@ document.addEventListener('DOMContentLoaded', () => {
             orderNumber += 1;
             localStorage.setItem('orderNumber', orderNumber.toString());
             const orderId = 'FC-' + orderNumber;
+
+            let shippingAddress = null;
+            try {
+                const addrSnap = await firebase.firestore()
+                    .collection('users').doc(userId)
+                    .collection('addresses')
+                    .orderBy('createdAt', 'desc')
+                    .limit(1)
+                    .get();
+                if (!addrSnap.empty) {
+                    const doc = addrSnap.docs[0];
+                    shippingAddress = { id: doc.id, ...doc.data() };
+                }
+            } catch (addrErr) {
+                console.log('No se pudo obtener dirección', addrErr);
+            }
+
             const order = {
                 id: orderId,
                 userId: userId,
@@ -379,6 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 shipping: shipping,
                 total: total,
                 status: 'pending',
+                addressId: shippingAddress ? shippingAddress.id : null,
+                address: shippingAddress,
                 createdAt: firebase.firestore ? firebase.firestore.FieldValue.serverTimestamp() : new Date(),
                 country: 'Honduras',
                 currency: 'HNL'
@@ -471,6 +490,16 @@ document.addEventListener('DOMContentLoaded', () => {
         message += `Subtotal: L. ${formatCurrencyHonduras(order.subtotal)}\n`;
         message += `Envío: L. ${formatCurrencyHonduras(order.shipping)}\n`;
         message += `*TOTAL: L. ${formatCurrencyHonduras(order.total)}*\n\n`;
+
+        if (order.address) {
+            message += `*Dirección de Envío*\n`;
+            message += `${order.address.line}\n`;
+            message += `${order.address.city}, ${order.address.state}\n`;
+            if (order.address.zip) {
+                message += `CP: ${order.address.zip}\n`;
+            }
+            message += `\n`;
+        }
 
         message += `📍 Confirma tu dirección de entrega en Honduras\n`;
         message += `💳 Forma de pago: Efectivo o Transferencia\n`;
