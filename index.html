@@ -203,56 +203,6 @@
             background: var(--color-rose-gold);
             transform: translateY(-50%) scale(1.05);
         }
-
-        /* Grid de Categorías */
-        .categorias-grid {
-            display: grid;
-            grid-template-areas:
-                "grande grande"
-                "pequeña1 pequeña2"
-                "pequeña3 pequeña4";
-            grid-gap: 1rem;
-        }
-
-        .categoria {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            border-radius: 10px;
-            overflow: hidden;
-            color: #fff;
-        }
-
-        .categoria.grande {
-            grid-area: grande;
-            height: 300px;
-        }
-
-        .categoria.pequeña {
-            height: 150px;
-        }
-
-        .categorias-grid > .categoria:nth-child(2) { grid-area: pequeña1; }
-        .categorias-grid > .categoria:nth-child(3) { grid-area: pequeña2; }
-        .categorias-grid > .categoria:nth-child(4) { grid-area: pequeña3; }
-        .categorias-grid > .categoria:nth-child(5) { grid-area: pequeña4; }
-
-        .categoria .contenido {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-        }
-
-        .categoria .btn {
-            display: inline-block;
-            margin-top: 10px;
-            background-color: #ff6f61;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
         
         /* Estilos responsivos */
         @media (max-width: 768px) {
@@ -344,42 +294,12 @@
     </section>
 
     <!-- Sección de Categorías -->
-    <section class="categorias-grid">
-      <div class="categoria grande" style="background-image: url('img/maquillaje.jpg');">
-        <div class="contenido">
-          <h3>Maquillaje</h3>
-          <p>3 productos</p>
-          <a href="#" class="btn">Explorar categoría</a>
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4" id="categories">
+                <!-- Las categorías se cargarán dinámicamente aquí -->
+            </div>
         </div>
-      </div>
-      <div class="categoria peque\u00f1a" style="background-image: url('img/acero.jpg');">
-        <div class="contenido">
-          <h3>Acero</h3>
-          <p>1 producto</p>
-          <a href="#" class="btn">Explorar categoría</a>
-        </div>
-      </div>
-      <div class="categoria peque\u00f1a" style="background-image: url('img/bisuteria.jpg');">
-        <div class="contenido">
-          <h3>Bisuter\u00eda</h3>
-          <p>2 productos</p>
-          <a href="#" class="btn">Explorar categoría</a>
-        </div>
-      </div>
-      <div class="categoria peque\u00f1a" style="background-image: url('img/ofertas.jpeg');">
-        <div class="contenido">
-          <h3>Ofertas</h3>
-          <p>5 productos</p>
-          <a href="#" class="btn">Explorar categoría</a>
-        </div>
-      </div>
-      <div class="categoria peque\u00f1a" style="background-image: url('img/novedades.png');">
-        <div class="contenido">
-          <h3>Novedades</h3>
-          <p>0 productos</p>
-          <a href="#" class="btn">Explorar categoría</a>
-        </div>
-      </div>
     </section>
 
     <!-- Sección Newsletter -->
