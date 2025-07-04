@@ -1261,12 +1261,13 @@ function renderUsersTable() {
     const descuento = order.couponDiscount || order.discount || 0;
     const cup = order.couponCode || order.coupon || '';
 
-    let itemsHtml = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>ID Producto</th><th>Nombre</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr></thead><tbody>';
+    let itemsHtml = '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Imagen</th><th>ID Producto</th><th>Nombre</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr></thead><tbody>';
     if (order.items) {
       order.items.forEach(item => {
         const sub = item.price * item.quantity;
         itemsHtml += `
           <tr>
+            <td><img src="${item.image || 'https://via.placeholder.com/40'}" alt="${item.name || 'Producto'}" style="width:40px;height:40px;object-fit:cover;"></td>
             <td>${item.id || ''}</td>
             <td>${item.name || 'Producto'}</td>
             <td>${item.quantity}</td>
