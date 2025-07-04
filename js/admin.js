@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Importar módulos de reportes y configuración
   import('./reports.js').then(module => {
     window.generateExcelReport = module.generateExcelReport;
+    window.refreshReports = module.refreshReports;
   }).catch(error => {
     console.log('Reportes en modo offline');
   });
@@ -398,6 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'reports':
         loadReportsSection();
+        window.refreshReports && refreshReports();
         break;
       case 'tasks':
         window.cargarTareas && cargarTareas();

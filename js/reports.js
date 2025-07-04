@@ -1,6 +1,55 @@
 // Importar SheetJS
 import * as XLSX from 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm';
 
+// Datos demo para modo offline
+const DEMO_DATA = {
+    inventory: [
+        {
+            'ID': 'INV001',
+            'Producto': 'Producto Demo',
+            'Categoría': 'General',
+            'Stock Actual': 20,
+            'Stock Mínimo': 5,
+            'Última Actualización': new Date().toLocaleString('es-ES'),
+            'Estado': 'OK'
+        }
+    ],
+    sales: [
+        {
+            'ID Pedido': 'ORD001',
+            'Cliente': 'demo@demo.com',
+            'Fecha': new Date().toLocaleString('es-ES'),
+            'Total': 'L100',
+            'Estado': 'completado',
+            'Productos': 'Producto Demo (1)'
+        }
+    ],
+    products: [
+        {
+            'ID': 'PROD001',
+            'Nombre': 'Producto Demo',
+            'Categoría': 'General',
+            'Precio': 'L100',
+            'Stock': 20,
+            'Estado': 'Activo',
+            'Descripción': '-'
+        }
+    ],
+    users: [
+        {
+            'ID': 'USR001',
+            'Nombre': 'Usuario Demo',
+            'Email': 'demo@demo.com',
+            'Rol': 'admin',
+            'Estado': 'active',
+            'Último Acceso': new Date().toLocaleString('es-ES')
+        }
+    ]
+};
+
+let salesChartInstance;
+let categoryChartInstance;
+
 // Función para cargar la sección de reportes
 export function loadReportsSection() {
     const reportsContainer = document.querySelector('#reports-section .container-fluid');
@@ -67,6 +116,81 @@ export function loadReportsSection() {
     }
 }
 
+// Actualizar métricas y gráficas
+export async function refreshReports() {
+    const [inventory, sales, products, users] = await Promise.all([
+        getInventoryData(),
+        getSalesData(),
+        getProductsData(),
+        getUsersData()
+    ]);
+
+    // Estadísticas rápidas
+    document.getElementById('totalProducts').textContent = products.length;
+    document.getElementById('totalOrders').textContent = sales.length;
+    document.getElementById('totalUsers').textContent = users.length;
+    const lowStock = inventory.filter(i => i['Estado'] === 'Stock Bajo').length;
+    document.getElementById('lowStockCount').textContent = lowStock;
+
+    renderSalesChart(sales);
+    renderCategoryChart(products);
+}
+
+function renderSalesChart(sales) {
+    const ctx = document.getElementById('salesChart');
+    if (!ctx) return;
+    const totals = {};
+    sales.forEach(s => {
+        const fecha = s['Fecha'] || s.createdAt || new Date();
+        const mes = new Date(fecha).toLocaleDateString('es-ES', { month: 'short' });
+        const monto = parseFloat(String(s['Total']).replace('L', '')) || 0;
+        totals[mes] = (totals[mes] || 0) + monto;
+    });
+    const labels = Object.keys(totals);
+    const data = Object.values(totals);
+    if (salesChartInstance) salesChartInstance.destroy();
+    salesChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Ventas',
+                data,
+                backgroundColor: '#6a0dad'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+function renderCategoryChart(products) {
+    const ctx = document.getElementById('categoryChart');
+    if (!ctx) return;
+    const counts = {};
+    products.forEach(p => {
+        counts[p['Categoría']] = (counts[p['Categoría']] || 0) + 1;
+    });
+    const labels = Object.keys(counts);
+    const data = Object.values(counts);
+    if (categoryChartInstance) categoryChartInstance.destroy();
+    categoryChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{ data, backgroundColor: ['#6a0dad', '#c06c84', '#bd8c7d', '#f4e4e1'] }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
 // Función para generar reportes en Excel
 export async function generateExcelReport(type) {
     try {
@@ -130,63 +254,91 @@ export async function generateExcelReport(type) {
 
 // Funciones auxiliares para obtener datos
 async function getInventoryData() {
-    const snapshot = await firebase.firestore().collection('inventory').get();
-    return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            'ID': doc.id,
-            'Producto': data.name,
-            'Categoría': data.category,
-            'Stock Actual': data.stock,
-            'Stock Mínimo': data.minStock,
-            'Última Actualización': data.lastUpdated ? new Date(data.lastUpdated.seconds * 1000).toLocaleString() : '-',
-            'Estado': data.stock <= data.minStock ? 'Stock Bajo' : 'OK'
-        };
-    });
+    try {
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            const snapshot = await firebase.firestore().collection('inventory').get();
+            return snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    'ID': doc.id,
+                    'Producto': data.name,
+                    'Categoría': data.category,
+                    'Stock Actual': data.stock,
+                    'Stock Mínimo': data.minStock,
+                    'Última Actualización': data.lastUpdated ? new Date(data.lastUpdated.seconds * 1000).toLocaleString('es-ES') : '-',
+                    'Estado': data.stock <= data.minStock ? 'Stock Bajo' : 'OK'
+                };
+            });
+        }
+    } catch (e) {
+        console.error('Error cargando inventario', e);
+    }
+    return DEMO_DATA.inventory;
 }
 
 async function getSalesData() {
-    const snapshot = await firebase.firestore().collection('orders').get();
-    return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            'ID Pedido': doc.id,
-            'Cliente': data.userEmail,
-            'Fecha': data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : '-',
-            'Total': `L${data.total || 0}`,
-            'Estado': data.status,
-            'Productos': data.items?.map(item => `${item.name} (${item.quantity})`).join(', ') || '-'
-        };
-    });
+    try {
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            const snapshot = await firebase.firestore().collection('orders').get();
+            return snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    'ID Pedido': doc.id,
+                    'Cliente': data.userEmail,
+                    'Fecha': data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('es-ES') : '-',
+                    'Total': `L${data.total || 0}`,
+                    'Estado': data.status,
+                    'Productos': data.items?.map(item => `${item.name} (${item.quantity})`).join(', ') || '-'
+                };
+            });
+        }
+    } catch (e) {
+        console.error('Error cargando ventas', e);
+    }
+    return DEMO_DATA.sales;
 }
 
 async function getProductsData() {
-    const snapshot = await firebase.firestore().collection('products').get();
-    return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            'ID': doc.id,
-            'Nombre': data.name,
-            'Categoría': data.category,
-            'Precio': `L${data.price}`,
-            'Stock': data.stock,
-            'Estado': data.status ? 'Activo' : 'Inactivo',
-            'Descripción': data.description || '-'
-        };
-    });
+    try {
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            const snapshot = await firebase.firestore().collection('products').get();
+            return snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    'ID': doc.id,
+                    'Nombre': data.name,
+                    'Categoría': data.category,
+                    'Precio': `L${data.price}`,
+                    'Stock': data.stock,
+                    'Estado': data.status ? 'Activo' : 'Inactivo',
+                    'Descripción': data.description || '-'
+                };
+            });
+        }
+    } catch (e) {
+        console.error('Error cargando productos', e);
+    }
+    return DEMO_DATA.products;
 }
 
 async function getUsersData() {
-    const snapshot = await firebase.firestore().collection('users').get();
-    return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            'ID': doc.id,
-            'Nombre': data.displayName,
-            'Email': data.email,
-            'Rol': data.role,
-            'Estado': data.status || 'active',
-            'Último Acceso': data.lastAccess ? new Date(data.lastAccess.seconds * 1000).toLocaleString() : '-'
-        };
-    });
+    try {
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            const snapshot = await firebase.firestore().collection('users').get();
+            return snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    'ID': doc.id,
+                    'Nombre': data.displayName,
+                    'Email': data.email,
+                    'Rol': data.role,
+                    'Estado': data.status || 'active',
+                    'Último Acceso': data.lastAccess ? new Date(data.lastAccess.seconds * 1000).toLocaleString('es-ES') : '-'
+                };
+            });
+        }
+    } catch (e) {
+        console.error('Error cargando usuarios', e);
+    }
+    return DEMO_DATA.users;
 }
