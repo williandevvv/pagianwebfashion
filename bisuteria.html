@@ -15,14 +15,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <style>
-        /* Paleta de colores unificada */
+        /* Paleta de colores pastel en tonos rosados */
         :root {
-            --color-rose-gold: #bd8c7d;
-            --color-shimmer: #f4e4e1;
-            --color-nude: #e8c6b6;
-            --color-blush: #f7cac9;
-            --color-accent: #c06c84;
-            --color-deep-rose: #86424b;
+            --color-rose-gold: #f8c8dc;
+            --color-shimmer: #ffeaf4;
+            --color-nude: #fdd5e4;
+            --color-blush: #ffe6e9;
+            --color-accent: #eab5c4;
+            --color-deep-rose: #d48ca2;
         }
 
         /* Estilos base */
@@ -166,9 +166,44 @@
         .sort-dropdown .dropdown-menu {
             width: 100%;
         }
+
+        /* Decoraciones flotantes con íconos de maquillaje */
+        .makeup-decorations {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .floating-makeup {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .lipstick { top: 20%; left: 10%; animation-delay: 0s; }
+        .brush { top: 60%; right: 15%; animation-delay: 2s; }
+        .compact { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .sparkle { top: 40%; right: 30%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
     </style>
 </head>
 <body>
+    <!-- Íconos flotantes de maquillaje para decorar la página -->
+    <div class="makeup-decorations">
+        <i class="fas fa-heart floating-makeup lipstick"></i>
+        <i class="fas fa-magic floating-makeup brush"></i>
+        <i class="fas fa-gem floating-makeup compact"></i>
+        <i class="fas fa-star floating-makeup sparkle"></i>
+    </div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
@@ -225,6 +260,11 @@
                         <i class="fas fa-filter me-1"></i> Filtros
                     </button>
                 </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary w-100" id="tipBtn">
+                        <i class="fas fa-magic me-1"></i> Tip de Maquillaje
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -248,20 +288,6 @@
             <p class="text-muted">Prueba ajustando tus filtros de búsqueda</p>
         </div>
 
-        <!-- Pagination -->
-        <nav aria-label="Page navigation" class="mt-5">
-            <ul class="pagination justify-content-center" id="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Siguiente</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 
     <!-- Footer -->
@@ -516,6 +542,19 @@
 
         // Actualizar contador al cargar la página
         document.addEventListener('DOMContentLoaded', updateCartCounter);
+
+        // Mostrar un consejo de maquillaje al azar
+        const tips = [
+            'Aplica primero una prebase para prolongar la duración de tu maquillaje.',
+            'Utiliza brochas limpias para un acabado profesional.',
+            'Difumina bien las sombras para un look suave y elegante.',
+            'No olvides hidratar tu piel antes de maquillarte.'
+        ];
+
+        document.getElementById('tipBtn').addEventListener('click', () => {
+            const tip = tips[Math.floor(Math.random() * tips.length)];
+            Swal.fire('Consejo de maquillaje', tip, 'info');
+        });
     </script>
   <!--<script>
   document.addEventListener("DOMContentLoaded", async () => {
