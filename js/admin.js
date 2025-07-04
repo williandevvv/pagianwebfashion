@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .doc(pedido.userId)
             .collection("orders")
             .doc(pedidoId);
-          batch.update(userOrderRef, { status: "enviado" });
+          batch.set(userOrderRef, { status: "enviado" }, { merge: true });
         }
 
         await batch.commit();
