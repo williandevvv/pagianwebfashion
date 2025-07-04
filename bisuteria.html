@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts para estilo de maquillaje -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -26,8 +28,34 @@
         /* Estilos base */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #fff;
             color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fondo con degradado animado inspirado en maquillaje */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg,
+                    var(--color-rose-gold),
+                    var(--color-shimmer),
+                    var(--color-blush),
+                    var(--color-accent));
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientMove 20s ease infinite;
+            opacity: 0.25;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Encabezado degradado */
@@ -38,6 +66,9 @@
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+        }
+        .header h1 {
+            font-family: 'Playfair Display', serif;
         }
         .header::after {
             content: "";
