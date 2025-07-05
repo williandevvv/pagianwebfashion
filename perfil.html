@@ -47,10 +47,29 @@
             opacity: 0.25;
         }
 
+        /* Burbujas animadas como en las categorías */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, transparent 70%);
+            animation: floatBubble 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
         @keyframes gradientMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            33% { transform: translate(30px,-30px) rotate(120deg); }
+            66% { transform: translate(-20px,20px) rotate(240deg); }
         }
 
         .header {
