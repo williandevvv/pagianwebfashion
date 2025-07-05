@@ -470,10 +470,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 function renderProductsTable() {
-    const container = document.getElementById("products-table");
+    const container = document.querySelector("#products-table tbody");
     if (!container) return;
 
-    // Verificar si products está definido y tiene elementos
     if (!Array.isArray(products) || products.length === 0) {
         container.innerHTML = `
             <tr>
@@ -482,7 +481,33 @@ function renderProductsTable() {
         return;
     }
 
-    container.innerHTML = products
+    let filtered = [...products];
+    const categoryFilter = document.getElementById('filterCategory')?.value?.toLowerCase();
+    const statusFilter = document.getElementById('filterProductStatus')?.value;
+    const searchTerm = document.getElementById('searchProducts')?.value?.toLowerCase();
+
+    if (categoryFilter) {
+        filtered = filtered.filter(p => (p.category || '').toLowerCase() === categoryFilter);
+    }
+
+    if (statusFilter) {
+        if (statusFilter === 'active') filtered = filtered.filter(p => p.status !== false);
+        if (statusFilter === 'inactive') filtered = filtered.filter(p => p.status === false);
+    }
+
+    if (searchTerm) {
+        filtered = filtered.filter(p => (p.name || '').toLowerCase().includes(searchTerm));
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center">No se encontraron productos</td>
+            </tr>`;
+        return;
+    }
+
+    container.innerHTML = filtered
         .map(
             (product) => `
                 <tr>
@@ -1922,6 +1947,19 @@ function renderUsersTable() {
   document.addEventListener('input', function(e) {
     if (e.target.id === 'searchUsers') {
       renderUsersTable();
+    }
+  });
+
+  // Eventos para filtros de productos
+  document.addEventListener('change', function(e) {
+    if (e.target.id === 'filterCategory' || e.target.id === 'filterProductStatus') {
+      renderProductsTable();
+    }
+  });
+
+  document.addEventListener('input', function(e) {
+    if (e.target.id === 'searchProducts') {
+      renderProductsTable();
     }
   });
 
