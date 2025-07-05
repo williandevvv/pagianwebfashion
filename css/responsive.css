@@ -1,0 +1,36 @@
+/* Global responsive rules */
+img, iframe, video {
+  max-width: 100%;
+  height: auto;
+}
+
+.container,
+.container-fluid {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+  .hero-section {
+    padding: 60px 0;
+  }
+  .categorias-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
