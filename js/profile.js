@@ -122,29 +122,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 ordersUnsubscribe();
             }
 
-            ordersUnsubscribe = firebase.firestore()
+            const globalQuery = firebase.firestore()
                 .collection('orders')
                 .where('userId', '==', currentUser.uid)
-                .orderBy('createdAt', 'desc')
-                .onSnapshot(snapshot => {
-                    const orders = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        return {
-                            id: doc.id,
-                            ...data,
-                            createdAt: data.createdAt?.toDate() || new Date()
-                        };
-                    });
+                .orderBy('createdAt', 'desc');
 
-                    console.log(`📦 ${orders.length} pedidos actualizados`);
-                    renderOrders(orders);
-                }, error => {
-                    console.error('❌ Error recibiendo pedidos:', error);
-                    renderOrders([]);
+            ordersUnsubscribe = globalQuery.onSnapshot(snapshot => {
+                const orders = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        createdAt: data.createdAt?.toDate() || new Date()
+                    };
                 });
+
+                console.log(`📦 ${orders.length} pedidos actualizados`);
+                renderOrders(orders);
+            }, error => {
+                console.error('❌ Error recibiendo pedidos:', error);
+                // Intentar cargar desde subcolección del usuario
+                loadOrdersFromUserSubcollection();
+            });
 
         } catch (error) {
             console.error('❌ Error cargando pedidos:', error);
+            renderOrders([]);
+        }
+    }
+
+    // Fallback para obtener pedidos desde la subcolección del usuario
+    function loadOrdersFromUserSubcollection() {
+        try {
+            const userOrdersQuery = firebase.firestore()
+                .collection('users')
+                .doc(currentUser.uid)
+                .collection('orders')
+                .orderBy('createdAt', 'desc');
+
+            ordersUnsubscribe = userOrdersQuery.onSnapshot(snap => {
+                const orders = snap.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        createdAt: data.createdAt?.toDate() || new Date()
+                    };
+                });
+
+                console.log(`📦 ${orders.length} pedidos actualizados (subcolección)`);
+                renderOrders(orders);
+            }, err => {
+                console.error('❌ Error recibiendo pedidos (subcolección):', err);
+                renderOrders([]);
+            });
+        } catch (err) {
+            console.error('❌ Error cargando pedidos (subcolección):', err);
             renderOrders([]);
         }
     }
