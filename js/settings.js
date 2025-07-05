@@ -327,20 +327,25 @@ export class SystemSettings {
                                         <i class="fas fa-list me-1"></i>Ver Respaldos
                                     </button>
                                 </div>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="automaticBackup" id="automaticBackup" checked>
-                                    <label class="form-check-label" for="automaticBackup">
-                                        Respaldos Automáticos
-                                    </label>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Frecuencia</label>
-                                    <select class="form-select" name="backupFrequency">
-                                        <option value="daily">Diario</option>
-                                        <option value="weekly">Semanal</option>
-                                        <option value="monthly">Mensual</option>
-                                    </select>
-                                </div>
+                                <form id="backupSettingsForm">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" name="automaticBackup" id="automaticBackup" checked>
+                                        <label class="form-check-label" for="automaticBackup">
+                                            Respaldos Automáticos
+                                        </label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Frecuencia</label>
+                                        <select class="form-select" name="backupFrequency">
+                                            <option value="daily">Diario</option>
+                                            <option value="weekly">Semanal</option>
+                                            <option value="monthly">Mensual</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-save me-1"></i>Guardar Configuración
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -390,6 +395,14 @@ export function loadSettingsSection() {
                     notificationForm.lowStock.checked = settings.notifications.lowStock !== false;
                     notificationForm.newOrders.checked = settings.notifications.newOrders !== false;
                     notificationForm.userRegistrations.checked = settings.notifications.userRegistrations !== false;
+                }
+            }
+
+            if (settings.backup) {
+                const backupForm = document.getElementById('backupSettingsForm');
+                if (backupForm) {
+                    backupForm.automaticBackup.checked = settings.backup.automatic !== false;
+                    backupForm.backupFrequency.value = settings.backup.frequency || 'daily';
                 }
             }
         }).catch(error => {
@@ -468,6 +481,21 @@ function setupSettingsEventListeners() {
             await systemSettings.saveSettings(settings);
         });
     }
+
+    const backupForm = document.getElementById('backupSettingsForm');
+    if (backupForm) {
+        backupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(backupForm);
+            const settings = {
+                backup: {
+                    automatic: formData.has('automaticBackup'),
+                    frequency: formData.get('backupFrequency')
+                }
+            };
+            await systemSettings.saveSettings(settings);
+        });
+    }
 }
 
 // Aplicar tema
@@ -484,6 +512,58 @@ function applyTheme(theme) {
         document.body.classList.remove('dark-mode');
     }
 }
+
+// Guardar configuración de todos los formularios
+window.saveAllSettings = async function() {
+    const allSettings = {};
+
+    const generalForm = document.getElementById('generalSettingsForm');
+    if (generalForm) {
+        const fd = new FormData(generalForm);
+        allSettings.general = {
+            siteName: fd.get('siteName'),
+            currency: fd.get('currency'),
+            language: fd.get('language'),
+            timezone: 'America/Tegucigalpa'
+        };
+    }
+
+    const maintenanceToggle = document.getElementById('maintenanceToggle');
+    if (maintenanceToggle && allSettings.general) {
+        allSettings.general.maintenanceMode = maintenanceToggle.checked;
+    }
+
+    const themeForm = document.getElementById('themeSettingsForm');
+    if (themeForm) {
+        const fd = new FormData(themeForm);
+        allSettings.theme = {
+            primaryColor: fd.get('primaryColor'),
+            secondaryColor: fd.get('secondaryColor'),
+            darkMode: fd.has('darkMode')
+        };
+    }
+
+    const notifForm = document.getElementById('notificationSettingsForm');
+    if (notifForm) {
+        const fd = new FormData(notifForm);
+        allSettings.notifications = {
+            lowStock: fd.has('lowStock'),
+            newOrders: fd.has('newOrders'),
+            userRegistrations: fd.has('userRegistrations')
+        };
+    }
+
+    const backupForm = document.getElementById('backupSettingsForm');
+    if (backupForm) {
+        const fd = new FormData(backupForm);
+        allSettings.backup = {
+            automatic: fd.has('automaticBackup'),
+            frequency: fd.get('backupFrequency')
+        };
+    }
+
+    await systemSettings.saveSettings(allSettings);
+};
 
 // Función para mostrar lista de respaldos
 window.showBackupsList = async function() {
