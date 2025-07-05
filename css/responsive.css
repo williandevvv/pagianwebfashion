@@ -69,3 +69,41 @@ h2 {
 p, li, a, button, input, label {
   font-size: clamp(0.9rem, 2vw, 1rem);
 }
+
+/* Responsive Navbar */
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-block: 1rem;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .navbar-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 0.5rem;
+  }
+  .menu-toggle.active + .navbar-links,
+  .navbar-links.active {
+    display: flex;
+  }
+}
