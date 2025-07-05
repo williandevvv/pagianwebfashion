@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- TailwindCSS CDN -->
+    <link rel="stylesheet" href="css/responsive.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Comentarios en español para cada sección */
@@ -44,14 +44,14 @@
         
         /* Tarjetas de categorías con efecto de brillo */
         .category-card {
-            height: 300px;
-            border-radius: 20px;
+            height: clamp(200px, 25vh, 300px);
+            border-radius: 1.25rem;
             overflow: hidden;
             position: relative;
             transition: all 0.4s ease;
             background-size: cover;
             background-position: center;
-            margin-bottom: 24px;
+            margin-bottom: 1.5rem;
             border: none;
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
         }
@@ -67,7 +67,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 30px;
+            padding: 2rem;
             background: linear-gradient(to top, 
                 rgba(189,140,125,0.9) 0%, 
                 rgba(189,140,125,0.6) 30%, 
@@ -83,7 +83,7 @@
                 url('img/banner.jpg');
             background-size: cover;
             background-position: center;
-            padding: 120px 0;
+            padding: clamp(4rem, 20vh, 7.5rem) 0;
             color: white;
             text-align: center;
         }
@@ -91,7 +91,7 @@
         /* Sección de newsletter con diseño suave */
         .newsletter-section {
             background-color: var(--color-shimmer);
-            padding: 80px 0;
+            padding: clamp(3rem, 15vh, 5rem) 0;
             position: relative;
             overflow: hidden;
         }
@@ -113,7 +113,7 @@
         footer {
             background: linear-gradient(to right, #2c2c2c, #1a1a1a);
             color: white;
-            padding: 60px 0 20px;
+            padding: clamp(3rem, 8vh, 4rem) 0 clamp(1.25rem, 4vh, 2rem);
         }
         
         /* Contador del carrito con diseño moderno */
@@ -124,9 +124,9 @@
             background-color: var(--color-accent);
             color: white;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 12px;
+            width: clamp(1rem, 2.8vw, 1.375rem);
+            height: clamp(1rem, 2.8vw, 1.375rem);
+            font-size: clamp(0.625rem, 1.5vw, 0.75rem);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -167,15 +167,15 @@
         /* Barra de búsqueda con diseño elegante */
         .search-container {
             position: relative;
-            max-width: 600px;
+            max-width: 90vw;
             margin: 0 auto;
         }
 
         .search-container input {
             background: rgba(255,255,255,0.9);
             border: none;
-            padding: 15px 25px;
-            border-radius: 30px;
+            padding: 1rem 1.5rem;
+            border-radius: 1.875rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
@@ -187,13 +187,13 @@
 
         .search-container button {
             position: absolute;
-            right: 5px;
+            right: 0.3rem;
             top: 50%;
             transform: translateY(-50%);
             background: var(--color-accent);
             border: none;
-            width: 45px;
-            height: 45px;
+            width: 2.8rem;
+            height: 2.8rem;
             border-radius: 50%;
             color: white;
             transition: all 0.3s ease;
@@ -207,16 +207,16 @@
         .categorias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            gap: 1.25rem;
             background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 1.25rem;
+            border-radius: 1.25rem;
         }
 
         .categoria-card {
             position: relative;
             border: 2px solid transparent;
-            border-radius: 20px;
+            border-radius: 1.25rem;
             overflow: hidden;
             background: linear-gradient(#fff, #fff) padding-box,
                         linear-gradient(90deg, #f093fb, #f5576c) border-box;
@@ -231,7 +231,7 @@
 
         .categoria-card img {
             width: 100%;
-            height: 200px;
+            height: clamp(150px, 25vh, 200px);
             object-fit: cover;
             filter: brightness(0.9);
             transition: filter 0.4s ease;
@@ -243,23 +243,23 @@
 
         .categoria-card h3 {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            bottom: 0.6rem;
+            left: 0.6rem;
             color: #fff;
             background: rgba(0,0,0,0.5);
-            padding: 5px 10px;
-            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.5rem;
             font-weight: bold;
         }
 
         .categoria-card p {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
+            bottom: 0.6rem;
+            right: 0.6rem;
             color: #fff;
             background: rgba(0,0,0,0.5);
-            padding: 3px 8px;
-            border-radius: 8px;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.5rem;
             font-size: 0.9rem;
         }
 
