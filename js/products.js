@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let filteredProducts = [];
     let currentCategory = null;
     let currentPage = 1;
-    const productsPerPage = 12;
+    const productsPerPage = 30;
 
     // Inicializar si existe un contenedor para productos
     const productsArea = document.getElementById('products-container') ||
