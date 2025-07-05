@@ -1,17 +1,17 @@
-# Pagian Web Fashion
+# Fashion Collection - Página Web
 
-Este proyecto utiliza un pequeño servidor en Express para servir el contenido.
+Este proyecto es una demostración de la tienda en línea **Fashion Collection**. Para ver el sitio sólo necesitas levantar un servidor estático.
 
 ## Uso
 
-1. Instale las dependencias con `npm install`.
-2. Inicie el servidor ejecutando:
+1. Instala las dependencias (opcional) con `npm install`.
+2. Sirve la carpeta del proyecto. Un método sencillo es:
 
 ```bash
-npm start
+npx http-server
 ```
 
-El comando inicia `js/server.js`, que expone la aplicación en [http://localhost:8080](http://localhost:8080).
+Esto expondrá la aplicación en [http://localhost:8080](http://localhost:8080) u otro puerto disponible.
 
 Además de la página principal, el sitio cuenta con secciones de **Envíos**, **Devoluciones**, **Preguntas Frecuentes** y **Términos y Condiciones** accesibles desde el pie de página.
 
