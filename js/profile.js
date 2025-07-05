@@ -210,14 +210,21 @@ function renderOrders(orders) {
 
         ordersContainer.innerHTML = orders.map(order => {
             const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+            const itemsText = firstItem
+                ? `${firstItem.name}${order.items.length > 1 ? ` y ${order.items.length - 1} más` : ''}`
+                : 'Pedido';
             return `
                 <div class="col-md-4 col-sm-6">
                     <div class="pedido-card">
                         ${firstItem ? `<img src="${firstItem.image}" alt="${firstItem.name}">` : ''}
-                        <h6 class="mb-1">${firstItem ? firstItem.name : 'Pedido'}</h6>
+                        <h6 class="mb-1">Pedido #${order.id}</h6>
+                        <p class="mb-1">${itemsText}</p>
                         <p class="mb-1">Fecha: ${formatDateHonduras(order.createdAt)}</p>
                         <p class="mb-1">Estado: <span class="status-badge bg-${getStatusColor(order.status)} text-white">${getStatusText(order.status)}</span></p>
                         <p class="mb-0"><strong>Total:</strong> L. ${formatCurrencyHonduras(order.total)}</p>
+                        <button class="btn btn-sm btn-outline-primary mt-2 view-order-details" data-order-id="${order.id}">
+                            <i class="fas fa-eye me-1"></i> Ver detalles
+                        </button>
                     </div>
                 </div>
             `;
