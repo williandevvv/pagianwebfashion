@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="mx-3 quantity-value">${item.quantity}</span>
                                 <button class="btn btn-outline-secondary btn-sm quantity-btn"
                                         data-action="increase" data-index="${index}"
-                                        ${item.quantity >= item.stock ? 'disabled' : ''}>
+                                        ${(item.stock !== undefined && item.quantity >= item.stock) ? 'disabled' : ''}>
                                     ➕
                                 </button>
                             </div>
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = cartItems[index];
         if (!item) return;
 
-        if (action === 'increase' && item.quantity < item.stock) {
+        if (action === 'increase' && (item.stock === undefined || item.quantity < item.stock)) {
             item.quantity++;
         } else if (action === 'decrease' && item.quantity > 1) {
             item.quantity--;
