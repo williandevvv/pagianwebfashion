@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileGender = document.getElementById('profile-gender');
     const profileDisplayName = document.getElementById('profile-display-name');
     const profileEmailDisplay = document.getElementById('profile-email');
-    const ordersContainer = document.getElementById('orders-container');
+    const ordersContainer = document.getElementById('pedidosContainer');
     const addressesContainer = document.getElementById('addresses-container');
     const addressForm = document.getElementById('address-form');
     const addressLine = document.getElementById('address-line');
@@ -167,19 +167,20 @@ function renderOrders(orders) {
             return;
         }
 
-        ordersContainer.innerHTML = orders.map(order => `
-            <div class="col-md-4">
-                <div class="order-card">
-                    <h5 class="mb-3">Pedido #${order.id.substring(0, 8)}</h5>
-                    <p><strong>Fecha:</strong> ${formatDateHonduras(order.createdAt)}</p>
-                    <p><strong>Estado:</strong> <span class="status-badge bg-${getStatusColor(order.status)} text-white">${getStatusText(order.status)}</span></p>
-                    <p><strong>Total:</strong> L. ${formatCurrencyHonduras(order.total)}</p>
-                    <button class="btn btn-primary view-order-details" data-order-id="${order.id}">
-                        <i class="fas fa-eye me-1"></i>Ver Detalles
-                    </button>
+        ordersContainer.innerHTML = orders.map(order => {
+            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+            return `
+                <div class="col-md-4 col-sm-6">
+                    <div class="pedido-card">
+                        ${firstItem ? `<img src="${firstItem.image}" alt="${firstItem.name}">` : ''}
+                        <h6 class="mb-1">${firstItem ? firstItem.name : 'Pedido'}</h6>
+                        <p class="mb-1">Fecha: ${formatDateHonduras(order.createdAt)}</p>
+                        <p class="mb-1">Estado: <span class="status-badge bg-${getStatusColor(order.status)} text-white">${getStatusText(order.status)}</span></p>
+                        <p class="mb-0"><strong>Total:</strong> L. ${formatCurrencyHonduras(order.total)}</p>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     // Cargar direcciones del usuario
