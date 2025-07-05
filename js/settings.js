@@ -33,7 +33,8 @@ export class SystemSettings {
                         currency: 'L',
                         language: 'es',
                         timezone: 'America/Tegucigalpa',
-                        maintenanceMode: false
+                        maintenanceMode: false,
+                        debugMode: false
                     }
                 };
                 await this.saveSettings(defaultSettings);
@@ -194,6 +195,63 @@ export class SystemSettings {
         }
     }
 
+    async toggleDebugMode(enabled) {
+        const settings = { general: { debugMode: enabled } };
+        await this.saveSettings(settings);
+    }
+
+    async clearCache() {
+        try {
+            if ('caches' in window) {
+                const names = await caches.keys();
+                await Promise.all(names.map(n => caches.delete(n)));
+            }
+            localStorage.clear();
+            Swal.fire({
+                title: 'Caché limpiada',
+                icon: 'success',
+                confirmButtonColor: '#28a745'
+            });
+        } catch (error) {
+            console.error('Error limpiando caché:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo limpiar la caché',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }
+
+    sendTestNotification() {
+        if (!('Notification' in window)) {
+            Swal.fire({
+                title: 'No compatible',
+                text: 'El navegador no soporta notificaciones',
+                icon: 'info'
+            });
+            return;
+        }
+
+        Notification.requestPermission().then(perm => {
+            if (perm === 'granted') {
+                new Notification('Notificación de prueba', { body: 'Esto es una prueba' });
+            } else {
+                Swal.fire('Permiso denegado', '', 'warning');
+            }
+        });
+    }
+
+    showLogs() {
+        const logs = localStorage.getItem('appLogs') || 'Sin registros';
+        Swal.fire({
+            title: 'Logs',
+            html: `<pre style="text-align:left;white-space:pre-wrap;">${logs}</pre>`,
+            width: '800px',
+            confirmButtonText: 'Cerrar'
+        });
+    }
+
     renderSettingsInterface() {
         return `
             <div class="container-fluid">
@@ -349,6 +407,30 @@ export class SystemSettings {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Herramientas -->
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5><i class="fas fa-wrench me-2"></i>Herramientas</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-outline-secondary w-100 mb-2" onclick="systemSettings.clearCache()">
+                                    <i class="fas fa-broom me-1"></i>Limpiar Caché
+                                </button>
+                                <button class="btn btn-outline-secondary w-100 mb-2" onclick="systemSettings.sendTestNotification()">
+                                    <i class="fas fa-bell me-1"></i>Notificación de Prueba
+                                </button>
+                                <div class="form-check form-switch mb-2">
+                                    <input class="form-check-input" type="checkbox" id="debugModeToggle">
+                                    <label class="form-check-label" for="debugModeToggle">Modo Depuración</label>
+                                </div>
+                                <button class="btn btn-outline-secondary w-100" onclick="systemSettings.showLogs()">
+                                    <i class="fas fa-file-alt me-1"></i>Ver Logs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -374,10 +456,14 @@ export function loadSettingsSection() {
                    generalForm.currency.value = settings.general.currency || 'L';
                    generalForm.language.value = settings.general.language || 'es';
                }
-                const maintenanceToggle = document.getElementById('maintenanceToggle');
-                if (maintenanceToggle) {
-                    maintenanceToggle.checked = settings.general.maintenanceMode || false;
-                }
+               const maintenanceToggle = document.getElementById('maintenanceToggle');
+               if (maintenanceToggle) {
+                   maintenanceToggle.checked = settings.general.maintenanceMode || false;
+               }
+               const debugToggle = document.getElementById('debugModeToggle');
+               if (debugToggle) {
+                   debugToggle.checked = settings.general.debugMode || false;
+               }
            }
             
             if (settings.theme) {
@@ -482,6 +568,13 @@ function setupSettingsEventListeners() {
         });
     }
 
+    const debugToggle = document.getElementById('debugModeToggle');
+    if (debugToggle) {
+        debugToggle.addEventListener('change', async () => {
+            await systemSettings.toggleDebugMode(debugToggle.checked);
+        });
+    }
+
     const backupForm = document.getElementById('backupSettingsForm');
     if (backupForm) {
         backupForm.addEventListener('submit', async (e) => {
@@ -531,6 +624,11 @@ window.saveAllSettings = async function() {
     const maintenanceToggle = document.getElementById('maintenanceToggle');
     if (maintenanceToggle && allSettings.general) {
         allSettings.general.maintenanceMode = maintenanceToggle.checked;
+    }
+
+    const debugToggleAll = document.getElementById('debugModeToggle');
+    if (debugToggleAll && allSettings.general) {
+        allSettings.general.debugMode = debugToggleAll.checked;
     }
 
     const themeForm = document.getElementById('themeSettingsForm');
