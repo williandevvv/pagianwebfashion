@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let subtotal = 0;
     const SHIPPING_OPTIONS = {
         sps: 80.00,
-        nacional: 90.00,
+        nacional: 120.00,
         tienda: 0.00
     };
     let selectedShipping = SHIPPING_OPTIONS.sps;
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyDiscount(code) {
         const role = localStorage.getItem('userRole') || 'cliente';
         const used = localStorage.getItem('welcomeCouponUsed');
-        if (code.toUpperCase() === 'BIENVENIDA10' && (role === 'admin' || !used)) {
+        if (code.toUpperCase() === 'FASHION10' && (role === 'admin' || !used)) {
             couponDiscount = subtotal * 0.1;
             localStorage.setItem('welcomeCouponUsed', 'true');
             showNotification('¡Descuento aplicado!', 'success');
@@ -581,6 +581,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             saveCartToStorage();
             updateCartBadge();
+            if (window.location.pathname.replace(/\.html$/, '').includes('carrito')) {
+                renderCart();
+                updateCartTotals();
+            }
             showNotification(`${product.name} agregado al carrito`, 'success');
         },
         removeFromCart,
@@ -588,6 +592,12 @@ document.addEventListener('DOMContentLoaded', () => {
         clearCart,
         formatCurrencyHonduras
     };
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'fashionCart') {
+            loadCartItems();
+        }
+    });
 
     console.log('✅ Cart.js inicializado - Fashion Collection Honduras');
 });
