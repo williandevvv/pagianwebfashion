@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileGender = document.getElementById('profile-gender');
     const profileDisplayName = document.getElementById('profile-display-name');
     const profileEmailDisplay = document.getElementById('profile-email');
+    const profileAvatar = document.getElementById('profile-avatar');
+    const profileImageInput = document.getElementById('profile-image');
     const ordersContainer = document.getElementById('pedidosContainer');
     const addressesContainer = document.getElementById('addresses-container');
     const addressForm = document.getElementById('address-form');
@@ -25,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentUser = null;
     let ordersUnsubscribe = null;
+    let selectedImageFile = null;
 
     // Inicializar perfil
     async function initializeProfile() {
@@ -78,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     phone: '',
                     birthdate: '',
                     gender: '',
+                    photoURL: '',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
@@ -94,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (profilePhone) profilePhone.value = userData.phone || '';
             if (profileBirthdate) profileBirthdate.value = userData.birthdate || '';
             if (profileGender) profileGender.value = userData.gender || '';
+
+            if (profileAvatar) {
+                profileAvatar.src = userData.photoURL || currentUser.photoURL || 'img/default-avatar.png';
+            }
 
             // Actualizar nombre mostrado
             const displayName = userData.name && userData.lastname 
@@ -335,6 +343,19 @@ function renderOrders(orders) {
                 }
             });
         }
+
+        if (profileImageInput) {
+            profileImageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                selectedImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    if (profileAvatar) profileAvatar.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
     }
 
     // Manejar actualización del perfil
@@ -362,17 +383,48 @@ function renderOrders(orders) {
                 return;
             }
 
+            let imageUrl = userData.photoURL || '';
+
+            if (selectedImageFile) {
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(selectedImageFile.type)) {
+                    showNotification('Tipo de archivo no válido', 'error');
+                    return;
+                }
+                const maxSize = 5 * 1024 * 1024;
+                if (selectedImageFile.size > maxSize) {
+                    showNotification('La imagen es demasiado grande. Máximo 5MB', 'error');
+                    return;
+                }
+
+                const ext = selectedImageFile.name.split('.').pop();
+                const storageRef = firebase.storage().ref();
+                const fileName = `avatars/${currentUser.uid}_${Date.now()}.${ext}`;
+                const imageRef = storageRef.child(fileName);
+                await imageRef.put(selectedImageFile);
+                imageUrl = await imageRef.getDownloadURL();
+                userData.photoURL = imageUrl;
+            }
+
             await firebase.firestore()
                 .collection('users')
                 .doc(currentUser.uid)
                 .update(userData);
 
+            if (imageUrl) {
+                await currentUser.updateProfile({ photoURL: imageUrl });
+                if (profileAvatar) profileAvatar.src = imageUrl;
+            }
+
             showNotification('¡Perfil actualizado exitosamente!', 'success');
-            
+
             // Actualizar nombre mostrado
             const displayName = `${userData.name} ${userData.lastname}`.trim();
             if (profileDisplayName) profileDisplayName.textContent = displayName;
             if (navbarUsername) navbarUsername.textContent = displayName;
+
+            selectedImageFile = null;
+            if (profileImageInput) profileImageInput.value = '';
 
         } catch (error) {
             console.error('❌ Error actualizando perfil:', error);
