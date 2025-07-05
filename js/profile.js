@@ -685,10 +685,15 @@ function renderOrders(orders) {
     function getStatusColor(status) {
         const statusColors = {
             'pending': 'warning',
+            'pendiente': 'warning',
             'processing': 'info',
+            'procesando': 'info',
             'shipped': 'primary',
+            'enviado': 'primary',
             'delivered': 'success',
-            'cancelled': 'danger'
+            'entregado': 'success',
+            'cancelled': 'danger',
+            'cancelado': 'danger'
         };
         return statusColors[status] || 'secondary';
     }
@@ -696,10 +701,15 @@ function renderOrders(orders) {
     function getStatusText(status) {
         const statusTexts = {
             'pending': 'Pendiente',
+            'pendiente': 'Pendiente',
             'processing': 'En Proceso',
+            'procesando': 'En Proceso',
             'shipped': 'Enviado',
+            'enviado': 'Enviado',
             'delivered': 'Entregado',
-            'cancelled': 'Cancelado'
+            'entregado': 'Entregado',
+            'cancelled': 'Cancelado',
+            'cancelado': 'Cancelado'
         };
         return statusTexts[status] || 'Desconocido';
     }
