@@ -296,16 +296,17 @@
 <body>
     <!-- Header -->
     <header class="bg-gradient-to-br from-pink-300 via-rose-200 to-orange-200 sticky top-0 z-50 shadow">
-        <div class="container nav-wrapper">
-            <a class="navbar-brand text-gray-800 font-bold text-xl" href="index.html">Fashion Collection</a>
-            <button class="menu-toggle text-gray-800">☰</button>
-            <nav class="navbar-links">
-                <a class="text-gray-800 hover:text-pink-600" href="index.html">Inicio</a>
-                <a class="text-gray-800 hover:text-pink-600" href="ofertas.html">Ofertas</a>
-                <a class="text-gray-800 hover:text-pink-600" href="contacto.html">Contacto</a>
-            </nav>
-            <div class="flex items-center gap-2 auth-section">
-                <a href="carrito.html" class="relative text-gray-800">
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
+            <div class="flex items-center">
+                <a class="navbar-brand me-5 text-gray-800 font-bold text-xl" href="index.html">Fashion Collection</a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-gray-800 hover:text-pink-600" href="index.html">Inicio</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="ofertas.html">Ofertas</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="contacto.html">Contacto</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <a href="carrito.html" class="relative text-gray-800 me-4">
                     <i class="fas fa-shopping-cart fa-lg"></i>
                     <span class="cart-badge absolute -top-2 -right-2 bg-pink-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
                 </a>
@@ -330,6 +331,16 @@
                         </ul>
                     </div>
                 </div>
+                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+            </div>
+        </div>
+        <div class="collapse md:hidden" id="mobileMenu">
+            <div class="py-3 px-4">
+                <a class="block py-2 text-gray-800" href="index.html">Inicio</a>
+                <a class="block py-2 text-gray-800" href="ofertas.html">Ofertas</a>
+                <a class="block py-2 text-gray-800" href="contacto.html">Contacto</a>
             </div>
         </div>
     </header>
@@ -468,7 +479,6 @@
     <script src="js/cart.js"></script>
     <script src="js/orders.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/responsive-navbar.js"></script>
     <script type="module" src="js/maintenance.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
