@@ -1,0 +1,370 @@
+/* Galería de imágenes - Estilos Principales */
+
+/* Variables de color inspiradas en maquillaje */
+:root {
+    --galeria-rosa: #ffb6c1;
+    --galeria-violeta: #d291bc;
+    --galeria-crema: #fdf6f0;
+    --galeria-dorado: #f3c300;
+    --galeria-negro: #2c2c2c;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.galeria {
+    background: linear-gradient(135deg,
+        var(--galeria-crema) 0%,
+        #ffe4e1 50%,
+        var(--galeria-rosa) 100%);
+    font-family: 'Poppins', sans-serif;
+    color: var(--galeria-negro);
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Contenedor principal */
+.gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Tarjeta de imagen */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+/* Overlay de información */
+.gallery-item .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+    color: #fff;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .overlay {
+    opacity: 1;
+}
+
+/* Modal de imagen */
+.modal-img {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-img img {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.modal-img.active {
+    display: flex;
+}
+
+/* Botón cerrar */
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--galeria-rosa);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Animaciones para el botón */
+.modal-close:hover {
+    background: var(--galeria-violeta);
+    transform: rotate(90deg);
+    transition: transform 0.4s ease, background 0.4s ease;
+}
+
+/* Botón scroll arriba */
+#scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--galeria-dorado);
+    color: var(--galeria-negro);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+}
+
+#scroll-top.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Estilos para la barra de filtros */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filters button {
+    background: var(--galeria-violeta);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-weight: 500;
+}
+
+.filters button:hover,
+.filters button.active {
+    background: var(--galeria-rosa);
+}
+
+/* Dark mode styles */
+body.galeria.dark {
+    background: linear-gradient(135deg,
+        #2c003e 0%,
+        #4c0040 50%,
+        #160021 100%);
+    color: #f1e5f7;
+}
+
+body.galeria.dark .gallery-item .overlay {
+    background: linear-gradient(to top, rgba(255,255,255,0.8), rgba(255,255,255,0));
+    color: var(--galeria-negro);
+}
+
+body.galeria.dark #scroll-top {
+    background: var(--galeria-rosa);
+    color: #fff;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.gallery-item {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Más estilos opcionales */
+.header-gallery {
+    text-align: center;
+    padding: 4rem 1rem;
+    background-image: linear-gradient(60deg, var(--galeria-rosa), var(--galeria-violeta));
+    color: white;
+    margin-bottom: 2rem;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.header-gallery h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.header-gallery p {
+    font-size: 1.2rem;
+}
+
+/* Detalle de sombra para imágenes */
+.gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.15);
+    pointer-events: none;
+    border-radius: 20px;
+}
+
+/* Fin de la hoja de estilos */
+
+/* === Animaciones de fondo === */
+.background-glitters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background-glitters span {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--galeria-dorado);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: glitter-fall 8s linear infinite;
+}
+
+@keyframes glitter-fall {
+    from { transform: translateY(-100vh); }
+    to { transform: translateY(100vh); }
+}
+
+/* === Estilos para botones adicionales === */
+.button-darkmode {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: var(--galeria-violeta);
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.button-darkmode.active {
+    background: var(--galeria-rosa);
+}
+
+.button-darkmode:hover {
+    transform: rotate(45deg);
+    transition: transform 0.4s ease;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .header-gallery h1 {
+        font-size: 2.2rem;
+    }
+
+    .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    #scroll-top,
+    .button-darkmode {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+/* === Estilos para captions === */
+.caption {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Capas extras para enmarcar la galería */
+.gallery-frame {
+    position: relative;
+    padding: 2rem;
+    border: 10px double var(--galeria-dorado);
+    border-radius: 30px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.gallery-frame::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    bottom: -20px;
+    left: -20px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, var(--galeria-rosa), var(--galeria-violeta));
+    z-index: -1;
+    filter: blur(20px);
+}
+
+/* === Tooltip personalizado === */
+.tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .tooltip {
+    opacity: 1;
+}
+
+/* === Fin de estilos adicionales === */
