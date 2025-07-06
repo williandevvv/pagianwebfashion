@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Inspiración - Fashion Collection</title>
+    <!-- Enlaces a estilos externos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/galeria.css">
+</head>
+<body class="galeria">
+    <!-- Encabezado -->
+    <header class="header-gallery">
+        <h1>Galería Fashion</h1>
+        <p>Encuentra inspiración en cada estilo</p>
+    </header>
+
+    <!-- Barra de navegación -->
+    <div class="container mb-4">
+        <nav class="navbar navbar-expand-lg glass-header">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html">Fashion Collection</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navMenu">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="ofertas.html">Ofertas</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="galeria.html">Galería</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters">
+        <button class="active" data-filter="all">Todos</button>
+        <button data-filter="maquillaje">Maquillaje</button>
+        <button data-filter="accesorios">Accesorios</button>
+        <button data-filter="uñas">Uñas</button>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="gallery-frame">
+        <div class="gallery-container">
+            <!-- Imagen ejemplo -->
+            <div class="gallery-item" data-category="maquillaje">
+                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=600&q=60" alt="Inspiración Maquillaje" />
+                <div class="overlay">Look 1</div>
+                <div class="tooltip">Maquillaje profesional</div>
+            </div>
+            <div class="gallery-item" data-category="accesorios">
+                <img src="https://images.unsplash.com/photo-1520975698515-8297a5b32e0c?auto=format&fit=crop&w=600&q=60" alt="Accesorios" />
+                <div class="overlay">Look 2</div>
+                <div class="tooltip">Bisutería brillante</div>
+            </div>
+            <div class="gallery-item" data-category="uñas">
+                <img src="https://images.unsplash.com/photo-1555529771-35a38fb89fd2?auto=format&fit=crop&w=600&q=60" alt="Uñas" />
+                <div class="overlay">Look 3</div>
+                <div class="tooltip">Diseños de uñas</div>
+            </div>
+            <div class="gallery-item" data-category="maquillaje">
+                <img src="https://images.unsplash.com/photo-1562158070-44a94e776d9c?auto=format&fit=crop&w=600&q=60" alt="Maquillaje 2" />
+                <div class="overlay">Look 4</div>
+                <div class="tooltip">Sombras coloridas</div>
+            </div>
+            <!-- Repite con diferentes categorías -->
+            <div class="gallery-item" data-category="accesorios">
+                <img src="https://images.unsplash.com/photo-1520975625930-b2c4e5593ea9?auto=format&fit=crop&w=600&q=60" alt="Accesorio 2" />
+                <div class="overlay">Look 5</div>
+                <div class="tooltip">Glamour total</div>
+            </div>
+            <div class="gallery-item" data-category="uñas">
+                <img src="https://images.unsplash.com/photo-1616394583484-0c4bd774f06f?auto=format&fit=crop&w=600&q=60" alt="Uñas 2" />
+                <div class="overlay">Look 6</div>
+                <div class="tooltip">Arte en tus manos</div>
+            </div>
+            <div class="gallery-item" data-category="maquillaje">
+                <img src="https://images.unsplash.com/photo-1621193577438-9d0f7fd54073?auto=format&fit=crop&w=600&q=60" alt="Maquillaje 3" />
+                <div class="overlay">Look 7</div>
+                <div class="tooltip">Brillos y más brillos</div>
+            </div>
+            <div class="gallery-item" data-category="accesorios">
+                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165d215?auto=format&fit=crop&w=600&q=60" alt="Accesorio 3" />
+                <div class="overlay">Look 8</div>
+                <div class="tooltip">Elegancia clásica</div>
+            </div>
+            <div class="gallery-item" data-category="uñas">
+                <img src="https://images.unsplash.com/photo-1552158070-d180aa8a24c0?auto=format&fit=crop&w=600&q=60" alt="Uñas 3" />
+                <div class="overlay">Look 9</div>
+                <div class="tooltip">Uñas pastel</div>
+            </div>
+            <div class="gallery-item" data-category="maquillaje">
+                <img src="https://images.unsplash.com/photo-1535469423-ff1c3d0f7c5c?auto=format&fit=crop&w=600&q=60" alt="Maquillaje 4" />
+                <div class="overlay">Look 10</div>
+                <div class="tooltip">Labios vibrantes</div>
+            </div>
+            <div class="gallery-item" data-category="accesorios">
+                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=600&q=60" alt="Accesorio 4" />
+                <div class="overlay">Look 11</div>
+                <div class="tooltip">Colores metálicos</div>
+            </div>
+            <div class="gallery-item" data-category="uñas">
+                <img src="https://images.unsplash.com/photo-1552159070-9999cfc45f0b?auto=format&fit=crop&w=600&q=60" alt="Uñas 4" />
+                <div class="overlay">Look 12</div>
+                <div class="tooltip">Diseño minimalista</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para imagenes -->
+    <div class="modal-img">
+        <button class="modal-close" aria-label="Cerrar">&times;</button>
+        <img src="" alt="Vista ampliada" />
+    </div>
+
+    <!-- Botones flotantes -->
+    <button id="scroll-top"><i class="fas fa-arrow-up"></i></button>
+    <button class="button-darkmode"><i class="fas fa-moon"></i></button>
+
+    <!-- Elementos decorativos en el fondo -->
+    <div class="background-glitters"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/galeria.js"></script>
+</body>
+</html>

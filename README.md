@@ -14,6 +14,7 @@ npx http-server
 Esto expondrá la aplicación en [http://localhost:8080](http://localhost:8080) u otro puerto disponible.
 
 Además de la página principal, el sitio cuenta con secciones de **Envíos**, **Devoluciones**, **Preguntas Frecuentes** y **Términos y Condiciones** accesibles desde el pie de página.
+Adicionalmente, encontrarás una nueva sección de **Galería** con inspiración de looks y accesorios.
 
 ## Gestión de pedidos
 
