@@ -506,6 +506,29 @@
               </button>
             </div>
           </div>
+          <!-- Filtros de pedidos -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <select class="form-select" id="filterOrderStatus">
+                <option value="">Todos los estados</option>
+                <option value="pendiente">Pendientes</option>
+                <option value="enviado">Enviados</option>
+                <option value="cancelado">Cancelados</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchOrders"
+                  placeholder="Buscar por ID o cliente..."
+                />
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
             <table class="table" id="orders-table">
               <thead>
