@@ -362,6 +362,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const pedidoId = btn.dataset.id;
       if (pedidoId) generateInvoice(pedidoId);
     });
+
+    // Vista previa de factura
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".preview-factura");
+      if (!btn) return;
+      const pedidoId = btn.dataset.id;
+      if (pedidoId) previewInvoice(pedidoId);
+    });
   }
 
   function showSection(sectionName) {
@@ -1108,6 +1116,9 @@ function renderUsersTable() {
                         }">${estado}</span>
                     </td>
                     <td>
+                        <button class="btn btn-sm btn-outline-secondary preview-factura" data-id="${order.id}">
+                          <i class="fas fa-search"></i>
+                        </button>
                         <button class="btn btn-sm btn-outline-primary ver-factura" data-id="${order.id}">
                           <i class="fas fa-file-invoice"></i>
                         </button>
@@ -1253,6 +1264,9 @@ function renderUsersTable() {
               <button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.id}')">
                 <i class="fas fa-eye"></i>
               </button>
+              <button class="btn btn-sm btn-outline-secondary preview-factura" data-id="${order.id}">
+                <i class="fas fa-search"></i>
+              </button>
               <button class="btn btn-sm btn-outline-success ver-factura" data-id="${order.id}">
                 <i class="fas fa-file-invoice"></i>
               </button>
@@ -1313,11 +1327,7 @@ function renderUsersTable() {
     });
   };
 
-  // Generar factura detallada del pedido
-  window.generateInvoice = function(orderId) {
-    const order = orders.find(o => o.id === orderId);
-    if (!order) return;
-
+  function buildInvoiceHtml(order) {
     const fechaHora = order.createdAt?.seconds
       ? new Date(order.createdAt.seconds * 1000).toLocaleString('es-HN')
       : new Date().toLocaleString('es-HN');
@@ -1355,7 +1365,7 @@ function renderUsersTable() {
     }
     resumenHtml += `<p><strong>Total:</strong> L${total.toFixed(2)}</p>`;
 
-    const invoiceHtml = `
+    return `
       <div style="font-family:Arial,sans-serif;font-size:12px;padding:20px;">
         <h2 style="text-align:center;margin-bottom:20px;">Fashion Collection</h2>
         <p><strong>Pedido:</strong> #${order.id}</p>
@@ -1366,21 +1376,55 @@ function renderUsersTable() {
         <hr>
         ${resumenHtml}
       </div>`;
+  }
+
+  // Generar factura detallada del pedido y descargar PDF
+  window.generateInvoice = function(orderId) {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+
+    const invoiceHtml = buildInvoiceHtml(order);
 
     const container = document.createElement('div');
     container.innerHTML = invoiceHtml;
     document.body.appendChild(container);
 
-    html2pdf()
-      .set({
-        margin: 10,
-        filename: `pedido_${order.id}.pdf`,
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
-      })
-      .from(container)
-      .save()
-      .then(() => container.remove());
+    const imgs = Array.from(container.querySelectorAll('img'));
+    Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(res => {
+      img.onload = img.onerror = res;
+    }))).then(() => {
+      html2pdf()
+        .set({
+          margin: 10,
+          filename: `pedido_${order.id}.pdf`,
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
+        })
+        .from(container)
+        .save()
+        .then(() => container.remove());
+    });
+  };
+
+  // Previsualizar factura del pedido
+  window.previewInvoice = function(orderId) {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+
+    const invoiceHtml = buildInvoiceHtml(order);
+
+    Swal.fire({
+      title: `Factura #${order.id}`,
+      html: invoiceHtml,
+      width: '800px',
+      showCancelButton: true,
+      confirmButtonText: 'Descargar PDF',
+      cancelButtonText: 'Cerrar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        generateInvoice(orderId);
+      }
+    });
   };
 
   // Guardar producto (crear o editar)
