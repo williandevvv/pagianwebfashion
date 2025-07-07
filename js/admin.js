@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Variables globales
   let products = [];
   let orders = [];
+  let orderFilters = { status: '', search: '', period: '' };
   let users = [];
   let productoEnEdicion = null;
   let currentUserRole = null;
@@ -1034,8 +1035,49 @@ function renderUsersTable() {
   function renderOrdersTable() {
     const container = document.querySelector("#orders-table tbody");
     if (!container) return;
+    let filtered = [...orders];
 
-    container.innerHTML = orders
+    const statusFilter = document.getElementById('filterOrderStatus')?.value;
+    const searchTerm = document.getElementById('searchOrders')?.value?.toLowerCase();
+    const period = orderFilters.period;
+
+    if (statusFilter) {
+      filtered = filtered.filter(o => (o.status || o.estado || 'pendiente') === statusFilter);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(o =>
+        (o.id || '').toLowerCase().includes(searchTerm) ||
+        (o.userEmail || '').toLowerCase().includes(searchTerm)
+      );
+    }
+
+    if (period) {
+      const now = new Date();
+      let start;
+      if (period === 'today') {
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (period === 'week') {
+        const day = now.getDay();
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day);
+      } else if (period === 'month') {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+      }
+      if (start) {
+        filtered = filtered.filter(o => {
+          if (!o.createdAt?.seconds) return false;
+          const d = new Date(o.createdAt.seconds * 1000);
+          return d >= start;
+        });
+      }
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<tr><td colspan="7" class="text-center">No se encontraron pedidos</td></tr>`;
+      return;
+    }
+
+    container.innerHTML = filtered
       .map((order) => {
         const total =
           order.total ||
@@ -1333,7 +1375,7 @@ function renderUsersTable() {
       .set({
         margin: 10,
         filename: `pedido_${order.id}.pdf`,
-        html2canvas: { scale: 2 },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
       })
       .from(container)
@@ -1971,6 +2013,30 @@ function renderUsersTable() {
     if (e.target.id === 'searchProducts') {
       renderProductsTable();
     }
+  });
+
+  // Eventos para filtros de pedidos
+  document.addEventListener('change', function(e) {
+    if (e.target.id === 'filterOrderStatus') {
+      orderFilters.status = e.target.value;
+      renderOrdersTable();
+    }
+  });
+
+  document.addEventListener('input', function(e) {
+    if (e.target.id === 'searchOrders') {
+      orderFilters.search = e.target.value.toLowerCase();
+      renderOrdersTable();
+    }
+  });
+
+  document.querySelectorAll('.order-filter').forEach(btn => {
+    btn.addEventListener('click', function() {
+      orderFilters.period = this.dataset.period || '';
+      document.querySelectorAll('.order-filter').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderOrdersTable();
+    });
   });
 
   // Sistema de Inventario
