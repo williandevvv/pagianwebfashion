@@ -1313,22 +1313,32 @@ function renderUsersTable() {
     }
     resumenHtml += `<p><strong>Total:</strong> L${total.toFixed(2)}</p>`;
 
-    Swal.fire({
-      title: 'Factura',
-      html: `
-        <div class="text-start">
-          <h5 class="text-center mb-3">Fashion Collection</h5>
-          <p><strong>Pedido:</strong> #${order.id}</p>
-          <p><strong>Cliente:</strong> ${order.userEmail || 'Desconocido'}</p>
-          <p><strong>Fecha y Hora:</strong> ${fechaHora}</p>
-          <hr>
-          ${itemsHtml}
-          ${resumenHtml}
-        </div>
-      `,
-      width: '800px',
-      confirmButtonText: 'Cerrar'
-    });
+    const invoiceHtml = `
+      <div style="font-family:Arial,sans-serif;font-size:12px;padding:20px;">
+        <h2 style="text-align:center;margin-bottom:20px;">Fashion Collection</h2>
+        <p><strong>Pedido:</strong> #${order.id}</p>
+        <p><strong>Cliente:</strong> ${order.userEmail || 'Desconocido'}</p>
+        <p><strong>Fecha y Hora:</strong> ${fechaHora}</p>
+        <hr>
+        ${itemsHtml}
+        <hr>
+        ${resumenHtml}
+      </div>`;
+
+    const container = document.createElement('div');
+    container.innerHTML = invoiceHtml;
+    document.body.appendChild(container);
+
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: `pedido_${order.id}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
+      })
+      .from(container)
+      .save()
+      .then(() => container.remove());
   };
 
   // Guardar producto (crear o editar)
