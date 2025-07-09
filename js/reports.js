@@ -156,7 +156,7 @@ function renderSalesChart(sales) {
             datasets: [{
                 label: 'Ventas',
                 data,
-                backgroundColor: '#6a0dad'
+                backgroundColor: '#0b3d91'
             }]
         },
         options: {
@@ -182,7 +182,7 @@ function renderCategoryChart(products) {
         type: 'doughnut',
         data: {
             labels,
-            datasets: [{ data, backgroundColor: ['#6a0dad', '#c06c84', '#bd8c7d', '#f4e4e1'] }]
+            datasets: [{ data, backgroundColor: ['#0b3d91', '#c06c84', '#bd8c7d', '#f4e4e1'] }]
         },
         options: {
             responsive: true,
