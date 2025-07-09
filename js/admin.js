@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Variables globales
   let products = [];
   let orders = [];
+  let groupedOrders = {};
   let orderFilters = { status: '', search: '', period: '' };
   let users = [];
   let productoEnEdicion = null;
@@ -425,6 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'orders':
         renderOrdersTable();
+        groupOrders();
         break;
       case 'users':
         renderUsersTable();
@@ -470,6 +472,8 @@ document.addEventListener("DOMContentLoaded", () => {
         id: doc.id,
         ...doc.data(),
       }));
+
+      groupOrders();
 
       renderDashboard();
       renderOffersTable();
@@ -1276,6 +1280,84 @@ function renderUsersTable() {
       })
       .join('');
   }
+
+  function groupOrders() {
+    groupedOrders = {};
+    orders.forEach(order => {
+      const uid = order.userId || 'desconocido';
+      if (!groupedOrders[uid]) groupedOrders[uid] = [];
+      groupedOrders[uid].push(order);
+    });
+    renderGroupedOrders();
+  }
+
+  function renderGroupedOrders(filter = '') {
+    const container = document.getElementById('listaPedidos');
+    if (!container) return;
+    container.innerHTML = '';
+    const search = filter.toLowerCase();
+    Object.keys(groupedOrders).forEach((uid, index) => {
+      const pedidos = groupedOrders[uid];
+      if (!pedidos.length) return;
+      const first = pedidos[0];
+      const nombre = (first.usuarioNombre || first.userName || first.userEmail || 'Usuario').toString();
+      const email = (first.userEmail || '').toString();
+      if (search && !nombre.toLowerCase().includes(search) && !email.toLowerCase().includes(search)) return;
+
+      const rows = pedidos.map(p => {
+        const total = p.total || p.items?.reduce((s,i)=>s + i.price*i.quantity,0) || 0;
+        const fecha = p.createdAt?.seconds ? new Date(p.createdAt.seconds*1000).toLocaleDateString() : '';
+        const estado = p.status || p.estado || 'pendiente';
+        return `
+          <tr>
+            <td>${p.id}</td>
+            <td>${fecha}</td>
+            <td>L${total.toFixed(2)}</td>
+            <td><span class="badge ${estado === 'enviado' ? 'bg-success' : estado === 'cancelado' ? 'bg-danger' : 'bg-warning'}">${estado}</span></td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary preview-factura" data-id="${p.id}">
+                <i class="fas fa-search"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-primary ver-factura" data-id="${p.id}">
+                <i class="fas fa-file-invoice"></i>
+              </button>
+              ${ (estado === 'pending' || estado === 'pendiente') && hasPermission('orders','edit') ? `<button class="btn btn-sm btn-success marcar-enviado" data-id="${p.id}">Marcar Enviado</button>` : '' }
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const item = document.createElement('div');
+      item.className = 'accordion-item mb-2';
+      item.innerHTML = `
+        <h2 class="accordion-header" id="heading${index}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" style="background-color:#6a0dad;color:white;">
+            ${nombre || email} (${pedidos.length} pedidos)
+          </button>
+        </h2>
+        <div id="collapse${index}" class="accordion-collapse collapse">
+          <div class="accordion-body p-0">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>`;
+      container.appendChild(item);
+    });
+  }
   
   // Función para ver detalles del pedido
   window.viewOrderDetails = function(orderId) {
@@ -2071,6 +2153,9 @@ function renderUsersTable() {
     if (e.target.id === 'searchOrders') {
       orderFilters.search = e.target.value.toLowerCase();
       renderOrdersTable();
+    }
+    if (e.target.id === 'searchUserOrders') {
+      renderGroupedOrders(e.target.value);
     }
   });
 
