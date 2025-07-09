@@ -1374,9 +1374,14 @@ function renderUsersTable() {
     }).addTo(mapaDashboard);
 
     const lugares = [
-      { nombre: 'Galerías del Valle', coords: [15.5143, -88.019] },
-      { nombre: 'City Mall San Pedro Sula', coords: [15.4855, -88.0235] },
-      { nombre: 'Multiplaza San Pedro Sula', coords: [15.4997, -88.018] }
+      { nombre: 'Mega Mall', coords: [15.4990, -88.0330] },
+      { nombre: 'City Mall San Pedro Sula', coords: [15.5000, -88.0330] },
+      { nombre: 'Galerías del Valle', coords: [15.5140, -88.0140] },
+      { nombre: 'Multiplaza San Pedro Sula', coords: [15.5000, -88.0250] },
+      { nombre: 'Diunsa Salida San Fernando', coords: [15.4990, -88.0300] },
+      { nombre: 'Fashion Collection – 5ta Avenida y 6ta Calle', coords: [15.5050, -88.0210] },
+      { nombre: 'Fashion Collection – Mall Galerías Las Américas', coords: [15.5130, -88.0120] },
+      { nombre: 'Variedades Mis Ceci', coords: [15.5003, -88.0249] }
     ];
 
     lugares.forEach(l => {
