@@ -529,6 +529,24 @@
             </div>
           </div>
 
+          <!-- Búsqueda por usuario para vista agrupada -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchUserOrders"
+                  placeholder="Filtrar usuario por nombre o correo..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Pedidos agrupados por usuario -->
+          <div id="listaPedidos" class="accordion"></div>
+
           <div class="table-responsive">
             <table class="table" id="orders-table">
               <thead>
