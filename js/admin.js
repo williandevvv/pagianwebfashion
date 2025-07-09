@@ -1186,7 +1186,9 @@ function renderUsersTable() {
         newUsers: newUsersThisMonth.length,
         monthlyRevenue: monthlyRevenue
       });
-      
+
+      initDashboardCharts();
+
       // Renderizar tablas
       renderRecentOrdersTable();
       
@@ -1226,6 +1228,63 @@ function renderUsersTable() {
     
     const monthlyRevenueEl = document.getElementById('monthlyRevenue');
     if (monthlyRevenueEl) monthlyRevenueEl.textContent = `L${stats.monthlyRevenue.toFixed(2)}`;
+  }
+
+  function initDashboardCharts() {
+    const ordersCtx = document.getElementById('graficaOrdenes');
+    if (ordersCtx && window.Chart) {
+      new Chart(ordersCtx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+          datasets: [{
+            label: 'Pedidos',
+            data: [5, 8, 3, 6, 4, 7, 2],
+            backgroundColor: 'rgba(106,13,173,0.5)',
+            borderRadius: 4
+          }]
+        },
+        options: { responsive: true, animation: true }
+      });
+    }
+
+    const salesCtx = document.getElementById('graficaVentas');
+    if (salesCtx && window.Chart) {
+      new Chart(salesCtx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+          datasets: [{
+            label: 'Ventas (L)',
+            data: [1500, 2200, 1800, 2500],
+            backgroundColor: 'rgba(66,193,156,0.2)',
+            borderColor: 'rgba(66,193,156,1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: { responsive: true, animation: true }
+      });
+    }
+
+    const stockCtx = document.getElementById('graficaStock');
+    if (stockCtx && window.Chart) {
+      new Chart(stockCtx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['En Stock', 'Bajo', 'Agotado'],
+          datasets: [{
+            data: [80, 10, 10],
+            backgroundColor: [
+              'rgba(106,13,173,0.6)',
+              'rgba(255,193,7,0.6)',
+              'rgba(220,53,69,0.6)'
+            ]
+          }]
+        },
+        options: { responsive: true, animation: true }
+      });
+    }
   }
   
   
@@ -1292,10 +1351,15 @@ function renderUsersTable() {
   }
 
   function renderGroupedOrders(filter = '') {
-    const container = document.getElementById('listaPedidos');
-    if (!container) return;
-    container.innerHTML = '';
+    const containers = [
+      { el: document.getElementById('listaPedidos'), prefix: 'orders' },
+      { el: document.getElementById('listaPedidosDashboard'), prefix: 'dash' }
+    ].filter(c => c.el);
+    if (containers.length === 0) return;
+
     const search = filter.toLowerCase();
+    containers.forEach(c => (c.el.innerHTML = ''));
+
     Object.keys(groupedOrders).forEach((uid, index) => {
       const pedidos = groupedOrders[uid];
       if (!pedidos.length) return;
@@ -1304,58 +1368,67 @@ function renderUsersTable() {
       const email = (first.userEmail || '').toString();
       if (search && !nombre.toLowerCase().includes(search) && !email.toLowerCase().includes(search)) return;
 
-      const rows = pedidos.map(p => {
-        const total = p.total || p.items?.reduce((s,i)=>s + i.price*i.quantity,0) || 0;
-        const fecha = p.createdAt?.seconds ? new Date(p.createdAt.seconds*1000).toLocaleDateString() : '';
-        const estado = p.status || p.estado || 'pendiente';
-        return `
-          <tr>
-            <td>${p.id}</td>
-            <td>${fecha}</td>
-            <td>L${total.toFixed(2)}</td>
-            <td><span class="badge ${estado === 'enviado' ? 'bg-success' : estado === 'cancelado' ? 'bg-danger' : 'bg-warning'}">${estado}</span></td>
-            <td>
-              <button class="btn btn-sm btn-outline-secondary preview-factura" data-id="${p.id}">
-                <i class="fas fa-search"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-primary ver-factura" data-id="${p.id}">
-                <i class="fas fa-file-invoice"></i>
-              </button>
-              ${ (estado === 'pending' || estado === 'pendiente') && hasPermission('orders','edit') ? `<button class="btn btn-sm btn-success marcar-enviado" data-id="${p.id}">Marcar Enviado</button>` : '' }
-            </td>
-          </tr>
-        `;
-      }).join('');
+      const rows = pedidos
+        .map((p) => {
+          const total = p.total || p.items?.reduce((s, i) => s + i.price * i.quantity, 0) || 0;
+          const fecha = p.createdAt?.seconds ? new Date(p.createdAt.seconds * 1000).toLocaleDateString() : '';
+          const estado = p.status || p.estado || 'pendiente';
+          return `
+            <tr>
+              <td>${p.id}</td>
+              <td>${fecha}</td>
+              <td>L${total.toFixed(2)}</td>
+              <td><span class="badge ${estado === 'enviado' ? 'bg-success' : estado === 'cancelado' ? 'bg-danger' : 'bg-warning'}">${estado}</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-secondary preview-factura" data-id="${p.id}">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary ver-factura" data-id="${p.id}">
+                  <i class="fas fa-file-invoice"></i>
+                </button>
+                ${
+                  (estado === 'pending' || estado === 'pendiente') && hasPermission('orders', 'edit')
+                    ? `<button class="btn btn-sm btn-success marcar-enviado" data-id="${p.id}">Marcar Enviado</button>`
+                    : ''
+                }
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
 
-      const item = document.createElement('div');
-      item.className = 'accordion-item mb-2';
-      item.innerHTML = `
-        <h2 class="accordion-header" id="heading${index}">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" style="background-color:#6a0dad;color:white;">
-            ${nombre || email} (${pedidos.length} pedidos)
-          </button>
-        </h2>
-        <div id="collapse${index}" class="accordion-collapse collapse">
-          <div class="accordion-body p-0">
-            <div class="table-responsive">
-              <table class="table table-striped table-bordered mb-0">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Fecha</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${rows}
-                </tbody>
-              </table>
+      containers.forEach((c) => {
+        const item = document.createElement('div');
+        item.className = 'accordion-item mb-2';
+        const idx = `${c.prefix}${index}`;
+        item.innerHTML = `
+          <h2 class="accordion-header" id="heading${idx}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${idx}" style="background-color:#6a0dad;color:white;">
+              ${nombre || email} (${pedidos.length} pedidos)
+            </button>
+          </h2>
+          <div id="collapse${idx}" class="accordion-collapse collapse">
+            <div class="accordion-body p-0">
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Fecha</th>
+                      <th>Total</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rows}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </div>`;
-      container.appendChild(item);
+          </div>`;
+        c.el.appendChild(item);
+      });
     });
   }
   
