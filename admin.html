@@ -29,7 +29,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css"
     />
-    <link href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- FullCalendar CSS -->
     <link
       rel="stylesheet"
@@ -148,8 +148,8 @@
         margin-bottom: 20px;
       }
 
-      #world_map {
-        height: 400px;
+      #map {
+        height: 350px;
       }
 
       #calendar {
@@ -486,7 +486,7 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <div class="chart-container">
-              <div id="world_map" style="height: 400px;"></div>
+              <div id="map"></div>
             </div>
           </div>
           <div class="col-md-6">
@@ -1720,8 +1720,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/js/jsvectormap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales-all.min.js"></script>
