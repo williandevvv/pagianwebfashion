@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Botón de checkout
         const checkoutBtn = document.getElementById('checkout-btn');
         if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', handleCheckout);
+            checkoutBtn.addEventListener('click', confirmCheckout);
         }
 
         // Botón de vaciar carrito
@@ -307,6 +307,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Guardar carrito en localStorage
     function saveCartToStorage() {
         localStorage.setItem('fashionCart', JSON.stringify(cartItems));
+    }
+
+    // Mostrar términos y confirmar el pedido antes del checkout
+    async function confirmCheckout() {
+        if (cartItems.length === 0) return;
+
+        const { isConfirmed } = await Swal.fire({
+            title: 'Términos y Condiciones',
+            html: `Para continuar debes aceptar nuestros <a href="terminos.html" target="_blank">términos y condiciones</a>.` +
+                  `<div class="form-check mt-3">` +
+                  `<input type="checkbox" class="form-check-input" id="accept-terms">` +
+                  `<label class="form-check-label" for="accept-terms">Acepto los términos y condiciones</label>` +
+                  `</div>`,
+            showCancelButton: true,
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar',
+            preConfirm: () => {
+                if (!document.getElementById('accept-terms').checked) {
+                    Swal.showValidationMessage('Debes aceptar los términos y condiciones');
+                    return false;
+                }
+                return true;
+            }
+        });
+
+        if (!isConfirmed) return;
+
+        const result = await Swal.fire({
+            title: 'Confirmar pedido',
+            html: 'Debes estar seguro de tu pedido porque no se puede eliminar ni agregar más artículos. Tienes 3 días para completar tu pedido o se perderá.',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            handleCheckout();
+        }
     }
 
     // Manejar checkout - Enviar por WhatsApp
