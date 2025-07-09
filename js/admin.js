@@ -59,9 +59,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
             const userData = userDoc.data() || {};
 
-            // Compatibilidad con campo "rol" en español
+            // Compatibilidad con diferentes variantes del campo de rol
             let role = userData.role || userData.rol;
-            if (role === 'Administrador') role = 'admin';
+            if (role) {
+              const normalized = String(role).toLowerCase();
+              if (normalized === 'administrador' || normalized === 'admin') {
+                role = 'admin';
+              } else {
+                role = normalized;
+              }
+            }
+
+            // Fallback a admin por email
+            if (!role && user.email === 'admin@fashioncollection.com') {
+              role = 'admin';
+            }
 
             currentUserRole = role || 'customer';
             currentPermissions = userData.permissions || defaultPermissions[currentUserRole] || {};
@@ -92,10 +104,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (offlineData) {
           try {
             const data = JSON.parse(offlineData);
-            if (data.user) {
-              let role = data.user.role || data.user.rol;
-              if (role === 'Administrador') role = 'admin';
-              currentUserRole = role || 'customer';
+              if (data.user) {
+                let role = data.user.role || data.user.rol;
+                if (role) {
+                  const normalized = String(role).toLowerCase();
+                  if (normalized === 'administrador' || normalized === 'admin') {
+                    role = 'admin';
+                  } else {
+                    role = normalized;
+                  }
+                }
+                if (!role && data.user.email === 'admin@fashioncollection.com') {
+                  role = 'admin';
+                }
+                currentUserRole = role || 'customer';
               currentPermissions = defaultPermissions[currentUserRole] || {};
 
               if (!currentPermissions.dashboard?.view) {
