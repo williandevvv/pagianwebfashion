@@ -29,7 +29,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" rel="stylesheet" />
     <!-- FullCalendar CSS -->
     <link
       rel="stylesheet"
@@ -148,12 +148,33 @@
         margin-bottom: 20px;
       }
 
-      #map {
-        height: 350px;
+      #world_map {
+        height: 400px;
       }
 
       #calendar {
         min-height: 350px;
+      }
+
+      #calendar .fc-toolbar-title {
+        color: var(--primary-purple);
+      }
+
+      #calendar .fc-button-primary {
+        background-color: var(--primary-purple);
+        border-color: var(--primary-purple);
+      }
+
+      #calendar .fc-button-primary:hover {
+        background-color: var(--light-purple);
+        border-color: var(--light-purple);
+      }
+
+      #calendar .fc-daygrid-event {
+        background-color: var(--primary-purple);
+        border: none;
+        padding: 2px 4px;
+        border-radius: 4px;
       }
 
       /* Table Styles */
@@ -465,7 +486,7 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <div class="chart-container">
-              <div id="map"></div>
+              <div id="world_map" style="height: 400px;"></div>
             </div>
           </div>
           <div class="col-md-6">

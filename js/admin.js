@@ -1361,7 +1361,7 @@ function renderUsersTable() {
   }
 
   function initMap() {
-    const mapEl = document.getElementById('map');
+    const mapEl = document.getElementById('world_map');
     if (!mapEl || typeof jsVectorMap === 'undefined') return;
 
     if (mapaDashboard) {
@@ -1380,9 +1380,9 @@ function renderUsersTable() {
     ];
 
     mapaDashboard = new jsVectorMap({
-      selector: '#map',
+      selector: '#world_map',
       map: 'world',
-      zoomButtons: false,
+      zoomButtons: true,
       zoomOnScroll: false,
       markers,
       markerStyle: {
