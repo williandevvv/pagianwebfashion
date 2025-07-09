@@ -1,0 +1,309 @@
+/* Paleta de colores pastel en tonos rosados */
+        :root {
+            --color-rose-gold: #f8c8dc;
+            --color-shimmer: #ffeaf4;
+            --color-nude: #fdd5e4;
+            --color-blush: #ffe6e9;
+            --color-accent: #eab5c4;
+            --color-deep-rose: #d48ca2;
+        }
+
+        /* Estilos base */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fondo con degradado animado inspirado en maquillaje */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg,
+                    var(--color-rose-gold),
+                    var(--color-shimmer),
+                    var(--color-blush),
+                    var(--color-accent));
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientMove 20s ease infinite;
+            opacity: 0.25;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .makeup-decorations {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .floating-makeup {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .lipstick { top: 20%; left: 10%; animation-delay: 0s; }
+        .brush { top: 60%; right: 15%; animation-delay: 2s; }
+        .compact { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .sparkle { top: 40%; right: 30%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Encabezado degradado */
+        .header {
+            background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: "🔥";
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.1;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+        }
+        /* Tarjetas de producto */
+        .product-card {
+            transition: all 0.3s;
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            margin-bottom: 20px;
+            background: white;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(192,108,132,0.15);
+        }
+
+        .product-img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+
+        .price-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-deep-rose));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(192,108,132,0.2);
+        }
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--color-blush);
+            color: var(--color-deep-rose);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .sale-price {
+            color: var(--color-deep-rose);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        /* Barra de navegación */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+        .filter-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid var(--color-shimmer);
+        }
+        .quantity-input {
+            max-width: 70px;
+            text-align: center;
+            border-radius: 20px;
+            border: 1px solid var(--color-accent);
+        }
+
+        /* Botones personalizados */
+        .btn-outline-primary {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--color-shimmer);
+            color: var(--color-accent);
+        }
+        .countdown-timer {
+            background: linear-gradient(45deg, var(--color-accent), var(--color-deep-rose));
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .product-card {
+            width: 300px;
+            background: #fff0f5;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .price-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ffc8dd, #f9c6d3);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            color: #a84d7a;
+            margin: 10px 0 5px;
+        }
+
+        .product-description {
+            font-size: 0.95rem;
+            color: #7b2b51;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .quantity-btn {
+            background: #ffc8dd;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #f9a1bb;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ffc8dd;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: linear-gradient(135deg, #f9c6d3, #f7a4b8);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(249, 198, 211, 0.7);
+        }
