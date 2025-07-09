@@ -29,6 +29,16 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css"
     />
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- FullCalendar CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css"
+    />
     <style>
       :root {
         --sidebar-width: 250px;
@@ -140,6 +150,14 @@
         box-shadow: var(--shadow);
         padding: 20px;
         margin-bottom: 20px;
+      }
+
+      #map {
+        height: 350px;
+      }
+
+      #calendar {
+        min-height: 350px;
       }
 
       /* Table Styles */
@@ -431,6 +449,20 @@
           <div class="col-md-4">
             <div class="chart-container">
               <canvas id="graficaStock"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map and Calendar -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="chart-container">
+              <div id="map"></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart-container">
+              <div id="calendar"></div>
             </div>
           </div>
         </div>
@@ -1552,6 +1584,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales-all.min.js"></script>
     <!-- html2pdf for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Firebase SDKs -->

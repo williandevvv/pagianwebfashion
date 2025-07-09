@@ -19,6 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let graficaOrdenesChart;
   let graficaVentasChart;
   let graficaStockChart;
+  let chartsInitialized = false;
+
+  // Instancias para mapa y calendario
+  let mapaDashboard;
+  let calendarioDashboard;
 
   // Importar módulos de reportes y configuración
   import('./reports.js').then(module => {
@@ -65,6 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
             loadDataFromFirebase();
             loadInventoryData();
             setupAdminEvents();
+            initMap();
+            initCalendar();
           } catch (error) {
             console.error('Error verificando rol:', error);
             redirectToLogin();
@@ -88,6 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
               loadDataFromFirebase();
               loadInventoryData();
               setupAdminEvents();
+              initMap();
+              initCalendar();
               console.log('✅ Acceso offline verificado');
               return;
             }
@@ -482,6 +491,9 @@ document.addEventListener("DOMContentLoaded", () => {
       groupOrders();
 
       renderDashboard();
+      if (!chartsInitialized) {
+        initDashboardCharts();
+      }
       renderOffersTable();
     } catch (error) {
       console.error("❌ Error cargando datos desde Firebase:", error);
@@ -1193,7 +1205,7 @@ function renderUsersTable() {
         monthlyRevenue: monthlyRevenue
       });
 
-      initDashboardCharts();
+
 
       // Renderizar tablas
       renderRecentOrdersTable();
@@ -1323,11 +1335,60 @@ function renderUsersTable() {
         options: { responsive: true, animation: true }
       });
     }
+
+    chartsInitialized = true;
   }
 
   function getWeekOfMonth(date) {
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
     return Math.ceil((date.getDate() + ((firstDay + 6) % 7)) / 7);
+  }
+
+  function initMap() {
+    const mapEl = document.getElementById('map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    if (mapaDashboard) {
+      mapaDashboard.remove();
+    }
+
+    mapaDashboard = L.map(mapEl).setView([15.5, -88.03], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mapaDashboard);
+
+    const lugares = [
+      { nombre: 'Galerías del Valle', coords: [15.5143, -88.019] },
+      { nombre: 'City Mall San Pedro Sula', coords: [15.4855, -88.0235] },
+      { nombre: 'Multiplaza San Pedro Sula', coords: [15.4997, -88.018] }
+    ];
+
+    lugares.forEach(l => {
+      L.marker(l.coords).addTo(mapaDashboard).bindPopup(`<b>${l.nombre}</b>`);
+    });
+  }
+
+  function initCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    if (!calendarEl || typeof FullCalendar === 'undefined') return;
+
+    if (calendarioDashboard) {
+      calendarioDashboard.destroy();
+    }
+
+    calendarioDashboard = new FullCalendar.Calendar(calendarEl, {
+      locale: 'es',
+      initialView: 'dayGridMonth',
+      selectable: true,
+      dateClick(info) {
+        const titulo = prompt('Título del evento:');
+        if (titulo) {
+          calendarioDashboard.addEvent({ title: titulo, start: info.dateStr });
+        }
+      }
+    });
+
+    calendarioDashboard.render();
   }
   
   
