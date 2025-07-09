@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let products = [];
   let orders = [];
   let groupedOrders = {};
+  let accordionState = {};
   let orderFilters = { status: '', search: '', period: '' };
   let users = [];
   let productoEnEdicion = null;
@@ -1233,14 +1234,20 @@ function renderUsersTable() {
   function initDashboardCharts() {
     const ordersCtx = document.getElementById('graficaOrdenes');
     if (ordersCtx && window.Chart) {
+      const orderCounts = [0,0,0,0,0,0,0];
+      orders.forEach(o => {
+        const d = o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000) : new Date();
+        const day = (d.getDay() + 6) % 7;
+        orderCounts[day]++;
+      });
       new Chart(ordersCtx.getContext('2d'), {
         type: 'bar',
         data: {
           labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
           datasets: [{
             label: 'Pedidos',
-            data: [5, 8, 3, 6, 4, 7, 2],
-            backgroundColor: 'rgba(106,13,173,0.5)',
+            data: orderCounts,
+            backgroundColor: 'rgba(11,61,145,0.5)',
             borderRadius: 4
           }]
         },
@@ -1250,15 +1257,23 @@ function renderUsersTable() {
 
     const salesCtx = document.getElementById('graficaVentas');
     if (salesCtx && window.Chart) {
+      const weeklyTotals = [0,0,0,0];
+      orders.forEach(o => {
+        if(!o.createdAt?.seconds) return;
+        const d = new Date(o.createdAt.seconds * 1000);
+        const w = Math.min(getWeekOfMonth(d)-1,3);
+        const total = o.total || (o.items?.reduce((s,i)=>s+i.price*i.quantity,0) || 0);
+        weeklyTotals[w] += total;
+      });
       new Chart(salesCtx.getContext('2d'), {
         type: 'line',
         data: {
           labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
           datasets: [{
             label: 'Ventas (L)',
-            data: [1500, 2200, 1800, 2500],
-            backgroundColor: 'rgba(66,193,156,0.2)',
-            borderColor: 'rgba(66,193,156,1)',
+            data: weeklyTotals,
+            backgroundColor: 'rgba(11,61,145,0.2)',
+            borderColor: 'rgba(11,61,145,1)',
             fill: true,
             tension: 0.4
           }]
@@ -1269,14 +1284,19 @@ function renderUsersTable() {
 
     const stockCtx = document.getElementById('graficaStock');
     if (stockCtx && window.Chart) {
+      let enStock=0,bajo=0,agotado=0;
+      products.forEach(p => {
+        const s = p.stock || 0;
+        if(s===0) agotado++; else if(s<=5) bajo++; else enStock++;
+      });
       new Chart(stockCtx.getContext('2d'), {
         type: 'doughnut',
         data: {
           labels: ['En Stock', 'Bajo', 'Agotado'],
           datasets: [{
-            data: [80, 10, 10],
+            data: [enStock, bajo, agotado],
             backgroundColor: [
-              'rgba(106,13,173,0.6)',
+              'rgba(11,61,145,0.6)',
               'rgba(255,193,7,0.6)',
               'rgba(220,53,69,0.6)'
             ]
@@ -1285,6 +1305,11 @@ function renderUsersTable() {
         options: { responsive: true, animation: true }
       });
     }
+  }
+
+  function getWeekOfMonth(date) {
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+    return Math.ceil((date.getDate() + ((firstDay + 6) % 7)) / 7);
   }
   
   
@@ -1403,7 +1428,7 @@ function renderUsersTable() {
         const idx = `${c.prefix}${index}`;
         item.innerHTML = `
           <h2 class="accordion-header" id="heading${idx}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${idx}" style="background-color:#6a0dad;color:white;">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${idx}" style="background-color:#0b3d91;color:white;">
               ${nombre || email} (${pedidos.length} pedidos)
             </button>
           </h2>
@@ -1428,6 +1453,17 @@ function renderUsersTable() {
             </div>
           </div>`;
         c.el.appendChild(item);
+
+        const collapseEl = item.querySelector(`#collapse${idx}`);
+        if (accordionState[idx]) {
+          collapseEl.classList.add('show');
+        }
+        collapseEl.addEventListener('shown.bs.collapse', () => {
+          accordionState[idx] = true;
+        });
+        collapseEl.addEventListener('hidden.bs.collapse', () => {
+          accordionState[idx] = false;
+        });
       });
     });
   }

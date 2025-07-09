@@ -14,7 +14,7 @@ export class SystemSettings {
                 // Crear configuración por defecto
                 const defaultSettings = {
                     theme: {
-                        primaryColor: '#6a0dad',
+                        primaryColor: '#0b3d91',
                         secondaryColor: '#f8f9fa',
                         darkMode: false
                     },
@@ -301,7 +301,7 @@ export class SystemSettings {
                                 <form id="themeSettingsForm">
                                     <div class="mb-3">
                                         <label class="form-label">Color Primario</label>
-                                        <input type="color" class="form-control form-control-color" name="primaryColor" value="#6a0dad">
+                                        <input type="color" class="form-control form-control-color" name="primaryColor" value="#0b3d91">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Color Secundario</label>
@@ -469,7 +469,7 @@ export function loadSettingsSection() {
             if (settings.theme) {
                 const themeForm = document.getElementById('themeSettingsForm');
                 if (themeForm) {
-                    themeForm.primaryColor.value = settings.theme.primaryColor || '#6a0dad';
+                    themeForm.primaryColor.value = settings.theme.primaryColor || '#0b3d91';
                     themeForm.secondaryColor.value = settings.theme.secondaryColor || '#f8f9fa';
                     themeForm.darkMode.checked = settings.theme.darkMode || false;
                 }
