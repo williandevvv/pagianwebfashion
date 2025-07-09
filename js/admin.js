@@ -1389,63 +1389,26 @@ function renderUsersTable() {
   }
 
   function initMap() {
-    const mapEl = document.getElementById('world_map');
-    if (!mapEl || typeof jsVectorMap === 'undefined') return;
+    const mapEl = document.getElementById('map');
+    if (!mapEl || typeof L === 'undefined') return;
 
     if (mapaDashboard) {
-      mapaDashboard.destroy();
+      mapaDashboard.remove();
     }
 
-    let markers = [
-      { coords: [15.4990, -88.0330], name: 'Mega Mall' },
-      { coords: [15.5000, -88.0330], name: 'City Mall San Pedro Sula' },
-      { coords: [15.5140, -88.0140], name: 'Galerías del Valle' },
-      { coords: [15.5000, -88.0250], name: 'Multiplaza San Pedro Sula' },
-      { coords: [15.4990, -88.0300], name: 'Diunsa Salida San Fernando' },
-      { coords: [15.5050, -88.0210], name: 'Fashion Collection – 5ta Avenida' },
-      { coords: [15.5130, -88.0120], name: 'Fashion Collection – Galerías Las Américas' },
-      { coords: [15.5003, -88.0249], name: 'Variedades Mis Ceci' }
+    mapaDashboard = L.map(mapEl).setView([15.5, -88.03], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mapaDashboard);
+
+    const lugares = [
+      { nombre: 'Galerías del Valle', coords: [15.5143, -88.019] },
+      { nombre: 'City Mall San Pedro Sula', coords: [15.4855, -88.0235] },
+      { nombre: 'Multiplaza San Pedro Sula', coords: [15.4997, -88.018] }
     ];
 
-    // Permitir markers dinámicos desde Firebase
-    if (Array.isArray(window.firebaseMarkers)) {
-      markers = window.firebaseMarkers
-        .filter(m => m && m.coords && m.name)
-        .map(m => ({
-          coords: m.coords,
-          name: m.name || 'Lugar sin nombre'
-        }));
-    }
-
-    mapaDashboard = new jsVectorMap({
-      selector: '#world_map',
-      map: 'world',
-      zoomButtons: true,
-      zoomOnScroll: false,
-      markers,
-      markerStyle: {
-        initial: {
-          fill: '#6F42C1',
-          stroke: '#6C757D'
-        },
-        hover: {
-          fill: '#0d6efd',
-          stroke: '#0d6efd'
-        }
-      },
-      labels: {
-        markers: {
-          render: (index) => markers[index].name
-        }
-      },
-      onMarkerTooltipShow(event, tooltip, index) {
-        tooltip.html(markers[index].name);
-      }
-    });
-
-    mapaDashboard.setFocus({
-      coords: [15.5, -88.03],
-      scale: 6
+    lugares.forEach(l => {
+      L.marker(l.coords).addTo(mapaDashboard).bindPopup(`<b>${l.nombre}</b>`);
     });
   }
 
