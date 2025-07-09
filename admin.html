@@ -32,17 +32,23 @@
     <style>
       :root {
         --sidebar-width: 250px;
-        /* Colores principales utilizados en el encabezado del sitio */
-        --color-rose-gold: #bd8c7d;
-        --color-shimmer: #f4e4e1;
-        --color-nude: #e8c6b6;
-        --color-blush: #f7cac9;
-        --color-accent: #c06c84;
+        --sidebar-bg: #1E1E2F;
+        --primary-purple: #6F42C1;
+        --light-purple: #B085F5;
+        --light-gray: #F8F9FA;
+        --text-primary: #2C2C2C;
+        --text-secondary: #6C757D;
+        --alert-yellow: #FFC107;
+        --success-green: #28A745;
+        --danger-red: #DC3545;
+        --border-radius: 12px;
+        --shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       }
 
       body {
         min-height: 100vh;
-        background-color: #f8f9fa;
+        background-color: var(--light-gray);
+        color: var(--text-primary);
         font-family: "Segoe UI", sans-serif;
       }
 
@@ -53,8 +59,8 @@
         top: 0;
         left: 0;
         height: 100vh;
-        background: #000;
-        color: white;
+        background: var(--sidebar-bg);
+        color: #fff;
         transition: all 0.3s;
         z-index: 1000;
       }
@@ -65,8 +71,8 @@
 
       #sidebar .sidebar-header {
         padding: 20px;
-        background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
-        color: white;
+        background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+        color: #fff;
       }
 
       #sidebar ul.components {
@@ -83,7 +89,7 @@
 
       #sidebar ul li a:hover,
       #sidebar ul li a.active {
-        background: #0b3d91;
+        background: var(--light-purple);
       }
 
       #sidebar ul li a i {
@@ -107,9 +113,9 @@
 
       /* Card Styles */
       .stats-card {
-        border-radius: 15px;
+        border-radius: var(--border-radius);
         border: none;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        box-shadow: var(--shadow);
         transition: transform 0.3s;
       }
 
@@ -129,52 +135,63 @@
 
       /* Chart Styles */
       .chart-container {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        background: #fff;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
         padding: 20px;
         margin-bottom: 20px;
       }
 
       /* Table Styles */
       .table-container {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        background: #fff;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
         padding: 20px;
         margin-bottom: 20px;
       }
 
       .table th {
         font-weight: 600;
-        background-color: #f8f9fa;
+        background-color: var(--light-gray);
       }
 
       /* Form Styles */
       .form-control {
-        border-radius: 8px;
-        border: 2px solid #eee;
+        border-radius: var(--border-radius);
+        border: 1px solid #eee;
       }
 
       .form-control:focus {
-        border-color: #0b3d91;
-        box-shadow: 0 0 0 0.2rem rgba(11, 61, 145, 0.25);
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
       }
 
       /* Button Styles */
       .btn-primary {
-        background-color: #0b3d91;
+        background-color: var(--primary-purple);
         border: none;
       }
 
       .btn-primary:hover {
-        background-color: #08295d;
+        background-color: var(--light-purple);
+      }
+
+      .btn-outline-primary {
+        color: var(--primary-purple);
+        border-color: var(--primary-purple);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--light-purple);
+        border-color: var(--light-purple);
+        color: #fff;
       }
 
       /* Estilo de degradado para el encabezado del panel */
       .navbar-gradient {
-        background: linear-gradient(135deg, var(--color-rose-gold), var(--color-accent));
-        color: white;
+        background: var(--primary-purple);
+        color: #fff;
       }
 
       /* Status Badge Styles */
@@ -183,6 +200,18 @@
         border-radius: 50px;
         font-size: 12px;
         font-weight: 600;
+      }
+
+      .card,
+      .modal-content,
+      .btn {
+        border-radius: var(--border-radius) !important;
+      }
+
+      .card,
+      .modal-content {
+        box-shadow: var(--shadow);
+        border: none;
       }
 
       /* Responsive */
