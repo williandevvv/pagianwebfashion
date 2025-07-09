@@ -1362,30 +1362,52 @@ function renderUsersTable() {
 
   function initMap() {
     const mapEl = document.getElementById('map');
-    if (!mapEl || typeof L === 'undefined') return;
+    if (!mapEl || typeof jsVectorMap === 'undefined') return;
 
     if (mapaDashboard) {
-      mapaDashboard.remove();
+      mapaDashboard.destroy();
     }
 
-    mapaDashboard = L.map(mapEl).setView([15.5, -88.03], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(mapaDashboard);
-
-    const lugares = [
-      { nombre: 'Mega Mall', coords: [15.4990, -88.0330] },
-      { nombre: 'City Mall San Pedro Sula', coords: [15.5000, -88.0330] },
-      { nombre: 'Galerías del Valle', coords: [15.5140, -88.0140] },
-      { nombre: 'Multiplaza San Pedro Sula', coords: [15.5000, -88.0250] },
-      { nombre: 'Diunsa Salida San Fernando', coords: [15.4990, -88.0300] },
-      { nombre: 'Fashion Collection – 5ta Avenida y 6ta Calle', coords: [15.5050, -88.0210] },
-      { nombre: 'Fashion Collection – Mall Galerías Las Américas', coords: [15.5130, -88.0120] },
-      { nombre: 'Variedades Mis Ceci', coords: [15.5003, -88.0249] }
+    const markers = [
+      { coords: [15.4990, -88.0330], name: 'Mega Mall' },
+      { coords: [15.5000, -88.0330], name: 'City Mall San Pedro Sula' },
+      { coords: [15.5140, -88.0140], name: 'Galerías del Valle' },
+      { coords: [15.5000, -88.0250], name: 'Multiplaza San Pedro Sula' },
+      { coords: [15.4990, -88.0300], name: 'Diunsa Salida San Fernando' },
+      { coords: [15.5050, -88.0210], name: 'Fashion Collection – 5ta Avenida' },
+      { coords: [15.5130, -88.0120], name: 'Fashion Collection – Galerías Las Américas' },
+      { coords: [15.5003, -88.0249], name: 'Variedades Mis Ceci' }
     ];
 
-    lugares.forEach(l => {
-      L.marker(l.coords).addTo(mapaDashboard).bindPopup(`<b>${l.nombre}</b>`);
+    mapaDashboard = new jsVectorMap({
+      selector: '#map',
+      map: 'world',
+      zoomButtons: false,
+      zoomOnScroll: false,
+      markers,
+      markerStyle: {
+        initial: {
+          fill: '#6F42C1',
+          stroke: '#6C757D'
+        },
+        hover: {
+          fill: '#0d6efd',
+          stroke: '#0d6efd'
+        }
+      },
+      labels: {
+        markers: {
+          render: (index) => markers[index].name
+        }
+      },
+      onMarkerTooltipShow(event, tooltip, index) {
+        tooltip.html(markers[index].name);
+      }
+    });
+
+    mapaDashboard.setFocus({
+      coords: [15.5, -88.03],
+      scale: 6
     });
   }
 
