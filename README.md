@@ -25,3 +25,10 @@ En la página **Mi Perfil** se muestran estos pedidos en la pestaña "Pedidos" y
 ## Panel de administración
 
 Desde `admin.html` los usuarios con permisos pueden gestionar productos, usuarios e inventario. Al marcar un pedido como **enviado** desde la sección de pedidos, el sistema actualiza el estado del pedido tanto en la colección global como en la subcolección del usuario. Además se descuenta el stock de los productos involucrados y se registra el movimiento en la colección `inventory_history`.
+
+## Limpieza de URLs
+
+Este proyecto incluye un archivo `.htaccess` que permite acceder a las páginas sin especificar la extensión `.html`.
+Al desplegar el sitio en un servidor Apache (por ejemplo en Hostinger), asegúrate de que `mod_rewrite` esté habilitado.
+Con esta regla podrás visitar `/ofertas` en lugar de `/ofertas.html`.
+
