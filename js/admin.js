@@ -59,7 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
             const userData = userDoc.data() || {};
 
-            currentUserRole = userData.role || 'customer';
+            // Compatibilidad con campo "rol" en español
+            let role = userData.role || userData.rol;
+            if (role === 'Administrador') role = 'admin';
+
+            currentUserRole = role || 'customer';
             currentPermissions = userData.permissions || defaultPermissions[currentUserRole] || {};
 
             const username = userData.displayName || user.email;
@@ -89,7 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
           try {
             const data = JSON.parse(offlineData);
             if (data.user) {
-              currentUserRole = data.user.role || 'customer';
+              let role = data.user.role || data.user.rol;
+              if (role === 'Administrador') role = 'admin';
+              currentUserRole = role || 'customer';
               currentPermissions = defaultPermissions[currentUserRole] || {};
 
               if (!currentPermissions.dashboard?.view) {
@@ -1368,7 +1374,7 @@ function renderUsersTable() {
       mapaDashboard.destroy();
     }
 
-    const markers = [
+    let markers = [
       { coords: [15.4990, -88.0330], name: 'Mega Mall' },
       { coords: [15.5000, -88.0330], name: 'City Mall San Pedro Sula' },
       { coords: [15.5140, -88.0140], name: 'Galerías del Valle' },
@@ -1378,6 +1384,16 @@ function renderUsersTable() {
       { coords: [15.5130, -88.0120], name: 'Fashion Collection – Galerías Las Américas' },
       { coords: [15.5003, -88.0249], name: 'Variedades Mis Ceci' }
     ];
+
+    // Permitir markers dinámicos desde Firebase
+    if (Array.isArray(window.firebaseMarkers)) {
+      markers = window.firebaseMarkers
+        .filter(m => m && m.coords && m.name)
+        .map(m => ({
+          coords: m.coords,
+          name: m.name || 'Lugar sin nombre'
+        }));
+    }
 
     mapaDashboard = new jsVectorMap({
       selector: '#world_map',
