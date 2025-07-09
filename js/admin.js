@@ -39,6 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Configuración en modo offline');
   });
 
+  import('./tickets.js').then(module => {
+    console.log('Módulo de tickets cargado');
+  }).catch(error => {
+    console.log('Tickets en modo offline');
+  });
+
   // Función para verificar acceso y establecer permisos
   async function checkAdminAccess() {
     try {
@@ -415,6 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
       inventory: 'Inventario',
       offers: 'Ofertas',
       tasks: 'Tareas',
+      tickets: 'Tickets',
       reports: 'Reportes',
       messages: 'Mensajes',
       settings: 'Configuración'
@@ -455,6 +462,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'tasks':
         window.cargarTareas && cargarTareas();
+        break;
+      case 'tickets':
+        window.loadTickets && loadTickets();
         break;
       case 'messages':
         window.loadMessages && loadMessages();
@@ -677,6 +687,7 @@ async function toggleProductOffer(productId) {
       inventory: { view: true, update: true, alerts: true, reports: true },
       offers: { view: true, edit: true },
       tasks: { view: true, create: true, run: true, delete: true },
+      tickets: { view: true, create: true, manage: true },
       messages: { view: true, delete: true },
       reports: { view: true, export: true },
       settings: { view: true, edit: true, backup: true, system: true }
@@ -689,6 +700,7 @@ async function toggleProductOffer(productId) {
       inventory: { view: true, update: true, alerts: false, reports: true },
       offers: { view: true, edit: true },
       tasks: { view: true, create: true, run: true, delete: false },
+      tickets: { view: true, create: true },
       messages: { view: true, delete: true },
       reports: { view: true, export: true },
       settings: { view: true, edit: false, backup: false, system: false }
@@ -701,6 +713,7 @@ async function toggleProductOffer(productId) {
       inventory: { view: true, update: true, alerts: false, reports: false },
       offers: { view: true, edit: true },
       tasks: { view: true, create: true, run: false, delete: false },
+      tickets: { view: true, create: true },
       messages: { view: true, delete: false },
       reports: { view: true, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
@@ -713,6 +726,7 @@ async function toggleProductOffer(productId) {
       inventory: { view: true, update: false, alerts: false, reports: false },
       offers: { view: false, edit: false },
       tasks: { view: false, create: false, run: false, delete: false },
+      tickets: { view: true, create: true },
       messages: { view: false, delete: false },
       reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
@@ -725,6 +739,7 @@ async function toggleProductOffer(productId) {
       inventory: { view: false, update: false, alerts: false, reports: false },
       offers: { view: false, edit: false },
       tasks: { view: false, create: false, run: false, delete: false },
+      tickets: { view: false, create: false },
       messages: { view: false, delete: false },
       reports: { view: false, export: false },
       settings: { view: false, edit: false, backup: false, system: false }
@@ -746,7 +761,8 @@ async function toggleProductOffer(productId) {
     export: 'Exportar',
     backup: 'Respaldar',
     system: 'Sistema',
-    run: 'Ejecutar'
+    run: 'Ejecutar',
+    manage: 'Gestionar'
   };
 
   function hasPermission(module, action) {
@@ -754,7 +770,7 @@ async function toggleProductOffer(productId) {
   }
 
   function applyRolePermissions() {
-    const modules = ['dashboard','products','orders','users','inventory','offers','tasks','reports','messages','settings'];
+    const modules = ['dashboard','products','orders','users','inventory','offers','tasks','reports','tickets','messages','settings'];
     modules.forEach(m => {
       const canView = hasPermission(m,'view');
       const navEl = document.querySelector(`#sidebar [data-section="${m}"]`);

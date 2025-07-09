@@ -219,6 +219,13 @@
         font-size: 12px;
         font-weight: 600;
       }
+      .state-abierto { background-color: #198754; color: #fff; }
+      .state-en-proceso { background-color: #ffc107; color: #000; }
+      .state-cerrado { background-color: #dc3545; color: #fff; }
+      .state-resuelto { background-color: #6c757d; color: #fff; }
+      .priority-baja { background-color: #198754; color: #fff; }
+      .priority-media { background-color: #ffc107; color: #000; }
+      .priority-alta { background-color: #dc3545; color: #fff; }
 
       .card,
       .modal-content,
@@ -299,11 +306,16 @@
             <i class="fas fa-file-alt"></i> Reportes
           </a>
         </li>
-          <li>
-            <a href="#" class="nav-link" data-section="messages">
-              <i class="fas fa-envelope"></i> Mensajes
-            </a>
-          </li>
+        <li>
+          <a href="#" class="nav-link" data-section="tickets">
+            <i class="fas fa-envelope-open-text"></i> Tickets
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-section="messages">
+            <i class="fas fa-envelope"></i> Mensajes
+          </a>
+        </li>
         <li>
           <a href="#" class="nav-link" data-section="settings">
             <i class="fas fa-cog"></i> Configuración
@@ -914,8 +926,36 @@
         </div>
         </div>
       </section>
-        <!-- Sección de Mensajes -->
-        <section id="messages-section" class="admin-section d-none">
+      <!-- Sección de Tickets -->
+      <section id="tickets-section" class="admin-section d-none">
+        <div class="table-container">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Tickets de Soporte</h5>
+            <button class="btn btn-primary" id="newTicketBtn">
+              <i class="fas fa-plus me-1"></i> Nuevo Ticket
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="ticketsTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Usuario</th>
+                  <th>Fecha</th>
+                  <th>Categoría</th>
+                  <th>Prioridad</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="6" class="text-center">Sin tickets</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <!-- Sección de Mensajes -->
+      <section id="messages-section" class="admin-section d-none">
           <div class="table-container">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h5 class="mb-0">Mensajes de Contacto</h5>
@@ -1553,6 +1593,85 @@
       </div>
     </div>
 
+    <!-- Modal Nuevo Ticket -->
+    <div class="modal fade" id="newTicketModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Nuevo Ticket</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="newTicketForm">
+              <div class="mb-3">
+                <label class="form-label">Asunto</label>
+                <input type="text" class="form-control" name="titulo" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select class="form-select" name="categoria" required>
+                  <option value="Soporte">Soporte</option>
+                  <option value="Pedido">Pedido</option>
+                  <option value="Inventario">Inventario</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Prioridad</label>
+                <select class="form-select" name="prioridad" required>
+                  <option value="Baja">Baja</option>
+                  <option value="Media">Media</option>
+                  <option value="Alta">Alta</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mensaje</label>
+                <textarea class="form-control" name="mensaje" rows="3" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Adjunto</label>
+                <input type="file" class="form-control" name="archivo" accept="image/*,application/pdf">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-paper-plane me-1"></i> Enviar Ticket
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Ver Ticket -->
+    <div class="modal fade" id="viewTicketModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title" id="ticketModalTitle">Detalle del Ticket</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="ticketDetails" class="mb-3"></div>
+            <div id="ticketMessages" class="mb-3" style="max-height:300px;overflow-y:auto;"></div>
+            <form id="ticketReplyForm">
+              <div id="ticketAdminControls" class="mb-3">
+                <label class="form-label">Estado</label>
+                <select id="ticketStatus" class="form-select mb-3">
+                  <option value="Abierto">Abierto</option>
+                  <option value="En proceso">En proceso</option>
+                  <option value="Resuelto">Resuelto</option>
+                  <option value="Cerrado">Cerrado</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <textarea id="replyText" class="form-control" rows="3" placeholder="Escribe una respuesta..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Responder</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
       <div
@@ -1606,6 +1725,7 @@
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/reports.js"></script>
     <script type="module" src="js/settings.js"></script>
+    <script type="module" src="js/tickets.js"></script>
     <script type="module" src="js/admin.js"></script>
     <script type="module" src="js/app.js"></script>
     <script type="module" src="js/maintenance.js"></script>
