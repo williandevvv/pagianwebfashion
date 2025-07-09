@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Instancias de las gráficas para evitar duplicados
   let graficaOrdenesChart;
   let graficaVentasChart;
+  let graficaStockChart;
 
   // Importar módulos de reportes y configuración
   import('./reports.js').then(module => {
@@ -1298,12 +1299,15 @@ function renderUsersTable() {
 
     const stockCtx = document.getElementById('graficaStock');
     if (stockCtx && window.Chart) {
+      if (graficaStockChart) {
+        graficaStockChart.destroy();
+      }
       let enStock=0,bajo=0,agotado=0;
       products.forEach(p => {
         const s = p.stock || 0;
         if(s===0) agotado++; else if(s<=5) bajo++; else enStock++;
       });
-      new Chart(stockCtx.getContext('2d'), {
+      graficaStockChart = new Chart(stockCtx.getContext('2d'), {
         type: 'doughnut',
         data: {
           labels: ['En Stock', 'Bajo', 'Agotado'],
