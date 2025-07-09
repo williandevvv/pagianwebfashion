@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentUserRole = null;
   let currentPermissions = {};
 
+  // Instancias de las gráficas para evitar duplicados
+  let graficaOrdenesChart;
+  let graficaVentasChart;
+
   // Importar módulos de reportes y configuración
   import('./reports.js').then(module => {
     window.generateExcelReport = module.generateExcelReport;
@@ -1234,13 +1238,18 @@ function renderUsersTable() {
   function initDashboardCharts() {
     const ordersCtx = document.getElementById('graficaOrdenes');
     if (ordersCtx && window.Chart) {
+      // Destruir gráfica previa si existe
+      if (graficaOrdenesChart) {
+        graficaOrdenesChart.destroy();
+      }
+
       const orderCounts = [0,0,0,0,0,0,0];
       orders.forEach(o => {
         const d = o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000) : new Date();
         const day = (d.getDay() + 6) % 7;
         orderCounts[day]++;
       });
-      new Chart(ordersCtx.getContext('2d'), {
+      graficaOrdenesChart = new Chart(ordersCtx.getContext('2d'), {
         type: 'bar',
         data: {
           labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
@@ -1257,6 +1266,11 @@ function renderUsersTable() {
 
     const salesCtx = document.getElementById('graficaVentas');
     if (salesCtx && window.Chart) {
+      // Destruir gráfica previa si existe
+      if (graficaVentasChart) {
+        graficaVentasChart.destroy();
+      }
+
       const weeklyTotals = [0,0,0,0];
       orders.forEach(o => {
         if(!o.createdAt?.seconds) return;
@@ -1265,7 +1279,7 @@ function renderUsersTable() {
         const total = o.total || (o.items?.reduce((s,i)=>s+i.price*i.quantity,0) || 0);
         weeklyTotals[w] += total;
       });
-      new Chart(salesCtx.getContext('2d'), {
+      graficaVentasChart = new Chart(salesCtx.getContext('2d'), {
         type: 'line',
         data: {
           labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
