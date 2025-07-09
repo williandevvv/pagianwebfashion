@@ -137,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 userData.displayName ||
                 "Usuario",
               role: userData.role || "customer",
+              permissions: userData.permissions || {},
             };
           } catch (error) {
             console.log("Firebase login falló, intentando modo offline");
@@ -159,19 +160,15 @@ document.addEventListener("DOMContentLoaded", () => {
           if (modalInstance) modalInstance.hide();
         }
 
-        // Redirigir según rol
-        if (
+        // Redirigir según permisos
+        const canViewDashboard =
+          user.permissions?.dashboard?.view ||
           user.role === "admin" ||
-          user.email === "admin@fashioncollection.com"
-        ) {
-          setTimeout(() => {
-            window.location.href = "admin.html";
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1000);
-        }
+          user.email === "admin@fashioncollection.com";
+
+        setTimeout(() => {
+          window.location.href = canViewDashboard ? "admin.html" : "index.html";
+        }, 1000);
       } catch (error) {
         console.error("❌ Error en login:", error);
         let message = "Error al iniciar sesión";
