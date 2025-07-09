@@ -424,7 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderProductsTable();
         break;
       case 'orders':
-        renderOrdersTable();
+        cargarPedidosAgrupados();
         break;
       case 'users':
         renderUsersTable();
@@ -473,6 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       renderDashboard();
       renderOffersTable();
+      cargarPedidosAgrupados();
     } catch (error) {
       console.error("❌ Error cargando datos desde Firebase:", error);
     }
@@ -2063,14 +2064,14 @@ function renderUsersTable() {
   document.addEventListener('change', function(e) {
     if (e.target.id === 'filterOrderStatus') {
       orderFilters.status = e.target.value;
-      renderOrdersTable();
+      cargarPedidosAgrupados();
     }
   });
 
   document.addEventListener('input', function(e) {
     if (e.target.id === 'searchOrders') {
       orderFilters.search = e.target.value.toLowerCase();
-      renderOrdersTable();
+      cargarPedidosAgrupados();
     }
   });
 
@@ -2079,7 +2080,7 @@ function renderUsersTable() {
       orderFilters.period = this.dataset.period || '';
       document.querySelectorAll('.order-filter').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
-      renderOrdersTable();
+      cargarPedidosAgrupados();
     });
   });
 
@@ -2367,6 +2368,104 @@ function renderUsersTable() {
       });
     }
   };
+
+  // ===================== Agrupar Pedidos por Usuario =====================
+  async function cargarPedidosAgrupados() {
+    try {
+      const pedidosRef = firebase.firestore().collection('orders');
+      const snapshot = await pedidosRef.orderBy('userId').get();
+
+      const pedidosPorUsuario = {};
+      snapshot.forEach(doc => {
+        const pedido = doc.data();
+        const userId = pedido.userId || 'desconocido';
+
+        // Filtro de estado
+        if (orderFilters.status && (pedido.status || pedido.estado) !== orderFilters.status) {
+          return;
+        }
+
+        // Filtro por periodo
+        if (orderFilters.period) {
+          const created = pedido.createdAt?.seconds ? new Date(pedido.createdAt.seconds * 1000) : null;
+          if (created) {
+            const now = new Date();
+            let start;
+            if (orderFilters.period === 'today') {
+              start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            } else if (orderFilters.period === 'week') {
+              const day = now.getDay();
+              start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day);
+            } else if (orderFilters.period === 'month') {
+              start = new Date(now.getFullYear(), now.getMonth(), 1);
+            }
+            if (start && created < start) return;
+          }
+        }
+
+        if (!pedidosPorUsuario[userId]) {
+          pedidosPorUsuario[userId] = [];
+        }
+        pedidosPorUsuario[userId].push({ id: doc.id, ...pedido });
+      });
+
+      // Filtro de búsqueda
+      if (orderFilters.search) {
+        Object.keys(pedidosPorUsuario).forEach(uid => {
+          pedidosPorUsuario[uid] = pedidosPorUsuario[uid].filter(p =>
+            p.id.toLowerCase().includes(orderFilters.search) ||
+            (p.userEmail || '').toLowerCase().includes(orderFilters.search)
+          );
+          if (pedidosPorUsuario[uid].length === 0) delete pedidosPorUsuario[uid];
+        });
+      }
+
+      renderPedidosAgrupados(pedidosPorUsuario);
+    } catch (error) {
+      console.error('Error cargando pedidos agrupados:', error);
+    }
+  }
+
+  function renderPedidosAgrupados(pedidosPorUsuario) {
+    const container = document.getElementById('listaPedidos');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    Object.keys(pedidosPorUsuario).forEach((userId, index) => {
+      const pedidos = pedidosPorUsuario[userId];
+      if (pedidos.length === 0) return;
+      const usuarioNombre = pedidos[0].userEmail || pedidos[0].usuarioNombre || 'Usuario Desconocido';
+
+      const accordionItem = document.createElement('div');
+      accordionItem.classList.add('accordion-item');
+      accordionItem.innerHTML = `
+        <h2 class="accordion-header" id="heading${index}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+            ${usuarioNombre} (${pedidos.length} pedidos)
+          </button>
+        </h2>
+        <div id="collapse${index}" class="accordion-collapse collapse" data-bs-parent="#listaPedidos">
+          <div class="accordion-body p-0">
+            <ul class="list-group list-group-flush">
+              ${pedidos.map(p => {
+                const fecha = p.createdAt?.seconds ? new Date(p.createdAt.seconds * 1000).toLocaleDateString() : '';
+                const estado = p.status || p.estado || 'pendiente';
+                const badge = estado === 'enviado' ? 'bg-success' : estado === 'cancelado' ? 'bg-danger' : 'bg-warning';
+                return `
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>Pedido #${p.id} - ${fecha}</span>
+                    <span class="badge ${badge}">${estado}</span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+      container.appendChild(accordionItem);
+    });
+  }
 
   function checkLowStock(inventory) {
     const lowStockItems = inventory.filter(item => item.stock <= item.minStock);
