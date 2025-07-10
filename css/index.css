@@ -156,6 +156,32 @@
             color: var(--color-accent);
         }
 
+        /* Botón de perfil en forma circular */
+        .profile-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: var(--color-shimmer);
+        }
+
+        .profile-icon-btn i {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .profile-icon-btn {
+                width: 36px;
+                height: 36px;
+            }
+            #navbar-username {
+                display: none;
+            }
+        }
+
         /* Barra de búsqueda con diseño elegante */
         .search-container {
             position: relative;
