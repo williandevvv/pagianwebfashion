@@ -33,6 +33,24 @@
             border-bottom-left-radius: 1rem;
             border-bottom-right-radius: 1rem;
         }
+/* Header con fondo de pétalos de rosa */
+        .petal-header {
+            background: url("https://cdn.pixabay.com/photo/2016/04/02/22/11/rose-petals-1307570_1280.jpg") center/cover no-repeat;
+            position: relative;
+            color: #4b4b4b;
+        }
+        .petal-header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: brightness(0.9);
+            z-index: 0;
+        }
+        .petal-header > * {
+            position: relative;
+            z-index: 1;
+        }
         
         /* Tarjetas de categorías con efecto de brillo */
         .category-card {
