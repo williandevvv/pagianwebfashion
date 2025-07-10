@@ -35,8 +35,8 @@
 /* Avatar */
 .profile-avatar {
     position: relative;
-    width: 8rem;
-    height: 8rem;
+    width: 120px;
+    height: 120px;
     margin: 0 auto 1rem;
 }
 
@@ -281,8 +281,41 @@
             transition: transform 0.3s;
         }
 
+        @media (max-width: 576px) {
+            .profile-avatar {
+                width: 40vw;
+                height: 40vw;
+            }
+        }
+
         .profile-avatar:hover {
             transform: scale(1.1);
+        }
+
+        /* Botón de perfil circular en la barra */
+        .profile-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: var(--color-shimmer);
+        }
+
+        .profile-icon-btn i {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .profile-icon-btn {
+                width: 36px;
+                height: 36px;
+            }
+            #navbar-username {
+                display: none;
+            }
         }
 
         .nav-pills .nav-link {
