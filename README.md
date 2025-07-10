@@ -56,3 +56,9 @@ La página `maquillaje.html` incluye un contenedor React que muestra una pequeñ
 galería con efectos en tonos pastel. Está implementada con **Framer Motion** y
 puedes personalizarla desde `src/react/src/components/MakeupGallery.jsx`.
 
+### Animación en la página principal
+
+`index.html` ahora cuenta con el contenedor `index-react-root`, el cual renderiza
+el componente `HeroAnimation` para mostrar un mensaje de bienvenida con efectos
+de entrada.
+
