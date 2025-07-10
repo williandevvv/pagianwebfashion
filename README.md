@@ -33,3 +33,20 @@ Este proyecto incluye un archivo `.htaccess` que permite acceder a las páginas 
 Al desplegar el sitio en un servidor Apache (por ejemplo en Hostinger), asegúrate de que `mod_rewrite` esté habilitado.
 Con esta regla podrás visitar `/ofertas` en lugar de `/ofertas.html`.
 
+## Módulo React
+
+Se añadió un pequeño proyecto React en `src/react` para ejemplificar componentes
+dínamicos con animaciones de **Framer Motion**.
+
+### Comandos básicos
+
+```bash
+cd src/react
+npm install       # instala dependencias
+npm run dev       # modo desarrollo
+npm run build     # genera versión de producción
+```
+
+El resultado de la compilación quedará en `src/react/dist/`. Puedes servir esos
+archivos de la misma forma que el resto del sitio.
+
