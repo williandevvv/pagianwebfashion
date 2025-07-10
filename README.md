@@ -4,8 +4,7 @@ Este proyecto es una demostración de la tienda en línea **Fashion Collection**
 
 ## Uso
 
-1. Instala las dependencias (opcional) con `npm install`.
-2. Sirve la carpeta del proyecto. Un método sencillo es:
+1. Sirve la carpeta del proyecto con un servidor estático. Un método sencillo es:
 
 ```bash
 npx http-server
