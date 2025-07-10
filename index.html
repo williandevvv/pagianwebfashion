@@ -95,6 +95,13 @@
         </div>
     </section>
 
+    <!-- Contenedor React para animaciones en la portada -->
+    <section class="py-6">
+        <div class="container mx-auto px-4 text-center">
+            <div id="index-react-root"></div>
+        </div>
+    </section>
+
     <!-- Sección de Categorías -->
     <section class="py-5">
         <div class="container">
@@ -205,6 +212,7 @@
     <script src="js/orders.js"></script>
     <script src="js/app.js"></script>
     <script type="module" src="js/maintenance.js"></script>
+    <script type="module" src="src/react/dist/assets/index.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
