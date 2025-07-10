@@ -1,0 +1,28 @@
+.makeup-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.makeup-item {
+  background: #ffe6f1;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 180px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.makeup-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.makeup-item p {
+  margin: 0.5rem;
+  color: #b05b82;
+  font-weight: 500;
+}

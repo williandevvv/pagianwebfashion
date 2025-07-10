@@ -50,3 +50,9 @@ npm run build     # genera versión de producción
 El resultado de la compilación quedará en `src/react/dist/`. Puedes servir esos
 archivos de la misma forma que el resto del sitio.
 
+### Nueva galería animada de maquillaje
+
+La página `maquillaje.html` incluye un contenedor React que muestra una pequeña
+galería con efectos en tonos pastel. Está implementada con **Framer Motion** y
+puedes personalizarla desde `src/react/src/components/MakeupGallery.jsx`.
+
