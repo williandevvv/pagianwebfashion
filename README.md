@@ -26,6 +26,8 @@ En la página **Mi Perfil** se muestran estos pedidos en la pestaña "Pedidos" y
 
 Desde `admin.html` los usuarios con permisos pueden gestionar productos, usuarios e inventario. Al marcar un pedido como **enviado** desde la sección de pedidos, el sistema actualiza el estado del pedido tanto en la colección global como en la subcolección del usuario. Además se descuenta el stock de los productos involucrados y se registra el movimiento en la colección `inventory_history`.
 
+El panel también incluye un sistema de **Tickets de Soporte**. Si la conexión con Firebase no está disponible, los tickets y sus respuestas se guardan localmente mediante `localStorage` para que puedan consultarse más tarde.
+
 ## Limpieza de URLs
 
 Este proyecto incluye un archivo `.htaccess` que permite acceder a las páginas sin especificar la extensión `.html`.
