@@ -186,6 +186,13 @@
             background-color: var(--color-shimmer);
         }
 
+        .profile-icon-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
         .profile-icon-btn i {
             margin: 0;
         }
