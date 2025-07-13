@@ -1,5 +1,4 @@
 // Comprobación de modo mantenimiento
-/*
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof firebase === 'undefined' || !firebase.firestore) {
     console.log('Firebase no disponible, omitiendo verificación de mantenimiento');
