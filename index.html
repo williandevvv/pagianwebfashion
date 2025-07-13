@@ -55,16 +55,20 @@
                         </ul>
                     </div>
                 </div>
-                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
                     <i class="fas fa-bars fa-lg"></i>
                 </button>
             </div>
         </div>
-        <div class="collapse md:hidden" id="mobileMenu">
-            <div class="py-3 px-4">
+        <div class="offcanvas offcanvas-start md:hidden" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="mobileMenuLabel">Menú</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
                 <a class="block py-2 text-gray-800" href="index.html">Inicio</a>
                 <a class="block py-2 text-gray-800" href="ofertas.html">Ofertas</a>
-                  <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
+                <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
                 <a class="block py-2 text-gray-800" href="contacto.html">Contacto</a>
             </div>
         </div>
