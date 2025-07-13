@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logout-btn");
   const googleLoginBtn = document.querySelector(".google-login-btn");
   const navbarUsername = document.getElementById("navbar-username");
-  const navbarProfileImage = document.getElementById("navbar-profile-image");
 
   // Función para mostrar notificaciones
   const showNotification = (message, type = "success") => {
@@ -39,10 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (authButtons) authButtons.classList.add("d-none");
         if (profileButton) {
           profileButton.classList.remove("d-none");
-          if (navbarProfileImage) {
-            navbarProfileImage.src = user.photoURL || "img/default-avatar.svg";
-            navbarProfileImage.alt = user.displayName || user.email;
-          }
           if (navbarUsername) {
             const displayName = user.displayName || user.email;
             navbarUsername.textContent = displayName;
@@ -52,10 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Usuario no autenticado
         if (authButtons) authButtons.classList.remove("d-none");
         if (profileButton) profileButton.classList.add("d-none");
-        if (navbarProfileImage) {
-          navbarProfileImage.src = "img/default-avatar.svg";
-          navbarProfileImage.alt = "Perfil";
-        }
       }
     } catch (error) {
       console.error("❌ Error actualizando UI:", error);
