@@ -12,16 +12,15 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- TailwindCSS compilado -->
-    <link rel="stylesheet" href="dist/output.css">
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
     <!-- Header -->
-    <header class="petal-header">
-        <div class="sticky top-0 z-50 container mx-auto px-4 flex justify-between items-center py-4">
+    <header class="fancy-header sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
             <div class="flex items-center">
                 <a class="navbar-brand me-5 text-gray-800 font-bold text-xl" href="index.html">Fashion Collection</a>
                 <nav class="hidden md:flex items-center gap-6">
@@ -46,8 +45,9 @@
                 </div>
                 <div id="profile-button" class="profile-dropdown d-none">
                     <div class="dropdown">
-                        <button class="btn btn-link dropdown-toggle p-0 profile-icon-btn" type="button" data-bs-toggle="dropdown">
-                            <img id="navbar-profile-image" src="img/default-avatar.svg" alt="Perfil" class="rounded-circle" width="40" height="40">
+                        <button class="btn btn-link dropdown-toggle text-gray-800 profile-icon-btn" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="navbar-username">Usuario</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user"></i> Mi Perfil</a></li>
@@ -56,45 +56,44 @@
                         </ul>
                     </div>
                 </div>
-                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
                     <i class="fas fa-bars fa-lg"></i>
                 </button>
             </div>
         </div>
-        <div class="offcanvas offcanvas-start md:hidden" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="mobileMenuLabel">Menú</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-            </div>
-            <div class="offcanvas-body">
+        <div class="collapse md:hidden" id="mobileMenu">
+            <div class="py-3 px-4">
                 <a class="block py-2 text-gray-800" href="index.html">Inicio</a>
                 <a class="block py-2 text-gray-800" href="ofertas.html">Ofertas</a>
-                <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
+                  <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
                 <a class="block py-2 text-gray-800" href="contacto.html">Contacto</a>
             </div>
         </div>
-<div class="container mx-auto px-4 flex flex-col-reverse lg:flex-row items-center gap-8 py-10">
-    <div class="flex-1 text-center lg:text-left">
-        <p class="text-pink-600 font-semibold mb-2">Producto Cosmético Facial</p>
-        <h1 class="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">Un Cosmético Perfecto e Increíble</h1>
-        <p class="text-gray-600 mb-6">Elige nuestros productos de belleza facial para verte bien todo el día. Consigue una piel suave, radiante y un cabello sedoso.</p>
-        <button class="bg-gradient-to-r from-pink-500 to-orange-400 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300">Comprar Ahora</button>
-        <div class="mt-6 relative max-w-md mx-auto lg:mx-0 search-container">
-            <input type="text" id="searchProducts" class="w-full px-5 py-3 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="Buscar productos…">
-            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-pink-500"><i class="fas fa-search"></i></button>
-        </div>
-    </div>
-    <div class="flex-1 relative">
-        <div class="bg-white shadow-xl rounded-3xl p-8 text-center relative">
-            <h3 class="text-xl font-bold text-gray-800 mt-4">Crema Facial de Rosa</h3>
-            <p class="text-gray-500">Crema nutritiva con extracto natural de rosa</p>
-        </div>
-        <span class="absolute top-4 left-4 bg-white text-pink-500 font-semibold px-3 py-1 rounded-full shadow">ROSA</span>
-        <span class="absolute bottom-4 right-4 bg-white text-orange-500 font-semibold px-3 py-1 rounded-full shadow">SUAVE</span>
-    </div>
-</div>
     </header>
 
+    <!-- Sección Hero -->
+    <section class="py-10 bg-gradient-to-br from-pink-300 via-rose-200 to-orange-200">
+        <div class="container mx-auto px-4 flex flex-col-reverse lg:flex-row items-center gap-8">
+            <div class="flex-1 text-center lg:text-left">
+                <p class="text-pink-600 font-semibold mb-2">Producto Cosmético Facial</p>
+                <h1 class="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">Un Cosmético Perfecto e Increíble</h1>
+                <p class="text-gray-600 mb-6">Elige nuestros productos de belleza herbal para verte bien todo el día. Consigue una piel suave, radiante y un cabello sedoso.</p>
+                <button class="bg-gradient-to-r from-pink-500 to-orange-400 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300">Comprar Ahora</button>
+                <div class="mt-6 relative max-w-md mx-auto lg:mx-0 search-container">
+                    <input type="text" id="searchProducts" class="w-full px-5 py-3 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="Buscar productos...">
+                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-pink-500"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <div class="flex-1 relative">
+                <div class="bg-white shadow-xl rounded-3xl p-8 text-center relative">
+                    <h3 class="text-xl font-bold text-gray-800 mt-4">Crema Facial de Rosa</h3>
+                    <p class="text-gray-500">Crema nutritiva con extracto natural de rosa</p>
+                </div>
+                <span class="absolute top-4 left-4 bg-white text-pink-500 font-semibold px-3 py-1 rounded-full shadow">ROSA</span>
+                <span class="absolute bottom-4 right-4 bg-white text-orange-500 font-semibold px-3 py-1 rounded-full shadow">SUAVE</span>
+            </div>
+        </div>
+    </section>
 
     <!-- Contenedor React para animaciones en la portada -->
     <section class="py-6">

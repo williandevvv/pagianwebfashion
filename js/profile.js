@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (profileGender) profileGender.value = userData.gender || '';
 
             if (profileAvatar) {
-                profileAvatar.src = userData.photoURL || currentUser.photoURL || 'img/default-avatar.svg';
+                profileAvatar.src = userData.photoURL || currentUser.photoURL || 'img/default-avatar.png';
             }
 
             // Actualizar nombre mostrado
