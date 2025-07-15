@@ -311,13 +311,14 @@
             object-fit: cover;
         }
 
+        #navbar-username {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .profile-icon-btn {
                 width: 36px;
                 height: 36px;
-            }
-            #navbar-username {
-                display: none;
             }
         }
 
