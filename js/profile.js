@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addressState = document.getElementById('address-state');
     const addressZip = document.getElementById('address-zip');
     const navbarUsername = document.getElementById('navbar-username');
+    const navbarAvatar = document.getElementById('navbar-avatar');
 
     let currentUser = null;
     let ordersUnsubscribe = null;
@@ -100,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (profileGender) profileGender.value = userData.gender || '';
 
             if (profileAvatar) {
-                profileAvatar.src = userData.photoURL || currentUser.photoURL || 'img/default-avatar.png';
+                profileAvatar.src = userData.photoURL || currentUser.photoURL || 'img/default-avatar.svg';
+            }
+            if (navbarAvatar) {
+                navbarAvatar.src = userData.photoURL || currentUser.photoURL || 'img/default-avatar.svg';
             }
 
             // Actualizar nombre mostrado
@@ -421,6 +425,7 @@ function renderOrders(orders) {
             if (imageUrl) {
                 await currentUser.updateProfile({ photoURL: imageUrl });
                 if (profileAvatar) profileAvatar.src = imageUrl;
+                if (navbarAvatar) navbarAvatar.src = imageUrl;
             }
 
             showNotification('¡Perfil actualizado exitosamente!', 'success');

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logout-btn");
   const googleLoginBtn = document.querySelector(".google-login-btn");
   const navbarUsername = document.getElementById("navbar-username");
+  const navbarAvatar = document.getElementById("navbar-avatar");
 
   // Función para mostrar notificaciones
   const showNotification = (message, type = "success") => {
@@ -42,11 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const displayName = user.displayName || user.email;
             navbarUsername.textContent = displayName;
           }
+          if (navbarAvatar) {
+            navbarAvatar.src = user.photoURL || 'img/default-avatar.svg';
+          }
         }
       } else {
         // Usuario no autenticado
         if (authButtons) authButtons.classList.remove("d-none");
         if (profileButton) profileButton.classList.add("d-none");
+        if (navbarAvatar) navbarAvatar.src = 'img/default-avatar.svg';
       }
     } catch (error) {
       console.error("❌ Error actualizando UI:", error);
