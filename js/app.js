@@ -197,11 +197,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (results.length) {
                     resultsContainer.innerHTML = results.map(p => `
-                        <a href="producto.html?id=${p.id}" class="list-group-item list-group-item-action d-flex align-items-center search-result-item">
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center search-result-item" data-id="${p.id}">
                             <img src="${p.image || ''}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover" class="me-2 rounded">
                             <span>${p.name}</span>
                         </a>
                     `).join('');
+                    resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+                        item.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            const id = item.dataset.id;
+                            if (window.showProductModal) {
+                                window.showProductModal(id);
+                            }
+                        });
+                    });
                 } else {
                     resultsContainer.innerHTML = '<div class="list-group-item text-muted">Sin resultados</div>';
                 }
