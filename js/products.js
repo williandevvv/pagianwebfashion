@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables globales
     let allProducts = [];
     let filteredProducts = [];
+    let wishlist = [];
     let currentCategory = null;
     let currentPage = 1;
     const productsPerPage = 30;
@@ -17,12 +18,33 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeProductsPage();
     }
 
+    function loadWishlist() {
+        try {
+            const stored = localStorage.getItem('fashionWishlist');
+            wishlist = stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.error('Error cargando wishlist:', error);
+            wishlist = [];
+        }
+    }
+
+    function saveWishlist() {
+        try {
+            localStorage.setItem('fashionWishlist', JSON.stringify(wishlist));
+        } catch (error) {
+            console.error('Error guardando wishlist:', error);
+        }
+    }
+
     async function initializeProductsPage() {
         try {
             // Obtener categoría de la URL
             const urlParams = new URLSearchParams(window.location.search);
             currentCategory = urlParams.get('category');
             
+            // Cargar wishlist
+            loadWishlist();
+
             // Cargar productos
             await loadProducts();
             
@@ -369,9 +391,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             ` : ''}
                             
                             <div class="position-absolute top-0 end-0 m-2">
-                                <button class="btn btn-sm btn-light rounded-circle wishlist-btn" 
+                                <button class="btn btn-sm btn-light rounded-circle wishlist-btn ${wishlist.includes(product.id) ? 'text-danger' : ''}"
                                         data-product-id="${product.id}">
-                                    <i class="far fa-heart"></i>
+                                    <i class="${wishlist.includes(product.id) ? 'fas' : 'far'} fa-heart"></i>
                                 </button>
                             </div>
                         </div>
@@ -676,19 +698,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle wishlist
     function toggleWishlist(productId) {
         const btn = document.querySelector(`[data-product-id="${productId}"].wishlist-btn`);
+        if (!btn) return;
         const icon = btn.querySelector('i');
-        
-        if (icon.classList.contains('far')) {
+
+        const index = wishlist.indexOf(productId);
+        if (index === -1) {
+            wishlist.push(productId);
             icon.classList.remove('far');
             icon.classList.add('fas');
             btn.classList.add('text-danger');
             showNotification('Agregado a favoritos', 'success');
         } else {
+            wishlist.splice(index, 1);
             icon.classList.remove('fas');
             icon.classList.add('far');
             btn.classList.remove('text-danger');
             showNotification('Removido de favoritos', 'info');
         }
+
+        saveWishlist();
     }
 
     // Función para mostrar notificaciones
@@ -716,9 +744,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.productsManager = {
         allProducts,
         filteredProducts,
+        wishlist,
         addToCart,
         showProductModal,
-        toggleWishlist
+        toggleWishlist,
+        loadWishlist,
+        saveWishlist
     };
 
     console.log('✅ Products.js inicializado');
