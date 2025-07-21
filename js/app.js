@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cartItems = [];
     let products = [];
     let categories = [];
+    let allProducts = [];
 
     // Inicializar aplicación
     initializeApp();
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Contar productos reales desde Firestore
         const snapshot = await firebase.firestore().collection('products').get();
-        const allProducts = snapshot.docs.map(doc => doc.data());
+        allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         // Normalizar acentos para contar productos por categoría
         const normalize = str => (str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -125,6 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById('searchProducts');
         if (searchInput) {
             searchInput.addEventListener('input', debounce(handleSearch, 300));
+            let results = document.getElementById('search-results');
+            if (!results) {
+                results = document.createElement('div');
+                results.id = 'search-results';
+                results.className = 'list-group position-absolute w-100 mt-1 d-none';
+                searchInput.parentElement.appendChild(results);
+            }
         }
 
         // Newsletter
@@ -155,11 +163,62 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manejar búsqueda
     function handleSearch(e) {
         const query = e.target.value.toLowerCase().trim();
-        if (query.length > 2) {
-            // Simular búsqueda
-            console.log('🔍 Buscando:', query);
-            showNotification(`Buscando "${query}"...`, 'info');
+        const resultsContainer = document.getElementById('search-results');
+
+        if (!resultsContainer) return;
+
+        if (query.length <= 2) {
+            resultsContainer.classList.add('d-none');
+            resultsContainer.innerHTML = '';
+            return;
         }
+
+        resultsContainer.innerHTML = '<div class="list-group-item">Buscando...</div>';
+        resultsContainer.classList.remove('d-none');
+
+        (async () => {
+            try {
+                let results = [];
+
+                if (firebase && firebase.firestore) {
+                    const snapshot = await firebase.firestore()
+                        .collection('products')
+                        .orderBy('name')
+                        .startAt(query)
+                        .endAt(query + '\uf8ff')
+                        .limit(5)
+                        .get();
+                    results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                }
+
+                if (!results.length && Array.isArray(allProducts) && allProducts.length) {
+                    results = allProducts.filter(p => (p.name || '').toLowerCase().includes(query)).slice(0, 5);
+                }
+
+                if (results.length) {
+                    resultsContainer.innerHTML = results.map(p => `
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center search-result-item" data-id="${p.id}">
+                            <img src="${p.image || ''}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover" class="me-2 rounded">
+                            <span>${p.name}</span>
+                        </a>
+                    `).join('');
+                    resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+                        item.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            const id = item.dataset.id;
+                            if (window.showProductModal) {
+                                window.showProductModal(id);
+                            }
+                        });
+                    });
+                } else {
+                    resultsContainer.innerHTML = '<div class="list-group-item text-muted">Sin resultados</div>';
+                }
+            } catch (err) {
+                console.error('❌ Error en búsqueda:', err);
+                resultsContainer.innerHTML = '<div class="list-group-item text-danger">Error al buscar</div>';
+            }
+        })();
     }
 
     // Manejar suscripción al newsletter
