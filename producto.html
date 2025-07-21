@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto - Fashion Collection</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="fancy-header sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
+            <div class="flex items-center">
+                <a class="navbar-brand me-5 text-gray-800 font-bold text-xl" href="index.html">Fashion Collection</a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-gray-800 hover:text-pink-600" href="index.html">Inicio</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="ofertas.html">Ofertas</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="galeria.html">Galería</a>
+                    <a class="text-gray-800 hover:text-pink-600" href="contacto.html">Contacto</a>
+                </nav>
+            </div>
+            <div class="flex items-center">
+                <a href="carrito.html" class="relative text-gray-800 me-4">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                    <span class="cart-badge absolute -top-2 -right-2 bg-pink-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
+                </a>
+                <div id="auth-buttons" class="auth-buttons flex gap-2">
+                    <a href="login.html">
+                        <button class="btn btn-outline-light" data-bs-toggle="modal">Iniciar Sesión</button>
+                    </a>
+                    <a href="login.html">
+                        <button class="btn btn-light" data-bs-toggle="modal">Registrarse</button>
+                    </a>
+                </div>
+                <div id="profile-button" class="profile-dropdown d-none">
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle text-gray-800 profile-icon-btn" type="button" data-bs-toggle="dropdown">
+                            <img id="navbar-avatar" src="img/default-avatar.svg" alt="Avatar" />
+                            <span id="navbar-username">Usuario</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item text-danger" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+            </div>
+        </div>
+        <div class="collapse md:hidden" id="mobileMenu">
+            <div class="py-3 px-4">
+                <a class="block py-2 text-gray-800" href="index.html">Inicio</a>
+                <a class="block py-2 text-gray-800" href="ofertas.html">Ofertas</a>
+                <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
+                <a class="block py-2 text-gray-800" href="contacto.html">Contacto</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-5" id="product-container">
+        <!-- Product details will be loaded here -->
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h3 class="h5 text-white mb-4" style="font-family: 'Playfair Display', serif;">Fashion Collection</h3>
+                    <p class="text-white-50">Tu destino para la belleza y el estilo.</p>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h3 class="h5 text-white mb-4">Enlaces rápidos</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none">Inicio</a></li>
+                        <li class="mb-2"><a href="ofertas.html" class="text-white-50 text-decoration-none">Ofertas</a></li>
+                        <li class="mb-2"><a href="contacto.html" class="text-white-50 text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h3 class="h5 text-white mb-4">Ayuda</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="envios.html" class="text-white-50 text-decoration-none">Envíos</a></li>
+                        <li class="mb-2"><a href="devoluciones.html" class="text-white-50 text-decoration-none">Devoluciones</a></li>
+                        <li class="mb-2"><a href="preguntas.html" class="text-white-50 text-decoration-none">Preguntas frecuentes</a></li>
+                        <li class="mb-2"><a href="terminos.html" class="text-white-50 text-decoration-none">Términos y condiciones</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h3 class="h5 text-white mb-4">Síguenos</h3>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 hover-effect"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-white-50 hover-effect"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-white-50 hover-effect"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white-50 hover-effect"><i class="fab fa-pinterest fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="text-center text-white-50">
+                <p class="mb-0">&copy; 2025 Fashion Collection. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- App scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('id');
+        const container = document.getElementById('product-container');
+        if (!productId) {
+            container.innerHTML = '<p class="text-center">Producto no encontrado</p>';
+            return;
+        }
+
+        let product = null;
+        try {
+            if (firebase && firebase.firestore) {
+                const doc = await firebase.firestore().collection('products').doc(productId).get();
+                if (doc.exists) {
+                    product = { id: doc.id, ...doc.data() };
+                }
+            }
+        } catch (err) {
+            console.error('Error obteniendo producto', err);
+        }
+
+        if (!product && window.productsManager && window.productsManager.allProducts) {
+            product = window.productsManager.allProducts.find(p => p.id === productId);
+        }
+
+        if (!product) {
+            container.innerHTML = '<p class="text-center">Producto no encontrado</p>';
+            return;
+        }
+
+        const html = `
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <img src="${product.image || ''}" class="img-fluid rounded" alt="${product.name}">
+                </div>
+                <div class="col-md-6">
+                    <h1 class="h4">${product.name}</h1>
+                    <p class="text-muted text-capitalize">${product.category || ''}</p>
+                    <p>${product.description || ''}</p>
+                    <div class="mb-3">
+                        <span class="h4 text-primary">$${product.price}</span>
+                        ${product.originalPrice ? `<small class="text-muted text-decoration-line-through ms-2">$${product.originalPrice}</small>` : ''}
+                    </div>
+                    ${product.inStock ? `<p class="text-success"><i class="fas fa-check-circle me-1"></i> En stock (${product.stock || 0} disponibles)</p>` : `<p class="text-danger"><i class="fas fa-times-circle me-1"></i> Agotado</p>`}
+                    <button class="btn btn-primary mt-3 add-to-cart-btn" data-product-id="${product.id}" ${!product.inStock ? 'disabled' : ''}>
+                        <i class="fas fa-shopping-cart me-2"></i> ${product.inStock ? 'Agregar al Carrito' : 'Agotado'}
+                    </button>
+                </div>
+            </div>
+        `;
+        container.innerHTML = html;
+    });
+    </script>
+</body>
+</html>
