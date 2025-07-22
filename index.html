@@ -34,7 +34,7 @@
                 </nav>
             </div>
             <div class="flex items-center">
-                <a href="carrito.html" class="relative text-gray-800 me-4">
+                <a href="carrito.html" id="cart-link-navbar" class="relative text-gray-800 me-4">
                     <i class="fas fa-shopping-cart fa-lg"></i>
                     <span class="cart-badge absolute -top-2 -right-2 bg-pink-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
                 </a>
@@ -79,7 +79,10 @@
                 <a class="block py-2 text-gray-800" href="novedades.html">Novedades</a>
                 <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
                 <a class="block py-2 text-gray-800" href="contacto.html">Contacto</a>
-                <a class="block py-2 text-gray-800" href="carrito.html"><i class="fas fa-shopping-cart me-2"></i>Carrito</a>
+                <a id="cart-link-offcanvas" class="block relative py-2 text-gray-800" href="carrito.html">
+                    <i class="fas fa-shopping-cart me-2"></i>Carrito
+                    <span class="cart-badge absolute -top-2 -right-2 bg-pink-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
+                </a>
                 <hr>
                 <div id="auth-buttons-offcanvas" class="auth-buttons flex flex-col gap-2">
                     <a href="login.html">

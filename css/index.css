@@ -7,8 +7,24 @@
             --color-nude: #e8c6b6;
             --color-blush: #f7cac9;
             --color-accent: #c06c84;
-        }
-        
+}
+
+/* Mostrar/ocultar opciones de carrito y perfil según tamaño de pantalla */
+@media (max-width: 768px) {
+    #cart-link-navbar,
+    #auth-buttons,
+    #profile-button {
+        display: none !important;
+    }
+}
+
+@media (min-width: 769px) {
+    #cart-link-offcanvas,
+    #auth-buttons-offcanvas,
+    #profile-button-offcanvas {
+        display: none !important;
+    }
+}
         /* Estilos generales del cuerpo */
         body {
             background-color: #fff;
