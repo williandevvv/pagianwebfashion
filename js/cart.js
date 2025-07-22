@@ -288,10 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalElement) totalElement.textContent = `L. ${formatCurrencyHonduras(total)}`;
 
         // Actualizar estado del botón de checkout
-        const checkoutBtn = document.getElementById('checkout-btn');
-        if (checkoutBtn) {
-            checkoutBtn.disabled = totalItems < 3;
-        }
+        // No deshabilitamos el botón para poder mostrar un mensaje
+        // cuando el usuario intente proceder con menos de 3 artículos
     }
 
     // Actualizar badge del carrito
@@ -316,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await Swal.fire({
                 icon: 'info',
                 title: 'Añade más productos',
-                text: 'Debes agregar al menos 3 artículos para continuar'
+                text: 'Debes seleccionar la cantidad mínima de 3 artículos'
             });
             return;
         }
