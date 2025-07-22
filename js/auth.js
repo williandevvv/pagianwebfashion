@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Referencias a elementos del DOM
   const loginForm = document.getElementById("login-form");
   const registerForm = document.getElementById("register-form");
-  const authButtons = document.getElementById("auth-buttons");
-  const profileButton = document.getElementById("profile-button");
-  const logoutBtn = document.getElementById("logout-btn");
+  const authButtons = document.querySelectorAll("#auth-buttons, #auth-buttons-offcanvas");
+  const profileButtons = document.querySelectorAll("#profile-button, #profile-button-offcanvas");
+  const logoutBtns = document.querySelectorAll("#logout-btn, #logout-btn-offcanvas");
   const googleLoginBtn = document.querySelector(".google-login-btn");
   const navbarUsername = document.getElementById("navbar-username");
   const navbarAvatar = document.getElementById("navbar-avatar");
@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       if (user) {
         // Usuario autenticado
-        if (authButtons) authButtons.classList.add("d-none");
-        if (profileButton) {
-          profileButton.classList.remove("d-none");
+        authButtons.forEach(btn => btn.classList.add("d-none"));
+        profileButtons.forEach(btn => {
+          btn.classList.remove("d-none");
           if (navbarUsername) {
             const displayName = user.displayName || user.email;
             navbarUsername.textContent = displayName;
@@ -46,11 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
           if (navbarAvatar) {
             navbarAvatar.src = user.photoURL || 'img/default-avatar.svg';
           }
-        }
+        });
       } else {
         // Usuario no autenticado
-        if (authButtons) authButtons.classList.remove("d-none");
-        if (profileButton) profileButton.classList.add("d-none");
+        authButtons.forEach(btn => btn.classList.remove("d-none"));
+        profileButtons.forEach(btn => btn.classList.add("d-none"));
         if (navbarAvatar) navbarAvatar.src = 'img/default-avatar.svg';
       }
     } catch (error) {
@@ -315,8 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Manejar logout
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
+  logoutBtns.forEach((btn) => btn.addEventListener("click", async () => {
       try {
         if (typeof window.logout === "function") {
           await window.logout();
@@ -332,8 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("❌ Error al cerrar sesión:", error);
         showNotification("Error al cerrar sesión", "error");
       }
-    });
-  }
+    }));
 
   if (typeof firebase !== "undefined") {
     window.register = async (email, password, displayName) => {

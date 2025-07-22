@@ -59,13 +59,17 @@
                         </ul>
                     </div>
                 </div>
-                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                <button class="md:hidden btn text-gray-800 ms-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvas" aria-controls="mobileOffcanvas">
                     <i class="fas fa-bars fa-lg"></i>
                 </button>
             </div>
         </div>
-        <div class="collapse md:hidden" id="mobileMenu">
-            <div class="py-3 px-4 space-y-1">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileOffcanvas" aria-labelledby="mobileOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="mobileOffcanvasLabel">Menú</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body space-y-1">
                 <a class="block py-2 text-gray-800" href="index.html">Inicio</a>
                 <a class="block py-2 text-gray-800" href="bisuteria.html">Bisutería</a>
                 <a class="block py-2 text-gray-800" href="maquillaje.html">Maquillaje</a>
@@ -75,6 +79,22 @@
                 <a class="block py-2 text-gray-800" href="novedades.html">Novedades</a>
                 <a class="block py-2 text-gray-800" href="galeria.html">Galería</a>
                 <a class="block py-2 text-gray-800" href="contacto.html">Contacto</a>
+                <a class="block py-2 text-gray-800" href="carrito.html"><i class="fas fa-shopping-cart me-2"></i>Carrito</a>
+                <hr>
+                <div id="auth-buttons-offcanvas" class="auth-buttons flex flex-col gap-2">
+                    <a href="login.html">
+                        <button class="btn btn-outline-light w-100" data-bs-toggle="modal">Iniciar Sesión</button>
+                    </a>
+                    <a href="login.html">
+                        <button class="btn btn-light w-100" data-bs-toggle="modal">Registrarse</button>
+                    </a>
+                </div>
+                <div id="profile-button-offcanvas" class="profile-button d-none mt-2">
+                    <ul class="list-unstyled mb-0">
+                        <li><a class="text-gray-800 d-block py-2" href="perfil.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                        <li><button class="btn btn-link text-danger ps-0" id="logout-btn-offcanvas"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</button></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </header>
