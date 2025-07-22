@@ -42,12 +42,22 @@
         }
 
         /* Encabezado moderno para una apariencia más atractiva */
-        .fancy-header {
+.fancy-header {
+            position: relative;
+            overflow: hidden;
             background: linear-gradient(90deg, #fcd3e1 0%, #fbc2eb 50%, #a6c1ee 100%);
+            background-size: 400% 400%;
+            animation: gradientMove 20s ease infinite;
             color: #4b4b4b;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             border-bottom-left-radius: 1rem;
             border-bottom-right-radius: 1rem;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         /* Tarjetas de categorías con efecto de brillo */
