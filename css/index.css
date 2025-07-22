@@ -304,3 +304,19 @@
                 font-size: 2.2rem;
             }
         }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                padding: 60px 0;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .categorias-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+        }
+
