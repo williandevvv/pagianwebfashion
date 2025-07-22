@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actualizar totales del carrito con formato hondureño
     function updateCartTotals() {
         const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        shipping = cartItems.length > 0 ? selectedShipping : 0;
+        shipping = totalItems > 0 ? selectedShipping : 0;
         subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         total = subtotal + shipping - couponDiscount;
 
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Actualizar estado del botón de checkout
         const checkoutBtn = document.getElementById('checkout-btn');
         if (checkoutBtn) {
-            checkoutBtn.disabled = cartItems.length === 0;
+            checkoutBtn.disabled = totalItems < 3;
         }
     }
 
@@ -311,7 +311,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mostrar términos y confirmar el pedido antes del checkout
     async function confirmCheckout() {
-        if (cartItems.length === 0) return;
+        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        if (totalItems < 3) {
+            await Swal.fire({
+                icon: 'info',
+                title: 'Añade más productos',
+                text: 'Debes agregar al menos 3 artículos para continuar'
+            });
+            return;
+        }
 
         const { isConfirmed } = await Swal.fire({
             title: 'Términos y Condiciones',
@@ -349,7 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar checkout - Enviar por WhatsApp
     async function handleCheckout() {
-        if (cartItems.length === 0) return;
+        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        if (totalItems < 3) return;
 
         try {
             // Verificar si el usuario está autenticado
