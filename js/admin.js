@@ -1658,7 +1658,7 @@ function renderUsersTable() {
         const sub = item.price * item.quantity;
         itemsHtml += `
           <tr>
-            <td><img src="${item.image || 'https://via.placeholder.com/40'}" alt="${item.name || 'Producto'}" style="width:40px;height:40px;object-fit:cover;"></td>
+            <td><img src="${item.image || 'https://via.placeholder.com/40'}" alt="${item.name || 'Producto'}" style="width:40px;height:40px;object-fit:cover;" crossOrigin="anonymous"></td>
             <td>${item.id || ''}</td>
             <td>${item.name || 'Producto'}</td>
             <td>${item.quantity}</td>
@@ -1711,7 +1711,7 @@ function renderUsersTable() {
         .set({
           margin: 10,
           filename: `pedido_${order.id}.pdf`,
-          html2canvas: { scale: 2, useCORS: true },
+          html2canvas: { scale: 2, useCORS: true, allowTaint: true },
           jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
         })
         .from(container)
