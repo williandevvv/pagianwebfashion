@@ -377,8 +377,8 @@
                             <h3 class="product-title">${product.name}</h3>
                             <p class="product-description">${(product.description || '').substring(0, 60)}${product.description && product.description.length > 60 ? '...' : ''}</p>
                             <div class="quantity-selector">
-                                <button class="quantity-btn" onclick="decreaseQuantity(this)">-</button>
-                                <input type="number" id="qty-${product.id}" class="quantity-input" value="1" min="1">
+                                <button class="quantity-btn" onclick="decreaseQuantity(this)" disabled>-</button>
+                                <input type="number" id="qty-${product.id}" class="quantity-input" value="3" min="3">
                                 <button class="quantity-btn" onclick="increaseQuantity(this)">+</button>
                             </div>
                             <button class="add-to-cart" onclick="addToCart('${product.id}')">🛒 Agregar al Carrito</button>
@@ -507,15 +507,23 @@ function addToCart(productId) {
     <script type="module" src="js/maintenance.js"></script>
     <script>
     function increaseQuantity(button) {
-        const input = button.parentElement.querySelector('.quantity-input');
+        const selector = button.parentElement;
+        const input = selector.querySelector('.quantity-input');
         input.value = parseInt(input.value) + 1;
+        const minus = selector.querySelector('button');
+        if (minus) minus.disabled = parseInt(input.value) <= 3;
     }
 
     function decreaseQuantity(button) {
-        const input = button.parentElement.querySelector('.quantity-input');
-        if (parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
+        const selector = button.parentElement;
+        const input = selector.querySelector('.quantity-input');
+        const current = parseInt(input.value);
+        if (current > 3) {
+            input.value = current - 1;
+        } else {
+            Swal.fire('Tienes que seleccionar mínimo 3 artículos');
         }
+        button.disabled = parseInt(input.value) <= 3;
     }
     </script>
     <!-- Modal para imágenes de productos -->
