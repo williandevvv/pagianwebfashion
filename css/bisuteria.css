@@ -271,6 +271,11 @@
             background: #f9a1bb;
         }
 
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .quantity-input {
             width: 50px;
             text-align: center;
