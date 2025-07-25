@@ -1,0 +1,74 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-outline-brown {
+    border: 1px solid #d2b48c;
+    color: #8b4513;
+    background-color: #fff;
+}
+
+.btn-outline-brown:hover {
+    background-color: #d2b48c;
+    color: #fff;
+}
+
+.btn-brown {
+    background-color: #8b4513;
+    border: 1px solid #8b4513;
+}
+
+.btn-lightbrown {
+    background-color: #d2b48c;
+    border: none;
+    color: #fff;
+}
+
+.hero {
+    background: url('../img/maquillaje.jpg') center/cover no-repeat;
+    padding: 120px 20px;
+    color: #4a4a4a;
+    background-color: #f7f1e6;
+}
+
+.search-box {
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+}
+.search-box input {
+    border-radius: 50px;
+    padding-right: 45px;
+}
+.search-box button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #8b4513;
+}
+
+.categorias {
+    background-color: #fef1e6;
+}
+
+.categoria-card {
+    border: 1px solid #d2b48c;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: box-shadow .3s ease;
+}
+.categoria-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.suscripcion {
+    background-color: #f7f1e6;
+}
+
+.footer {
+    background-color: #eee0d1;
+    color: #4a4a4a;
+}

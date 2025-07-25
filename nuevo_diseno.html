@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Collection - Nuevo Diseño</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/nuevo_diseno.css">
+</head>
+<body>
+    <!-- Encabezado -->
+    <nav class="navbar navbar-expand-lg bg-white py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Fashion Collection</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="text-decoration-none position-relative">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-brown">Iniciar sesión</a>
+                    <a href="#" class="btn btn-brown text-white">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección Hero -->
+    <section class="hero d-flex flex-column justify-content-center align-items-center text-center">
+        <h1 class="display-4 fw-bold">Un Cosmético Perfecto e Increíble</h1>
+        <p class="lead mb-4">Descubre la línea que realza tu belleza natural.</p>
+        <button class="btn btn-lg btn-lightbrown mb-3">Comprar Ahora</button>
+        <div class="search-box mt-2">
+            <input type="text" class="form-control" placeholder="Buscar...">
+            <button class="btn"><i class="fas fa-search"></i></button>
+        </div>
+    </section>
+
+    <!-- Categorías -->
+    <section class="py-5 categorias">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="categoria-card p-3 text-center">
+                        <img src="img/bisuteria.jpg" class="img-fluid rounded" alt="Bisutería">
+                        <h3 class="mt-3">Bisutería</h3>
+                        <p>6 productos</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="categoria-card p-3 text-center">
+                        <img src="img/maquillaje.jpg" class="img-fluid rounded" alt="Maquillaje">
+                        <h3 class="mt-3">Maquillaje</h3>
+                        <p>6 productos</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="categoria-card p-3 text-center">
+                        <img src="img/acero.jpg" class="img-fluid rounded" alt="Accesorios">
+                        <h3 class="mt-3">Accesorios</h3>
+                        <p>6 productos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Suscripción -->
+    <section class="suscripcion py-5 text-center">
+        <div class="container">
+            <h2 class="fw-bold">Únete a nuestra comunidad fashionista</h2>
+            <p class="mb-4">Recibe los últimos descuentos directamente en tu correo.</p>
+            <form class="row justify-content-center g-2">
+                <div class="col-sm-6 col-md-4">
+                    <input type="email" class="form-control" placeholder="Tu correo electrónico">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-lightbrown">Suscribirse</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-center text-md-start py-5">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-md-3">
+                    <h5 class="fw-bold">Fashion Collection</h5>
+                    <p>Tu sistema para la belleza y el estilo.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Enlaces rápidos</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Inicio</a></li>
+                        <li><a href="#" class="text-decoration-none">Ofertas</a></li>
+                        <li><a href="#" class="text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Ayuda</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Envíos</a></li>
+                        <li><a href="#" class="text-decoration-none">Devoluciones</a></li>
+                        <li><a href="#" class="text-decoration-none">Preguntas frecuentes</a></li>
+                        <li><a href="#" class="text-decoration-none">Términos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Redes sociales</h6>
+                    <div class="d-flex gap-3 justify-content-center justify-content-md-start">
+                        <a href="#" class="text-decoration-none"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fab fa-tiktok fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center mb-0">© 2025 Fashion Collection. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
