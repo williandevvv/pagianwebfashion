@@ -1697,27 +1697,60 @@ function renderUsersTable() {
     const order = orders.find(o => o.id === orderId);
     if (!order) return;
 
-    const invoiceHtml = buildInvoiceHtml(order);
+    console.log('📝 Generando PDF con items:', order.items);
 
-    const container = document.createElement('div');
-    container.innerHTML = invoiceHtml;
-    document.body.appendChild(container);
+    const fechaHora = order.createdAt?.seconds
+      ? new Date(order.createdAt.seconds * 1000).toLocaleString('es-HN')
+      : new Date().toLocaleString('es-HN');
 
-    const imgs = Array.from(container.querySelectorAll('img'));
-    Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(res => {
-      img.onload = img.onerror = res;
-    }))).then(() => {
-      html2pdf()
-        .set({
-          margin: 10,
-          filename: `pedido_${order.id}.pdf`,
-          html2canvas: { scale: 2, useCORS: true, allowTaint: true },
-          jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
-        })
-        .from(container)
-        .save()
-        .then(() => container.remove());
-    });
+    const { jsPDF } = window.jspdf || window;
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+
+    doc.setFontSize(16);
+    doc.text('Fashion Collection', 306, 40, { align: 'center' });
+    doc.setFontSize(12);
+
+    let y = 60;
+    doc.text(`Pedido: #${order.id}`, 40, y); y += 14;
+    doc.text(`Cliente: ${order.userEmail || 'Desconocido'}`, 40, y); y += 14;
+    doc.text(`Fecha y Hora: ${fechaHora}`, 40, y); y += 20;
+
+    const body = (order.items || []).map(item => [
+      item.id || '',
+      item.name || 'Producto',
+      item.quantity,
+      `L${item.price.toFixed(2)}`,
+      `L${(item.price * item.quantity).toFixed(2)}`
+    ]);
+
+    if (body.length) {
+      doc.autoTable({
+        head: [['ID', 'Nombre', 'Cantidad', 'Precio', 'Subtotal']],
+        body,
+        startY: y,
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [11, 61, 145] }
+      });
+      y = doc.lastAutoTable.finalY + 10;
+    } else {
+      doc.text('No hay productos en este pedido.', 40, y);
+      y += 20;
+    }
+
+    const subtotal = order.subtotal ?? order.total ?? 0;
+    const envio = order.shipping || 0;
+    const descuento = order.couponDiscount || order.discount || 0;
+    const cup = order.couponCode || order.coupon || '';
+    const total = order.total || (order.items?.reduce((s, i) => s + i.price * i.quantity, 0) || 0);
+
+    doc.text(`Subtotal: L${subtotal.toFixed(2)}`, 40, y); y += 12;
+    doc.text(`Envío: L${envio.toFixed(2)}`, 40, y); y += 12;
+    if (descuento) {
+      doc.text(`Descuento ${cup ? '(' + cup + ')' : ''}: -L${descuento.toFixed(2)}`, 40, y); y += 12;
+    }
+    doc.text(`Total: L${total.toFixed(2)}`, 40, y);
+
+    doc.save(`pedido_${order.id}.pdf`);
   };
 
   // Previsualizar factura del pedido
