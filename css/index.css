@@ -7,10 +7,7 @@
             --color-nude: #e8c6b6;
             --color-blush: #f7cac9;
             --color-accent: #c06c84;
-            --cafe-claro: #d6bfae;
-            --cafe-oscuro: #8b5b3a;
-            --beige-claro: #fef1e6;
-        }
+}
 
 /* Mostrar/ocultar opciones de carrito y perfil según tamaño de pantalla */
 @media (max-width: 768px) {
@@ -34,39 +31,27 @@
             font-family: 'Poppins', sans-serif;
         }
         
-        /* Encabezado blanco con botones personalizados */
-        .navbar-custom {
-            background-color: #fff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        /* Encabezado con efecto de cristal y degradado */
+        .header {
+            background: linear-gradient(135deg, rgba(189,140,125,0.95), rgba(192,108,132,0.95));
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
 
-        .navbar-custom a {
-            color: var(--cafe-oscuro);
-            font-weight: 500;
-        }
-
-        .navbar-custom a:hover {
-            color: var(--color-accent);
-        }
-
-        .btn-login {
-            border: 2px solid var(--cafe-claro);
-            background-color: #fff;
-            color: var(--cafe-oscuro);
-            border-radius: 50px;
-            padding: 0.5rem 1.5rem;
-        }
-
-        .btn-register {
-            background-color: var(--cafe-oscuro);
-            color: #fff;
-            border-radius: 50px;
-            border: 2px solid var(--cafe-oscuro);
-            padding: 0.5rem 1.5rem;
-        }
-
-        .btn-register:hover {
-            opacity: 0.9;
+        /* Encabezado moderno para una apariencia más atractiva */
+.fancy-header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(90deg, #fcd3e1 0%, #fbc2eb 50%, #a6c1ee 100%);
+            background-size: 400% 400%;
+            animation: gradientMove 20s ease infinite;
+            color: #4b4b4b;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
         }
 
         @keyframes gradientMove {
@@ -108,26 +93,22 @@
             color: white;
         }
         
-        /* Sección hero con imagen de maquillaje en tonos pastel */
+        /* Sección hero con diseño moderno y elegante */
         .hero-section {
-            background: url('img/maquillaje.jpg') center/cover no-repeat;
+            background: linear-gradient(45deg, 
+                rgba(189,140,125,0.9), 
+                rgba(192,108,132,0.9)), 
+                url('img/banner.jpg');
+            background-size: cover;
+            background-position: center;
             padding: 120px 0;
+            color: white;
             text-align: center;
-            color: var(--cafe-oscuro);
-        }
-
-        .btn-buy {
-            background-color: var(--cafe-claro);
-            color: #fff;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            border: none;
         }
         
         /* Sección de newsletter con diseño suave */
         .newsletter-section {
-            background-color: var(--beige-claro);
+            background-color: var(--color-shimmer);
             padding: 80px 0;
             position: relative;
             overflow: hidden;
@@ -148,13 +129,9 @@
         
         /* Footer con diseño elegante */
         footer {
-            background-color: #e8d3c2;
-            color: #333;
+            background: linear-gradient(to right, #2c2c2c, #1a1a1a);
+            color: white;
             padding: 60px 0 20px;
-        }
-
-        footer .text-white-50 {
-            color: #555 !important;
         }
         
         /* Contador del carrito con diseño moderno */
@@ -275,30 +252,29 @@
             transform: translateY(-50%) scale(1.05);
         }
 
-        .categories-area {
-            background-color: var(--beige-claro);
-            padding: 60px 0;
-        }
-
         .categorias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            padding: 20px;
+            border-radius: 20px;
         }
 
         .categoria-card {
             position: relative;
-            border: 1px solid var(--cafe-claro);
-            border-radius: 15px;
+            border: 2px solid transparent;
+            border-radius: 20px;
             overflow: hidden;
-            background: #fff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: linear-gradient(#fff, #fff) padding-box,
+                        linear-gradient(90deg, #f093fb, #f5576c) border-box;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .categoria-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
 
         .categoria-card img {
