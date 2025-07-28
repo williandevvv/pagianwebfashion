@@ -1805,11 +1805,16 @@ function renderUsersTable() {
     const { jsPDF } = window.jspdf || window;
     const doc = new jsPDF({ unit: 'pt', format: 'letter' });
 
-    doc.setFontSize(16);
+    const logo = await imageToDataUrl('img/LOGOFS.png');
+    if (logo) {
+      doc.addImage(logo, 'PNG', 40, 20, 60, 60);
+    }
+
+    doc.setFontSize(18);
     doc.text('Fashion Collection', 306, 40, { align: 'center' });
     doc.setFontSize(12);
 
-    let y = 60;
+    let y = 90;
     doc.text(`Pedido: #${order.id}`, 40, y); y += 14;
     doc.text(`Cliente: ${order.userEmail || 'Desconocido'}`, 40, y); y += 14;
     doc.text(`Fecha y Hora: ${fechaHora}`, 40, y); y += 20;
@@ -1833,8 +1838,10 @@ function renderUsersTable() {
         head: [['Imagen', 'ID', 'Nombre', 'Cantidad', 'Precio', 'Subtotal']],
         body,
         startY: y,
+        theme: 'striped',
         styles: { fontSize: 10, cellWidth: 'wrap' },
         headStyles: { fillColor: [11, 61, 145], textColor: 255, halign: 'center' },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
         didDrawCell: data => {
           if (data.column.index === 0 && data.cell.section === 'body') {
             const img = data.cell.raw.img;
