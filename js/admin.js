@@ -1774,8 +1774,25 @@ function renderUsersTable() {
       </div>`;
   }
 
+  // Convierte una imagen remota en base64 para incluirla en el PDF
+  async function imageToDataUrl(url) {
+    try {
+      const res = await fetch(url, { mode: 'cors' });
+      const blob = await res.blob();
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (err) {
+      console.error('Error cargando imagen para PDF:', err);
+      return '';
+    }
+  }
+
   // Generar factura detallada del pedido y descargar PDF
-  window.generateInvoice = function(orderId) {
+  window.generateInvoice = async function(orderId) {
     const order = orders.find(o => o.id === orderId);
     if (!order) return;
 
@@ -1797,7 +1814,13 @@ function renderUsersTable() {
     doc.text(`Cliente: ${order.userEmail || 'Desconocido'}`, 40, y); y += 14;
     doc.text(`Fecha y Hora: ${fechaHora}`, 40, y); y += 20;
 
-    const body = (order.items || []).map(item => [
+    const items = await Promise.all((order.items || []).map(async item => ({
+      ...item,
+      imgData: item.image ? await imageToDataUrl(item.image) : ''
+    })));
+
+    const body = items.map(item => [
+      { content: '', img: item.imgData },
       item.id || '',
       item.name || 'Producto',
       item.quantity,
@@ -1807,11 +1830,20 @@ function renderUsersTable() {
 
     if (body.length) {
       doc.autoTable({
-        head: [['ID', 'Nombre', 'Cantidad', 'Precio', 'Subtotal']],
+        head: [['Imagen', 'ID', 'Nombre', 'Cantidad', 'Precio', 'Subtotal']],
         body,
         startY: y,
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [11, 61, 145] }
+        styles: { fontSize: 10, cellWidth: 'wrap' },
+        headStyles: { fillColor: [11, 61, 145], textColor: 255, halign: 'center' },
+        didDrawCell: data => {
+          if (data.column.index === 0 && data.cell.section === 'body') {
+            const img = data.cell.raw.img;
+            if (img) {
+              const dim = 30;
+              doc.addImage(img, 'JPEG', data.cell.x + 2, data.cell.y + 2, dim, dim);
+            }
+          }
+        }
       });
       y = doc.lastAutoTable.finalY + 10;
     } else {
