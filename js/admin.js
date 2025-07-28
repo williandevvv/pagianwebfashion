@@ -1840,7 +1840,9 @@ function renderUsersTable() {
             const img = data.cell.raw.img;
             if (img) {
               const dim = 30;
-              doc.addImage(img, 'JPEG', data.cell.x + 2, data.cell.y + 2, dim, dim);
+              const fmtMatch = /^data:image\/(png|jpeg|jpg)/i.exec(img);
+              const fmt = fmtMatch ? fmtMatch[1].toUpperCase() : 'JPEG';
+              doc.addImage(img, fmt, data.cell.x + 2, data.cell.y + 2, dim, dim);
             }
           }
         }
