@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("👑 Admin.js cargado");
+  const dateEl = document.getElementById('currentDate');
+  if (dateEl) {
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+    dateEl.textContent = new Date().toLocaleDateString('es-ES', opciones);
+  }
 
   // Verificar autenticación y rol de administrador
   checkAdminAccess();
@@ -7,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Variables globales
   let products = [];
   let orders = [];
+  let expenses = [];
+  let incomes = [];
   let groupedOrders = {};
   let accordionState = {};
   let orderFilters = { status: '', search: '', period: '' };
@@ -79,8 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
             currentPermissions = userData.permissions || defaultPermissions[currentUserRole] || {};
 
             const username = userData.displayName || user.email;
-            const nameEl = document.getElementById('admin-username');
-            if (nameEl) nameEl.textContent = username;
+            const nameEls = document.querySelectorAll('#admin-username, #sidebar-user-name');
+            nameEls.forEach(el => el.textContent = username);
+            const photo = userData.photoURL || user.photoURL;
+            document.querySelectorAll('#userPhoto, #sidebar-user-photo').forEach(el => {
+              if (photo) el.src = photo;
+            });
 
             if (!currentPermissions.dashboard?.view) {
               showUnauthorizedMessage();
@@ -184,6 +195,30 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebarToggle.addEventListener("click", () => {
         document.getElementById("sidebar").classList.toggle("active");
         document.getElementById("content").classList.toggle("active");
+      });
+    }
+
+    const addLink = document.getElementById('addProductLink');
+    if (addLink) {
+      addLink.addEventListener('click', e => {
+        e.preventDefault();
+        showSection('products');
+        const modalEl = document.getElementById('addProductModal');
+        if (modalEl) new bootstrap.Modal(modalEl).show();
+      });
+    }
+
+    const seeOrdersBtn = document.getElementById('seeAllOrdersBtn');
+    if (seeOrdersBtn) {
+      seeOrdersBtn.addEventListener('click', () => {
+        showSection('orders');
+      });
+    }
+
+    const darkBtn = document.getElementById('darkModeToggle');
+    if (darkBtn) {
+      darkBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
       });
     }
 
@@ -525,6 +560,20 @@ document.addEventListener("DOMContentLoaded", () => {
         id: doc.id,
         ...doc.data(),
       }));
+
+      // Gastos e ingresos
+      try {
+        const expensesSnapshot = await firebase.firestore().collection('expenses').get();
+        expenses = expensesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } catch (e) {
+        expenses = [];
+      }
+      try {
+        const incomesSnapshot = await firebase.firestore().collection('incomes').get();
+        incomes = incomesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } catch (e) {
+        incomes = [];
+      }
 
       groupOrders();
 
@@ -1237,16 +1286,35 @@ function renderUsersTable() {
       });
       
       const monthlyRevenue = monthlyOrders.reduce((sum, order) => {
-        return sum + (order.total || order.items?.reduce((itemSum, item) => 
+        return sum + (order.total || order.items?.reduce((itemSum, item) =>
           itemSum + (item.price * item.quantity), 0) || 0);
       }, 0);
+
+      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      const orders24h = orders.filter(o => {
+        if(!o.createdAt?.seconds) return false;
+        const d = new Date(o.createdAt.seconds * 1000);
+        return d >= yesterday;
+      });
+      const ventas24h = orders24h.reduce((s,o)=> s + (o.total || o.items?.reduce((p,i)=>p+i.price*i.quantity,0) || 0),0);
+      const gastos24h = expenses.filter(e => {
+        if(!e.date?.seconds) return false;
+        return new Date(e.date.seconds * 1000) >= yesterday;
+      }).reduce((s,e)=> s + (e.amount || 0),0);
+      const ingresos24h = incomes.filter(i => {
+        if(!i.date?.seconds) return false;
+        return new Date(i.date.seconds * 1000) >= yesterday;
+      }).reduce((s,i)=> s + (i.amount || 0),0);
       
       // Actualizar elementos del dashboard
       updateDashboardStats({
         todayOrders: todayOrders.length,
         lowStock: lowStockProducts.length,
         newUsers: newUsersThisMonth.length,
-        monthlyRevenue: monthlyRevenue
+        monthlyRevenue: monthlyRevenue,
+        ventas24h,
+        gastos24h,
+        ingresos24h
       });
 
 
@@ -1266,13 +1334,19 @@ function renderUsersTable() {
   
   function updateDashboardStats(stats) {
     // Actualizar tarjetas de estadísticas usando los IDs correctos del HTML
+    const ventasEl = document.getElementById('ventas24h');
+    if (ventasEl) ventasEl.textContent = `L${stats.ventas24h.toFixed(2)}`;
+    const gastosEl = document.getElementById('gastos24h');
+    if (gastosEl) gastosEl.textContent = `L${stats.gastos24h.toFixed(2)}`;
+    const ingresosEl = document.getElementById('ingresos24h');
+    if (ingresosEl) ingresosEl.textContent = `L${stats.ingresos24h.toFixed(2)}`;
+
     const todayOrdersEl = document.getElementById('ordersToday');
     if (todayOrdersEl) todayOrdersEl.textContent = stats.todayOrders;
-    
+
     const lowStockEl = document.getElementById('productsLowStock');
     if (lowStockEl) {
       lowStockEl.textContent = stats.lowStock;
-      // Cambiar color si hay stock bajo
       const card = lowStockEl.closest('.card');
       if (card) {
         if (stats.lowStock > 0) {
@@ -1284,12 +1358,20 @@ function renderUsersTable() {
         }
       }
     }
-    
+
     const newUsersEl = document.getElementById('newUsers');
     if (newUsersEl) newUsersEl.textContent = stats.newUsers;
-    
+
     const monthlyRevenueEl = document.getElementById('monthlyRevenue');
     if (monthlyRevenueEl) monthlyRevenueEl.textContent = `L${stats.monthlyRevenue.toFixed(2)}`;
+
+    const max = Math.max(stats.ventas24h, stats.gastos24h, stats.ingresos24h, 1);
+    const vp = document.getElementById('ventasProgress');
+    const gp = document.getElementById('gastosProgress');
+    const ip = document.getElementById('ingresosProgress');
+    if (vp) vp.style.setProperty('--value', (stats.ventas24h / max) * 100);
+    if (gp) gp.style.setProperty('--value', (stats.gastos24h / max) * 100);
+    if (ip) ip.style.setProperty('--value', (stats.ingresos24h / max) * 100);
   }
 
   function initDashboardCharts() {
