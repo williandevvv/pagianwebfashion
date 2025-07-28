@@ -39,125 +39,56 @@
       href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css"
     />
     
-      <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
   <body>
     <!-- Sidebar -->
     <nav id="sidebar">
-      <div class="sidebar-header">
+      <div class="sidebar-header text-center">
         <h3 class="mb-0">Fashion Collection</h3>
+      </div>
+      <div class="sidebar-user text-center p-3">
+        <img id="sidebar-user-photo" src="" class="rounded-circle mb-2" width="80" height="80" alt="Usuario">
+        <h6 id="sidebar-user-name" class="text-white mb-0"></h6>
       </div>
 
       <ul class="list-unstyled components">
-        <li>
-          <a href="#" class="nav-link active" data-section="dashboard">
-            <i class="fas fa-chart-line"></i> Panel
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="products">
-            <i class="fas fa-box"></i> Productos
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="orders">
-            <i class="fas fa-shopping-bag"></i> Pedidos
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="users">
-            <i class="fas fa-users"></i> Usuarios
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="inventory">
-            <i class="fas fa-warehouse"></i> Inventario
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="offers">
-            <i class="fas fa-tags"></i> Ofertas
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="tasks">
-            <i class="fas fa-tasks"></i> Tareas
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="reports">
-            <i class="fas fa-file-alt"></i> Reportes
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="tickets">
-            <i class="fas fa-envelope-open-text"></i> Tickets
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="messages">
-            <i class="fas fa-envelope"></i> Mensajes
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link" data-section="settings">
-            <i class="fas fa-cog"></i> Configuración
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link text-danger" id="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-          </a>
-        </li>
+        <li><a href="#" class="nav-link active" data-section="dashboard"><i data-lucide="layout-dashboard"></i> Panel de Control</a></li>
+        <li><a href="#" class="nav-link" data-section="users"><i data-lucide="users"></i> Clientes</a></li>
+        <li><a href="#" class="nav-link" data-section="orders"><i data-lucide="package"></i> Pedidos</a></li>
+        <li><a href="#" class="nav-link" data-section="reports"><i data-lucide="bar-chart-3"></i> Análisis</a></li>
+        <li><a href="#" class="nav-link" data-section="messages"><i data-lucide="mail"></i> Mensajes</a></li>
+        <li><a href="#" class="nav-link" data-section="products"><i data-lucide="shopping-bag"></i> Productos</a></li>
+        <li><a href="#" class="nav-link" data-section="reports"><i data-lucide="file-text"></i> Reportes</a></li>
+        <li><a href="#" class="nav-link" data-section="settings"><i data-lucide="settings"></i> Configuración</a></li>
+        <li><a href="#" class="nav-link" id="addProductLink"><i data-lucide="plus-circle"></i> Agregar Producto</a></li>
+        <li><a href="#" class="nav-link text-danger" id="logout-btn"><i data-lucide="log-out"></i> Cerrar Sesión</a></li>
+        <li><a href="#" class="nav-link" data-section="tasks"><i data-lucide="list-check"></i> Tareas</a></li>
+        <li><a href="#" class="nav-link" data-section="inventory"><i data-lucide="archive"></i> Inventario</a></li>
+        <li><a href="#" class="nav-link" data-section="offers"><i data-lucide="tag"></i> Ofertas</a></li>
+        <li><a href="#" class="nav-link" data-section="tickets"><i data-lucide="life-buoy"></i> Tickets</a></li>
       </ul>
     </nav>
 
     <!-- Content -->
     <div id="content">
       <!-- Navbar -->
-      <nav
-        class="navbar navbar-expand-lg navbar-dark navbar-gradient rounded-3 mb-4 shadow-sm"
-      >
+      <nav class="navbar navbar-light bg-white rounded-3 shadow-sm mb-4">
         <div class="container-fluid">
-          <button type="button" id="sidebarToggle" class="btn">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="ms-3">
-            <h5 class="mb-0" id="section-title">Panel</h5>
-          </div>
-          <div class="ms-auto d-flex align-items-center">
-            <!-- Botón para activar o desactivar el modo mantenimiento -->
-            <button id="maintenanceBtn" class="btn btn-warning me-3">
-              Modo Mantenimiento
+          <button type="button" id="sidebarToggle" class="btn"><i data-lucide="menu"></i></button>
+          <h5 class="mb-0 ms-2" id="section-title">Panel de Control</h5>
+          <span class="ms-auto me-3" id="currentDate"></span>
+          <button id="darkModeToggle" class="btn btn-outline-secondary me-3"><i data-lucide="sun"></i></button>
+          <div class="dropdown">
+            <button class="btn d-flex align-items-center" data-bs-toggle="dropdown">
+              <img id="userPhoto" src="" class="rounded-circle me-2" width="32" height="32" alt="Usuario">
+              <span id="admin-username"></span>
             </button>
-            <div class="dropdown">
-              <button
-                class="btn btn-link text-dark text-decoration-none dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown"
-              >
-                <i class="fas fa-user-circle me-1"></i>
-                <span id="admin-username">Admin</span>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fas fa-user me-2"></i>Perfil</a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fas fa-cog me-2"></i>Configuración</a
-                  >
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <button class="dropdown-item text-danger" id="nav-logout-btn">
-                    <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-                  </button>
-                </li>
-              </ul>
-            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" data-section="settings">Configuración</a></li>
+              <li><button class="dropdown-item text-danger" id="nav-logout-btn">Cerrar Sesión</button></li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -165,66 +96,46 @@
       <!-- Panel Section -->
       <section id="dashboard-section" class="admin-section">
         <!-- Stats Cards -->
-        <div class="row g-4 mb-4">
-          <div class="col-md-6 col-lg-3">
-            <div class="stats-card card">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="stats-icon bg-primary bg-opacity-10 text-primary">
-                    <i class="fas fa-shopping-cart"></i>
-                  </div>
-                  <div class="ms-3">
-                    <h6 class="mb-1 text-muted">Pedidos Hoy</h6>
-                    <h3 class="mb-0" id="ordersToday">0</h3>
-                  </div>
-                </div>
-              </div>
+        <div class="row g-4 mb-4 text-center">
+          <div class="col-md-4">
+            <div class="stats-card card p-3">
+              <div id="ventasProgress" class="circular-progress" style="--color:#0b3d91"></div>
+              <h6 class="mt-2 text-muted">Ventas Totales (últimas 24h)</h6>
+              <h3 id="ventas24h">L0</h3>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="stats-card card">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="stats-icon bg-warning bg-opacity-10 text-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                  </div>
-                  <div class="ms-3">
-                    <h6 class="mb-1 text-muted">Stock Bajo</h6>
-                    <h3 class="mb-0" id="productsLowStock">0</h3>
-                  </div>
-                </div>
-              </div>
+          <div class="col-md-4">
+            <div class="stats-card card p-3">
+              <div id="gastosProgress" class="circular-progress" style="--color:#dc3545"></div>
+              <h6 class="mt-2 text-muted">Gastos Totales (últimas 24h)</h6>
+              <h3 id="gastos24h">L0</h3>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="stats-card card">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="stats-icon bg-success bg-opacity-10 text-success">
-                    <i class="fas fa-users"></i>
-                  </div>
-                  <div class="ms-3">
-                    <h6 class="mb-1 text-muted">Nuevos Usuarios</h6>
-                    <h3 class="mb-0" id="newUsers">0</h3>
-                  </div>
-                </div>
-              </div>
+          <div class="col-md-4">
+            <div class="stats-card card p-3">
+              <div id="ingresosProgress" class="circular-progress" style="--color:#198754"></div>
+              <h6 class="mt-2 text-muted">Ingresos Totales (últimas 24h)</h6>
+              <h3 id="ingresos24h">L0</h3>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="stats-card card">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div class="stats-icon bg-info bg-opacity-10 text-info">
-                    <i class="fas fa-dollar-sign"></i>
-                  </div>
-                  <div class="ms-3">
-                    <h6 class="mb-1 text-muted">Ventas del Mes</h6>
-                    <h3 class="mb-0" id="monthlyRevenue">L0</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
+        </div>
+
+        <h4 class="mb-3">Pedidos Recientes</h4>
+        <div class="table-responsive mb-4">
+          <table class="table" id="recentOrdersTable">
+            <thead>
+              <tr>
+                <th>Nombre del producto</th>
+                <th>Número de producto</th>
+                <th>Pago</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="text-end mt-2">
+            <button class="btn btn-primary" id="seeAllOrdersBtn">Ver todos</button>
           </div>
         </div>
 
@@ -1514,6 +1425,11 @@
     <script type="module" src="js/admin.js"></script>
     <script type="module" src="js/app.js"></script>
     <script type="module" src="js/maintenance.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+      });
+    </script>
     <!-- Script para manejar el botón de modo mantenimiento -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
