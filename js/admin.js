@@ -1640,7 +1640,7 @@ function renderUsersTable() {
           <div id="collapse${idx}" class="accordion-collapse collapse">
             <div class="accordion-body p-0">
               <div class="table-responsive">
-                <table class="table table-striped table-bordered mb-0">
+                <table class="table table-striped table-bordered table-hover mb-0">
                   <thead>
                     <tr>
                       <th>ID</th>
