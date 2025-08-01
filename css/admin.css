@@ -265,3 +265,26 @@
         background-color: #2a2a40;
         color: #f8f9fa;
       }
+
+/* Ordenes sin animaciones */
+#orders-section .accordion-collapse,
+#dashboard-section .accordion-collapse,
+#orders-section .collapse,
+#dashboard-section .collapse,
+#orders-section .collapsing,
+#dashboard-section .collapsing {
+  transition: none !important;
+}
+
+#orders-section .accordion-button:not(.collapsed) {
+  background-color: #092a63;
+  color: #fff;
+}
+#orders-section .accordion-button {
+  background-color: #0b3d91;
+  color: #fff;
+}
+#orders-section .table-hover tbody tr:hover {
+  background-color: var(--light-gray);
+}
+
