@@ -2,11 +2,11 @@
         
         /* Estilos base con nueva paleta de colores inspirada en maquillaje */
         :root {
-            --color-rose-gold: #bd8c7d;
-            --color-shimmer: #f4e4e1;
-            --color-nude: #e8c6b6;
-            --color-blush: #f7cac9;
-            --color-accent: #c06c84;
+            --color-rose-gold: #d7ccc8;
+            --color-shimmer: #f5f0ea;
+            --color-nude: #e6ccb2;
+            --color-blush: #d9b99b;
+            --color-accent: #8d6e63;
 }
 
 /* Mostrar/ocultar opciones de carrito y perfil según tamaño de pantalla */
@@ -33,7 +33,7 @@
         
         /* Encabezado con efecto de cristal y degradado */
         .header {
-            background: linear-gradient(135deg, rgba(189,140,125,0.95), rgba(192,108,132,0.95));
+            background: linear-gradient(135deg, rgba(166,125,96,0.95), rgba(141,110,99,0.95));
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
@@ -45,7 +45,7 @@
 .fancy-header {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(90deg, #fcd3e1 0%, #fbc2eb 50%, #a6c1ee 100%);
+            background: linear-gradient(90deg, #e6ccb2 0%, #d7ccc8 50%, #bcaaa4 100%);
             background-size: 400% 400%;
             animation: gradientMove 20s ease infinite;
             color: #4b4b4b;
@@ -76,7 +76,7 @@
         
         .category-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(192,108,132,0.2);
+            box-shadow: 0 15px 30px rgba(141,110,99,0.2);
         }
         
         /* Overlay con efecto degradado suave */
@@ -86,18 +86,18 @@
             left: 0;
             right: 0;
             padding: 30px;
-            background: linear-gradient(to top, 
-                rgba(189,140,125,0.9) 0%, 
-                rgba(189,140,125,0.6) 30%, 
+            background: linear-gradient(to top,
+                rgba(166,125,96,0.9) 0%,
+                rgba(166,125,96,0.6) 30%,
                 transparent 100%);
             color: white;
         }
         
         /* Sección hero con diseño moderno y elegante */
         .hero-section {
-            background: linear-gradient(45deg, 
-                rgba(189,140,125,0.9), 
-                rgba(192,108,132,0.9)), 
+            background: linear-gradient(45deg,
+                rgba(166,125,96,0.9),
+                rgba(141,110,99,0.9)),
                 url('img/banner.jpg');
             background-size: cover;
             background-position: center;
@@ -256,7 +256,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            background: linear-gradient(135deg, #f5f0ea, #d7ccc8);
             padding: 20px;
             border-radius: 20px;
         }
@@ -267,7 +267,7 @@
             border-radius: 20px;
             overflow: hidden;
             background: linear-gradient(#fff, #fff) padding-box,
-                        linear-gradient(90deg, #f093fb, #f5576c) border-box;
+                        linear-gradient(90deg, #d2b48c, #a67b5b) border-box;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
@@ -316,8 +316,8 @@
         }
 
         @keyframes glow {
-            0% { box-shadow: 0 0 10px #f093fb; }
-            100% { box-shadow: 0 0 25px #f5576c; }
+            0% { box-shadow: 0 0 10px #d2b48c; }
+            100% { box-shadow: 0 0 25px #a67b5b; }
         }
 
         /* Estilos responsivos */
