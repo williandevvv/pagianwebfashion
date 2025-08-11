@@ -5,7 +5,7 @@
   align-items: center;
   padding: 20px;
   margin: 20px;
-  background: linear-gradient(to right, #fce4ec, #f8bbd0);
+  background: linear-gradient(to right, #d7ccc8, #bcaaa4);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   backdrop-filter: blur(10px);
@@ -41,7 +41,7 @@
 }
 
 .glass-header nav a:hover {
-  color: #0b3d91;
+  color: #5d4037;
 }
 
 .search-bar {
@@ -73,7 +73,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(210,180,140,0.1) 0%, transparent 70%);
   animation: floatBubble 6s ease-in-out infinite;
 }
 
@@ -84,7 +84,7 @@
 }
 
 body.index {
-  background: linear-gradient(135deg, #fca5a5 0%, #f9a8d4 50%, #fed7aa 100%);
+  background: linear-gradient(135deg, #d7ccc8 0%, #bcaaa4 50%, #a1887f 100%);
   position: relative;
 }
 
@@ -103,11 +103,11 @@ body.index::before {
 }
 
 body.ofertas {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
+  background: linear-gradient(135deg, #bcaaa4 0%, #a1887f 50%, #8d6e63 100%);
 }
 
 body.general {
-  background: linear-gradient(135deg, #f8f9fa 0%, #fff5f5 50%, #ffeaa7 100%);
+  background: linear-gradient(135deg, #f0e5d8 0%, #e8dcd0 50%, #d7ccc8 100%);
 }
 
 .makeup-decorations {
